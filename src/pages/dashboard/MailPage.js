@@ -8,7 +8,7 @@ export default function MailPage() {
   return (
     <>
       <Helmet>
-        <title> Mail | Minimal UI</title>
+        <title> Mail | Point of Sale UI</title>
       </Helmet>
 
       <Mail />

@@ -13,7 +13,7 @@ export default function ComponentsOverviewPage() {
   return (
     <>
       <Helmet>
-        <title> Components Overview | Minimal UI</title>
+        <title> Components Overview | Point of Sale UI</title>
       </Helmet>
 
       <ComponentHero />

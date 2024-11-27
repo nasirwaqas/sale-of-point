@@ -13,7 +13,7 @@ export default function DemoScrollbarPage() {
   return (
     <>
       <Helmet>
-        <title> Extra Components: Scrollbar | Minimal UI</title>
+        <title> Extra Components: Scrollbar | Point of Sale UI</title>
       </Helmet>
 
       <Box

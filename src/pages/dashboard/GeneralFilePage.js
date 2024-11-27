@@ -128,7 +128,7 @@ export default function GeneralFilePage() {
   return (
     <>
       <Helmet>
-        <title> General: File | Minimal UI</title>
+        <title> General: File | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>

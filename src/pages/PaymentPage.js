@@ -14,7 +14,7 @@ export default function PaymentPage() {
   return (
     <>
       <Helmet>
-        <title> Payment | Minimal UI</title>
+        <title> Payment | Point of Sale UI</title>
       </Helmet>
 
       <Container

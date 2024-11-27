@@ -29,7 +29,7 @@ export default function GeneralAnalyticsPage() {
   return (
     <>
       <Helmet>
-        <title> General: Analytics | Minimal UI</title>
+        <title> General: Analytics | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>

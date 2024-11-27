@@ -13,7 +13,7 @@ export default function BlankPage() {
   return (
     <>
       <Helmet>
-        <title> Blank Page | Minimal UI</title>
+        <title> Blank Page | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>

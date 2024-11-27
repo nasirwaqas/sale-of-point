@@ -73,7 +73,7 @@ export default function MUISliderPage() {
   return (
     <>
       <Helmet>
-        <title> MUI Components: Slider | Minimal UI</title>
+        <title> MUI Components: Slider | Point of Sale UI</title>
       </Helmet>
 
       <Box

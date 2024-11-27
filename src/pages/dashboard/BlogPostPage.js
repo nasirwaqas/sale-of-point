@@ -76,7 +76,7 @@ export default function BlogPostPage() {
   return (
     <>
       <Helmet>
-        <title>{`Blog: ${post?.title || ''} | Minimal UI`}</title>
+        <title>{`Blog: ${post?.title || ''} | Point of Sale UI`}</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>

@@ -38,7 +38,7 @@ export default function MUITreesViewPage() {
   return (
     <>
       <Helmet>
-        <title> MUI Components: Tree View | Minimal UI</title>
+        <title> MUI Components: Tree View | Point of Sale UI</title>
       </Helmet>
 
       <Box

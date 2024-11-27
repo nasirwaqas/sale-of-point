@@ -29,7 +29,7 @@ export default function DemoFormValidationPage() {
   return (
     <>
       <Helmet>
-        <title> Extra Components: Form Validation | Minimal UI</title>
+        <title> Extra Components: Form Validation | Point of Sale UI</title>
       </Helmet>
 
       <Box

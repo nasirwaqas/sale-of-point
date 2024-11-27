@@ -12,7 +12,7 @@ export default function PricingPage() {
   return (
     <>
       <Helmet>
-        <title> Pricing | Minimal UI</title>
+        <title> Pricing | Point of Sale UI</title>
       </Helmet>
 
       <Container

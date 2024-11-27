@@ -1,8 +1,8 @@
 {
-  "name": "@minimal/minimal-kit-react",
-  "author": "Minimals UI",
+  "name": "pos",
+  "author": "POS",
   "version": "4.3.0",
-  "description": "Javascript Version",
+  "description": "Point of Sale",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
