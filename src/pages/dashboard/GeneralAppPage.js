@@ -1,7 +1,10 @@
+import React, { useState } from 'react';
+import { Container, Grid, Stack, TextField, Button, Box } from '@mui/material';
+// utils
+import { format } from 'date-fns';
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Container, Grid, Stack, Button } from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
@@ -16,10 +19,13 @@ import {
 import { useSettingsContext } from '../../components/settings';
 // sections
 import {
+  DateRangePicker,
   AppWidget,
   AppWelcome,
   AppFeatured,
-  AppNewInvoice,
+  AppRecentInvoice,
+  AppTopSaleProducts,
+  AppProductsOnLowStack,
   AppTopAuthors,
   AppTopRelated,
   AppAreaInstalled,
@@ -34,43 +40,57 @@ import { SeoIllustration } from '../../assets/illustrations';
 
 export default function GeneralAppPage() {
   const { user } = useAuthContext();
-
   const theme = useTheme();
-
   const { themeStretch } = useSettingsContext();
+
+  // State for DateRangePicker
+  // State for dates
+  const today = format(new Date(), 'yyyy-MM-dd'); // Default today's date
+  const [fromDate, setFromDate] = useState(today);
+  const [toDate, setToDate] = useState(today);
+
+  // Handlers
+  const handleSearch = () => {
+    console.log('Search clicked with dates:', { fromDate, toDate });
+  };
+
+
 
   return (
     <>
       <Helmet>
-        <title> General: App | Point of Sale UI</title>
+        <title> General: App | Point of Sale UI </title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
+        {/* Date Range Picker */}
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+          <TextField
+            label="From Date"
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+            sx={{ mr: 2 }}
+            InputLabelProps={{ shrink: true }}
+          />
+          <TextField
+            label="To Date"
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+            sx={{ mr: 2 }}
+            InputLabelProps={{ shrink: true }}
+          />
+          <Button variant="contained" onClick={handleSearch}>
+            Search
+          </Button>
+        </Box>
+
+        {/* Dashboard Widgets */}
         <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <AppWelcome
-              title={`Welcome back! \n ${user?.displayName}`}
-              description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
-              img={
-                <SeoIllustration
-                  sx={{
-                    p: 3,
-                    width: 360,
-                    margin: { xs: 'auto', md: 'inherit' },
-                  }}
-                />
-              }
-              action={<Button variant="contained">Go Now</Button>}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <AppFeatured list={_appFeatured} />
-          </Grid>
-
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
-              title="Total Active Users"
+              title="Visited Customers"
               percent={2.6}
               total={18765}
               chart={{
@@ -82,7 +102,7 @@ export default function GeneralAppPage() {
 
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
-              title="Total Installed"
+              title="Purchase"
               percent={0.2}
               total={4876}
               chart={{
@@ -94,7 +114,73 @@ export default function GeneralAppPage() {
 
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
-              title="Total Downloads"
+              title="Purchase Return"
+              percent={-0.1}
+              total={678}
+              chart={{
+                colors: [theme.palette.warning.main],
+                series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <AppWidgetSummary
+              title="Sale"
+              percent={-0.1}
+              total={678}
+              chart={{
+                colors: [theme.palette.warning.main],
+                series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <AppWidgetSummary
+              title="Sale Return"
+              percent={-0.1}
+              total={678}
+              chart={{
+                colors: [theme.palette.warning.main],
+                series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <AppWidgetSummary
+              title="Customer Balance"
+              percent={-0.1}
+              total={678}
+              chart={{
+                colors: [theme.palette.warning.main],
+                series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <AppWidgetSummary
+              title="Customer Cullected"
+              percent={-0.1}
+              total={678}
+              chart={{
+                colors: [theme.palette.warning.main],
+                series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <AppWidgetSummary
+              title="Vendor Balance"
+              percent={-0.1}
+              total={678}
+              chart={{
+                colors: [theme.palette.warning.main],
+                series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <AppWidgetSummary
+              title="Vendor Paid"
               percent={-0.1}
               total={678}
               chart={{
@@ -104,100 +190,44 @@ export default function GeneralAppPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentDownload
-              title="Current Download"
-              chart={{
-                colors: [
-                  theme.palette.primary.main,
-                  theme.palette.info.main,
-                  theme.palette.error.main,
-                  theme.palette.warning.main,
-                ],
-                series: [
-                  { label: 'Mac', value: 12244 },
-                  { label: 'Window', value: 53345 },
-                  { label: 'iOS', value: 44313 },
-                  { label: 'Android', value: 78343 },
-                ],
-              }}
-            />
-          </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
-            <AppAreaInstalled
-              title="Area Installed"
-              subheader="(+43%) than last year"
-              chart={{
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                series: [
-                  {
-                    year: '2019',
-                    data: [
-                      { name: 'Asia', data: [10, 41, 35, 51, 49, 62, 69, 91, 148] },
-                      { name: 'America', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] },
-                    ],
-                  },
-                  {
-                    year: '2020',
-                    data: [
-                      { name: 'Asia', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-                      { name: 'America', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
-                    ],
-                  },
-                ],
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} lg={8}>
-            <AppNewInvoice
-              title="New Invoice"
+          <Grid item xs={12} lg={6}>
+            <AppRecentInvoice
+              title="Recent Invoice"
               tableData={_appInvoices}
               tableLabels={[
-                { id: 'id', label: 'Invoice ID' },
-                { id: 'category', label: 'Category' },
-                { id: 'price', label: 'Price' },
-                { id: 'status', label: 'Status' },
-                { id: '' },
+                { id: 'type', label: 'Type' },
+                { id: 'time', label: 'Time' },
+                { id: 'invoice', label: 'Invoice#' },
+                { id: 'totalamount', label: 'Total Amount' },
               ]}
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopRelated title="Top Related Applications" list={_appRelated} />
+          <Grid item xs={12} lg={6}>
+            <AppTopSaleProducts
+              title="Top Sale Product"
+              tableData={_appInvoices}
+              tableLabels={[
+                { id: 'code', label: 'Code' },
+                { id: 'name', label: 'Name' },
+              ]}
+            />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
+          <Grid item xs={12} lg={6}>
+            <AppProductsOnLowStack
+              title="Products On Low Stack"
+              tableData={_appInvoices}
+              tableLabels={[
+                { id: 'code', label: 'Code' },
+                { id: 'name', label: 'Name' },
+                { id: 'batch', label: 'Batch' },
+                { id: 'quantity', label: 'Quantity' },
+              ]}
+            />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopAuthors title="Top Authors" list={_appAuthors} />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <Stack spacing={3}>
-              <AppWidget
-                title="Conversion"
-                total={38566}
-                icon="eva:person-fill"
-                chart={{
-                  series: 48,
-                }}
-              />
-
-              <AppWidget
-                title="Applications"
-                total={55566}
-                icon="eva:email-fill"
-                color="info"
-                chart={{
-                  series: 75,
-                }}
-              />
-            </Stack>
-          </Grid>
         </Grid>
       </Container>
     </>

@@ -33,6 +33,7 @@ const ICONS = {
   ecommerce: icon('ic_ecommerce'),
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
+  
 };
 
 const navConfig = [
@@ -41,12 +42,20 @@ const navConfig = [
   {
     subheader: 'general',
     items: [
-      { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
-      { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-      { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
-      { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
-      { title: 'file', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
+      { title: 'dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+      { title: 'sale', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
+      { title: 'categories', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
+      { title: 'companies', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
+      { title: 'products', path: PATH_DASHBOARD.general.booking, icon: ICONS.cart },
+      { title: 'vendors', path: PATH_DASHBOARD.general.file, icon: ICONS.dashboard },
+
+      { title: 'customers', path: PATH_DASHBOARD.general.app, icon: ICONS.user },
+      { title: 'income', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.invoice },
+      { title: 'expense', path: PATH_DASHBOARD.general.analytics, icon: ICONS.invoice },
+      { title: 'purchase', path: PATH_DASHBOARD.general.banking, icon: ICONS.invoice },
+      { title: 'stock', path: PATH_DASHBOARD.general.booking, icon: ICONS.ecommerce },
+      { title: 'stock adjustment', path: PATH_DASHBOARD.general.file, icon: ICONS.ecommerce },
+      { title: 'report', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
     ],
   },
 

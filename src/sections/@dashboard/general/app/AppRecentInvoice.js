@@ -27,30 +27,30 @@ import { TableHeadCustom } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-AppNewInvoice.propTypes = {
+AppRecentInvoice.propTypes = {
   title: PropTypes.string,
   tableData: PropTypes.array,
   subheader: PropTypes.string,
   tableLabels: PropTypes.array,
 };
 
-export default function AppNewInvoice({ title, subheader, tableData, tableLabels, ...other }) {
+export default function AppRecentInvoice({ title, subheader, tableData, tableLabels, ...other }) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
 
       <TableContainer sx={{ overflow: 'unset' }}>
-        <Scrollbar>
+
           <Table sx={{ minWidth: 720 }}>
             <TableHeadCustom headLabel={tableLabels} />
 
             <TableBody>
               {tableData.map((row) => (
-                <AppNewInvoiceRow key={row.id} row={row} />
+                <AppRecentInvoiceRow key={row.id} row={row} />
               ))}
             </TableBody>
           </Table>
-        </Scrollbar>
+     
       </TableContainer>
 
       <Divider />
@@ -70,7 +70,7 @@ export default function AppNewInvoice({ title, subheader, tableData, tableLabels
 
 // ----------------------------------------------------------------------
 
-AppNewInvoiceRow.propTypes = {
+AppRecentInvoiceRow.propTypes = {
   row: PropTypes.shape({
     id: PropTypes.string,
     price: PropTypes.number,
@@ -79,7 +79,7 @@ AppNewInvoiceRow.propTypes = {
   }),
 };
 
-function AppNewInvoiceRow({ row }) {
+function AppRecentInvoiceRow({ row }) {
   const [openPopover, setOpenPopover] = useState(null);
 
   const handleOpenPopover = (event) => {
@@ -113,30 +113,15 @@ function AppNewInvoiceRow({ row }) {
   return (
     <>
       <TableRow>
-        <TableCell>{`INV-${row.id}`}</TableCell>
+        <TableCell>{row.type}</TableCell>
 
-        <TableCell>{row.category}</TableCell>
+        <TableCell>{row.time}</TableCell>
 
-        <TableCell>{fCurrency(row.price)}</TableCell>
+        <TableCell>{fCurrency(row.invoice)}</TableCell>
 
-        <TableCell>
-          <Label
-            variant="soft"
-            color={
-              (row.status === 'in_progress' && 'warning') ||
-              (row.status === 'out_of_date' && 'error') ||
-              'success'
-            }
-          >
-            {sentenceCase(row.status)}
-          </Label>
-        </TableCell>
+        <TableCell>{fCurrency(row.totalamount)}</TableCell>
 
-        <TableCell align="right">
-          <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </TableCell>
+    
       </TableRow>
 
       <MenuPopover
