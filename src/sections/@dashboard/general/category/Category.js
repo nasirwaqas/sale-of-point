@@ -25,18 +25,18 @@ import Scrollbar from '../../../../components/scrollbar';
 import MenuPopover from '../../../../components/menu-popover';
 import { TableHeadCustom } from '../../../../components/table';
 // sections
-import { UserTableToolbar } from '../../../../sections/@dashboard/user/list';
+import { UserTableToolbar } from '../../user/list';
 
 // ----------------------------------------------------------------------
 
-AnalyticsCategory.propTypes = {
+Category.propTypes = {
   title: PropTypes.string,
   tableData: PropTypes.array,
   subheader: PropTypes.string,
   tableLabels: PropTypes.array,
 };
 
-export default function AnalyticsCategory({ title, subheader, tableData, tableLabels, ...other }) {
+export default function Category({ title, subheader, tableData, tableLabels, ...other }) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
@@ -55,7 +55,7 @@ export default function AnalyticsCategory({ title, subheader, tableData, tableLa
      
             <TableBody>
               {tableData.map((row) => (
-                <AnalyticsCategoryRow key={row.id} row={row} />
+                <CategoryRow key={row.id} row={row} />
               ))}
             </TableBody>
           </Table>
@@ -67,7 +67,7 @@ export default function AnalyticsCategory({ title, subheader, tableData, tableLa
         <Button
           size="small"
           color="inherit"
-          endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
+          endIcon={<Iconify icon="eva:arrow-ios-forward-fill"  />}
         >
           View All
         </Button>
@@ -78,7 +78,7 @@ export default function AnalyticsCategory({ title, subheader, tableData, tableLa
 
 // ----------------------------------------------------------------------
 
-AnalyticsCategoryRow.propTypes = {
+CategoryRow.propTypes = {
   row: PropTypes.shape({
     code: PropTypes.number,
     name: PropTypes.string,
@@ -86,7 +86,7 @@ AnalyticsCategoryRow.propTypes = {
   }),
 };
 
-function AnalyticsCategoryRow({ row }) {
+function CategoryRow({ row }) {
   const [openPopover, setOpenPopover] = useState(null);
 
   const handleOpenPopover = (event) => {

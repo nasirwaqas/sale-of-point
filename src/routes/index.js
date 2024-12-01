@@ -23,7 +23,8 @@ import {
   GeneralBankingPage,
   GeneralBookingPage,
   GeneralEcommercePage,
-  GeneralAnalyticsPage,
+  GeneralCategoryPage,
+  
   // Dashboard: User
   UserListPage,
   UserEditPage,
@@ -126,6 +127,9 @@ import {
   DemoTextMaxLinePage,
   DemoUploadPage,
   DemoMarkdownPage,
+  CategoryPage,
+  CategoryNew,
+  
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -176,8 +180,10 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
-        { path: 'ecommerce', element: <GeneralEcommercePage /> },
-        { path: 'analytics', element: <GeneralAnalyticsPage /> },
+        { path: 'categories', element: <CategoryPage /> },
+
+         { path: 'categories/new', element: <CategoryNew /> },
+        { path: 'analytics', element: <GeneralCategoryPage /> },
         { path: 'banking', element: <GeneralBankingPage /> },
         { path: 'booking', element: <GeneralBookingPage /> },
         { path: 'file', element: <GeneralFilePage /> },

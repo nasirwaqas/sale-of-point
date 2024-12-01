@@ -36,6 +36,7 @@ export const PATH_PAGE = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
+
   kanban: path(ROOTS_DASHBOARD, '/kanban'),
   calendar: path(ROOTS_DASHBOARD, '/calendar'),
   fileManager: path(ROOTS_DASHBOARD, '/files-manager'),
@@ -48,6 +49,8 @@ export const PATH_DASHBOARD = {
     banking: path(ROOTS_DASHBOARD, '/banking'),
     booking: path(ROOTS_DASHBOARD, '/booking'),
     file: path(ROOTS_DASHBOARD, '/file'),
+    categories :    path(ROOTS_DASHBOARD, '/categories'),
+
   },
   mail: {
     root: path(ROOTS_DASHBOARD, '/mail'),
@@ -60,7 +63,7 @@ export const PATH_DASHBOARD = {
   },
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
-    new: path(ROOTS_DASHBOARD, '/user/new'),
+    new: path(ROOTS_DASHBOARD, '/categories/new'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),
     profile: path(ROOTS_DASHBOARD, '/user/profile'),

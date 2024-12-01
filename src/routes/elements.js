@@ -25,8 +25,8 @@ export const GeneralAppPage = Loadable(lazy(() => import('../pages/dashboard/Gen
 export const GeneralEcommercePage = Loadable(
   lazy(() => import('../pages/dashboard/GeneralEcommercePage'))
 );
-export const GeneralAnalyticsPage = Loadable(
-  lazy(() => import('../pages/dashboard/GeneralAnalyticsPage'))
+export const GeneralCategoryPage = Loadable(
+  lazy(() => import('../pages/dashboard/GeneralCategoryPage'))
 );
 export const GeneralBankingPage = Loadable(
   lazy(() => import('../pages/dashboard/GeneralBankingPage'))
@@ -71,8 +71,12 @@ export const UserProfilePage = Loadable(lazy(() => import('../pages/dashboard/Us
 export const UserCardsPage = Loadable(lazy(() => import('../pages/dashboard/UserCardsPage')));
 export const UserListPage = Loadable(lazy(() => import('../pages/dashboard/UserListPage')));
 export const UserAccountPage = Loadable(lazy(() => import('../pages/dashboard/UserAccountPage')));
+
 export const UserCreatePage = Loadable(lazy(() => import('../pages/dashboard/UserCreatePage')));
+export const UserCrea = Loadable(lazy(() => import('../pages/dashboard/UserCreatePage')));
 export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserEditPage')));
+export const CategoryPage = Loadable(lazy(() => import('../pages/dashboard/CategoryPage')));
+export const CategoryNew = Loadable(lazy(() => import('../sections/@dashboard/category/list/CategoryNew')));
 
 // DASHBOARD: BLOG
 export const BlogPostsPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostsPage')));

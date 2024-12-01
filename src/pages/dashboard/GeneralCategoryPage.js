@@ -12,7 +12,8 @@ import { _analyticPost, _analyticOrderTimeline, _analyticTraffic, _appFeatured,
 import { useSettingsContext } from '../../components/settings';
 // sections
 import {
-  AnalyticsCategory,
+  Category,
+  CategoryNew,
   AnalyticsTasks,
   AnalyticsNewsUpdate,
   AnalyticsOrderTimeline,
@@ -22,11 +23,11 @@ import {
   AnalyticsWidgetSummary,
   AnalyticsCurrentSubject,
   AnalyticsConversionRates,
-} from '../../sections/@dashboard/general/analytics';
+} from '../../sections/@dashboard/general/category';
 
 // ----------------------------------------------------------------------
 
-export default function GeneralAnalyticsPage() {
+export default function GeneralCategoryPage() {
   const theme = useTheme();
   
   const { themeStretch } = useSettingsContext();
