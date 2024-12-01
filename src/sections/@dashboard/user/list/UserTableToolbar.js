@@ -9,9 +9,9 @@ import Iconify from '../../../../components/iconify';
 UserTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
-  filterRole: PropTypes.string,
+
   onFilterName: PropTypes.func,
-  onFilterRole: PropTypes.func,
+
   onResetFilter: PropTypes.func,
   optionsRole: PropTypes.arrayOf(PropTypes.string),
 };
@@ -35,7 +35,7 @@ export default function UserTableToolbar({
       }}
       sx={{ px: 2.5, py: 3 }}
     >
-      <TextField
+      {/* <TextField
         fullWidth
         select
         label="Role"
@@ -54,8 +54,8 @@ export default function UserTableToolbar({
           maxWidth: { sm: 240 },
           textTransform: 'capitalize',
         }}
-      >
-        {optionsRole.map((option) => (
+      > */}
+        {/* {optionsRole.map((option) => (
           <MenuItem
             key={option}
             value={option}
@@ -68,8 +68,8 @@ export default function UserTableToolbar({
           >
             {option}
           </MenuItem>
-        ))}
-      </TextField>
+        ))} */}
+      {/* </TextField> */}
 
       <TextField
         fullWidth
