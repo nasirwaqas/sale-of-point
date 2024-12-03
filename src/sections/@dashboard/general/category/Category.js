@@ -101,9 +101,9 @@ function CategoryRow({ row }) {
   return (
     <>
       <TableRow>
-        <TableCell>{row.name}</TableCell>
+        <TableCell>{row.categoryName}</TableCell>
 
-        <TableCell>{row.discription}</TableCell>
+        <TableCell>{row.categoryDiscription}</TableCell>
 
         <TableCell>{fCurrency(row.action)}</TableCell>
 

@@ -29,7 +29,7 @@ export default function UserTableToolbar({
     <Stack
       spacing={2}
       alignItems="center"
-      justifyContent='flex-end'
+      justifyContent='flex-start'
       direction={{
         xs: 'column',
         sm: 'row',
@@ -58,6 +58,7 @@ export default function UserTableToolbar({
         <Button
           color="error"
           sx={{ flexShrink: 0 }}
+          color={{ xs: 'primary.main', sm: 'error' }}
           onClick={onResetFilter}
           startIcon={<Iconify icon="eva:trash-2-outline" />}
         >

@@ -8,4 +8,4 @@ export { default as AnalyticsWidgetSummary } from './AnalyticsWidgetSummary';
 export { default as AnalyticsCurrentSubject } from './AnalyticsCurrentSubject';
 export { default as AnalyticsConversionRates } from './AnalyticsConversionRates';
 export { default as Category} from './Category';
-export { default as CategoryNew} from './CategoryNew';
+

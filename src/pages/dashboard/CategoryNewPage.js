@@ -2,16 +2,16 @@ import { Helmet } from 'react-helmet-async';
 // @mui
 import { Container } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../routes/paths';
 // components
-import { useSettingsContext } from '../../../../components/settings';
-import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
+import { useSettingsContext } from '../../components/settings';
+import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
-import UserNewEditForm from '../../../../sections/@dashboard/user/UserNewEditForm';
+import CategoryNewEditForm from '../../sections/@dashboard/general/category/CategoryNewEditForm';
 
 // ----------------------------------------------------------------------
 
-export default function UserCreatePage() {
+export default function CategoryNewPage() {
   const { themeStretch } = useSettingsContext();
 
   return (
@@ -22,20 +22,20 @@ export default function UserCreatePage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Create a new user"
+          heading="Category Information"
           links={[
             {
               name: 'Dashboard',
               href: PATH_DASHBOARD.root,
             },
             {
-              name: 'User',
+              
               href: PATH_DASHBOARD.user.list,
             },
-            { name: 'New user' },
+            
           ]}
         />
-        <UserNewEditForm />
+        <CategoryNewEditForm />
       </Container>
     </>
   );

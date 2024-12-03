@@ -128,8 +128,8 @@ import {
   DemoUploadPage,
   DemoMarkdownPage,
   CategoryPage,
-  CategoryNew,
-  
+  CategoryNewPage,
+  CategoryEditPage,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -180,9 +180,10 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
-        { path: 'categories', element: <CategoryPage /> },
 
-         { path: 'categories/new', element: <CategoryNew /> },
+        { path: 'categories', element: <CategoryPage /> },
+         { path: 'categories/new', element: <CategoryNewPage /> },
+         { path: 'categories/edit', element: <CategoryEditPage /> },
         { path: 'analytics', element: <GeneralCategoryPage /> },
         { path: 'banking', element: <GeneralBankingPage /> },
         { path: 'booking', element: <GeneralBookingPage /> },
@@ -207,6 +208,7 @@ export default function Router() {
             { path: 'cards', element: <UserCardsPage /> },
             { path: 'list', element: <UserListPage /> },
             { path: 'new', element: <UserCreatePage /> },
+            { path: 'edit',element: <CategoryEditPage /> },
             { path: ':name/edit', element: <UserEditPage /> },
             { path: 'account', element: <UserAccountPage /> },
           ],

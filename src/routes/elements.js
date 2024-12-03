@@ -72,11 +72,13 @@ export const UserCardsPage = Loadable(lazy(() => import('../pages/dashboard/User
 export const UserListPage = Loadable(lazy(() => import('../pages/dashboard/UserListPage')));
 export const UserAccountPage = Loadable(lazy(() => import('../pages/dashboard/UserAccountPage')));
 
-export const UserCreatePage = Loadable(lazy(() => import('../pages/dashboard/UserCreatePage')));
-export const UserCrea = Loadable(lazy(() => import('../pages/dashboard/UserCreatePage')));
+export const UserCreatePage = Loadable(lazy(() => import('../pages/dashboard/CategoryNewPage')));
+export const UserCrea = Loadable(lazy(() => import('../pages/dashboard/CategoryNewPage')));
 export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserEditPage')));
+
 export const CategoryPage = Loadable(lazy(() => import('../pages/dashboard/CategoryPage')));
-export const CategoryNew = Loadable(lazy(() => import('../sections/@dashboard/category/list/CategoryNew')));
+export const CategoryNewPage = Loadable(lazy(() => import('../pages/dashboard/CategoryNewPage')));
+export const CategoryEditPage = Loadable(lazy(() => import('../pages/dashboard/CategoryEditPage')));
 
 // DASHBOARD: BLOG
 export const BlogPostsPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostsPage')));

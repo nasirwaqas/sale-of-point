@@ -14,12 +14,14 @@ import {
   TableBody,
   Container,
   IconButton,
+  TableRow, TableCell ,
+
   TableContainer,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // _mock_
-import { _userList } from '../../_mock/arrays';
+// import { _userList } from '../../_mock/arrays';
 // components
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
@@ -57,17 +59,15 @@ const ROLE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'company', label: 'Company', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
-  { id: 'isVerified', label: 'Verified', align: 'center' },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: '' },
+  { id: 'categoryName', label: 'Name', align: 'left' },
+  { id: 'categoryDescription', label: 'Discription', align: 'left' },
+  { id: 'action', label: 'Action', align: 'left' },
+
 ];
 
 // ----------------------------------------------------------------------
 
-export default function CategoryPage() {
+export default function GeneralCategoryPage() {
   const {
     dense,
     page,
@@ -91,7 +91,7 @@ export default function CategoryPage() {
 
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -100,9 +100,43 @@ export default function CategoryPage() {
   const [filterRole, setFilterRole] = useState('all');
 
   const [filterStatus, setFilterStatus] = useState('all');
-
+  const data= [
+    {
+      name: "John Doe",
+      avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+      company: "Tech Solutions",
+      role: "Software Engineer",
+      isVerified: true,
+      status: "Active",
+      categoryName: "Technology",
+      categoryDescription: "Innovative tech products and solutions",
+      categoryAction: "View Details",
+    },
+    {
+      name: "Jane Smith",
+      avatarUrl: "https://randomuser.me/api/portraits/women/2.jpg",
+      company: "Green Valley",
+      role: "Marketing Manager",
+      isVerified: true,
+      status: "Active",
+      categoryName: "Agriculture",
+      categoryDescription: "Organic farming and produce",
+      categoryAction: "Explore",
+    },
+    {
+      name: "Mike Brown",
+      avatarUrl: "https://randomuser.me/api/portraits/men/3.jpg",
+      company: "Health First",
+      role: "Product Manager",
+      isVerified: false,
+      status: "Inactive",
+      categoryName: "Healthcare",
+      categoryDescription: "Health and wellness products",
+      categoryAction: "Contact",
+    },
+]
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: data ,
     comparator: getComparator(order, orderBy),
     filterName,
     filterRole,
@@ -113,12 +147,7 @@ export default function CategoryPage() {
 
   const denseHeight = dense ? 52 : 72;
 
-  const isFiltered = filterName !== '' || filterRole !== 'all' || filterStatus !== 'all';
 
-  const isNotFound =
-    (!dataFiltered.length && !!filterName) ||
-    (!dataFiltered.length && !!filterRole) ||
-    (!dataFiltered.length && !!filterStatus);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -143,37 +172,11 @@ export default function CategoryPage() {
     setFilterRole(event.target.value);
   };
 
-  const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
 
-    if (page > 0) {
-      if (dataInPage.length < 2) {
-        setPage(page - 1);
-      }
-    }
-  };
 
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+    navigate(PATH_DASHBOARD.user.edit);
   };
 
   const handleResetFilter = () => {
@@ -190,11 +193,10 @@ export default function CategoryPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="User List"
+          
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'List' },
+            { name: 'Categories', href: PATH_DASHBOARD.root },
+           
           ]}
           action={
             <Button
@@ -203,7 +205,7 @@ export default function CategoryPage() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              New User
+              New 
             </Button>
           }
         />
@@ -211,7 +213,6 @@ export default function CategoryPage() {
         <Card>
     
           <UserTableToolbar
-            isFiltered={isFiltered}
             filterName={filterName}
             filterRole={filterRole}
             optionsRole={ROLE_OPTIONS}
@@ -234,7 +235,7 @@ export default function CategoryPage() {
                   onSort={onSort}
                 />
 
-                <TableBody>
+                {/* <TableBody>
                   {dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
@@ -253,8 +254,39 @@ export default function CategoryPage() {
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   />
 
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
+                </TableBody> */}
+                <TableBody>
+  {dataInPage.map((row, index) => (
+    <TableRow key={index}>
+      <TableCell>{row.categoryName}</TableCell>
+      <TableCell>{row.categoryDescription}</TableCell>
+      <TableCell>
+        <Button 
+          variant="outlined" 
+          color="primary" 
+          size="small" 
+          onClick={() => handleEditRow(row.categoryName)}
+        >
+          Edit
+        </Button>
+        <Button 
+          variant="contained" 
+          color="success" 
+          size="small" 
+          sx={{ ml: 1 }} // Add some margin between buttons
+        >
+          Active
+        </Button>
+      </TableCell>
+    </TableRow>
+  ))}
+
+  <TableEmptyRows
+    height={denseHeight}
+    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+  />
+</TableBody>
+
               </Table>
             </Scrollbar>
           </TableContainer>
