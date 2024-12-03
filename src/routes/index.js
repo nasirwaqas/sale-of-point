@@ -130,6 +130,12 @@ import {
   CategoryPage,
   CategoryNewPage,
   CategoryEditPage,
+
+  MenufacturerPage,
+  MenufacturerNewPage,
+  MenufacturerEditForm,
+  // MenufactorerNewPage,
+  // MenufactorerEditPage,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -184,8 +190,12 @@ export default function Router() {
         { path: 'categories', element: <CategoryPage /> },
          { path: 'categories/new', element: <CategoryNewPage /> },
          { path: 'categories/edit', element: <CategoryEditPage /> },
+
+         { path: 'menufacturer', element: <MenufacturerPage /> },
+         { path: '/dashboard/menufacturer/new', element: <MenufacturerNewPage /> },
+         { path: '/dashboard/menufacturer/edit', element: <MenufacturerEditForm /> },
+
         { path: 'analytics', element: <GeneralCategoryPage /> },
-        { path: 'banking', element: <GeneralBankingPage /> },
         { path: 'booking', element: <GeneralBookingPage /> },
         { path: 'file', element: <GeneralFilePage /> },
         {

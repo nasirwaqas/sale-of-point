@@ -46,10 +46,12 @@ export const PATH_DASHBOARD = {
     app: path(ROOTS_DASHBOARD, '/app'),
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
     analytics: path(ROOTS_DASHBOARD, '/analytics'),
-    banking: path(ROOTS_DASHBOARD, '/banking'),
     booking: path(ROOTS_DASHBOARD, '/booking'),
     file: path(ROOTS_DASHBOARD, '/file'),
+
     categories :    path(ROOTS_DASHBOARD, '/categories'),
+    companies: path(ROOTS_DASHBOARD, '/menufacturer'),
+
 
   },
   mail: {
@@ -61,10 +63,17 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/chat/new'),
     view: (name) => path(ROOTS_DASHBOARD, `/chat/${name}`),
   },
+  menufacturer: {
+    root: path(ROOTS_DASHBOARD, '/menufacturer'),
+    new: path(ROOTS_DASHBOARD, '/menufacturer/new'),
+    edit: path(ROOTS_DASHBOARD, '/menufacturer/edit'),
+
+  },
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
     new: path(ROOTS_DASHBOARD, '/categories/new'),
     edit: path(ROOTS_DASHBOARD, '/categories/edit'),
+
     list: path(ROOTS_DASHBOARD, '/user/list'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),
     profile: path(ROOTS_DASHBOARD, '/user/profile'),

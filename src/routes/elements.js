@@ -76,9 +76,15 @@ export const UserCreatePage = Loadable(lazy(() => import('../pages/dashboard/Cat
 export const UserCrea = Loadable(lazy(() => import('../pages/dashboard/CategoryNewPage')));
 export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserEditPage')));
 
+ // DASHBOARD: Category
 export const CategoryPage = Loadable(lazy(() => import('../pages/dashboard/CategoryPage')));
 export const CategoryNewPage = Loadable(lazy(() => import('../pages/dashboard/CategoryNewPage')));
 export const CategoryEditPage = Loadable(lazy(() => import('../pages/dashboard/CategoryEditPage')));
+
+// DASHBOARD: Company
+export const MenufacturerPage = Loadable(lazy(() => import('../pages/dashboard/MenufacturerPage')));
+export const MenufacturerNewPage = Loadable(lazy(() => import('../sections/@dashboard/general/companies/MenufacturerNewPage')));
+export const MenufacturerEditForm = Loadable(lazy(() => import('../sections/@dashboard/general/companies/MenufacturerEditForm')));
 
 // DASHBOARD: BLOG
 export const BlogPostsPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostsPage')));
