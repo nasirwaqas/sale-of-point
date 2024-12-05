@@ -17,12 +17,12 @@ export default function MenufacturerNewPage() {
   return (
     <>
       <Helmet>
-        <title>  Create Menufacturer | Point of Sale UI</title>
+        <title>  Create Manufacturer | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Menufacturer Information"
+          heading="Manufacturer Information"
           links={[
             {
               name: 'Dashboard',

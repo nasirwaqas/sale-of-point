@@ -172,7 +172,7 @@ export default function MenufacturerPage() {
 
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.menufacturer.edit);
+    navigate(PATH_DASHBOARD.manufacturer.edit);
   };
 
   const handleResetFilter = () => {
@@ -184,20 +184,20 @@ export default function MenufacturerPage() {
   return (
     <>
       <Helmet>
-        <title> Menufacturer | Point of Sale UI</title>
+        <title> Manufacturer | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           
           links={[
-            { name: 'Menufacturer', href: PATH_DASHBOARD.root },
+            { name: 'Manufacturer', href: PATH_DASHBOARD.root },
            
           ]}
           action={
             <Button
               component={RouterLink}
-              to={PATH_DASHBOARD.menufacturer.new}
+              to={PATH_DASHBOARD.manufacturer.new}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >

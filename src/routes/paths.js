@@ -51,7 +51,7 @@ export const PATH_DASHBOARD = {
     file: path(ROOTS_DASHBOARD, '/file'),
 
     categories :    path(ROOTS_DASHBOARD, '/categories'),
-    companies: path(ROOTS_DASHBOARD, '/menufacturer'),
+    companies: path(ROOTS_DASHBOARD, '/manufacturer'),
     products: path(ROOTS_DASHBOARD, '/product'),
     vendors: path(ROOTS_DASHBOARD, '/vendors'),
 
@@ -66,10 +66,10 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/chat/new'),
     view: (name) => path(ROOTS_DASHBOARD, `/chat/${name}`),
   },
-  menufacturer: {
-    root: path(ROOTS_DASHBOARD, '/menufacturer'),
-    new: path(ROOTS_DASHBOARD, '/menufacturer/new'),
-    edit: path(ROOTS_DASHBOARD, '/menufacturer/edit'),
+  manufacturer: {
+    root: path(ROOTS_DASHBOARD, '/manufacturer'),
+    new: path(ROOTS_DASHBOARD, '/manufacturer/new'),
+    edit: path(ROOTS_DASHBOARD, '/manufacturer/edit'),
 
   },
   product: {

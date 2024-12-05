@@ -172,7 +172,7 @@ export default function VendorsPage() {
 
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.menufacturer.edit);
+    navigate(PATH_DASHBOARD.manufacturer.edit);
   };
 
   const handleResetFilter = () => {
@@ -191,13 +191,13 @@ export default function VendorsPage() {
         <CustomBreadcrumbs
           
           links={[
-            { name: 'Menufacturer', href: PATH_DASHBOARD.root },
+            { name: 'Manufacturer', href: PATH_DASHBOARD.root },
            
           ]}
           action={
             <Button
               component={RouterLink}
-              to={PATH_DASHBOARD.menufacturer.new}
+              to={PATH_DASHBOARD.manufacturer.new}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >

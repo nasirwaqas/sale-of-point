@@ -246,7 +246,7 @@ export default function MenufacturerEditForm({ isEdit = false, currentUser }) {
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                {!isEdit ? 'Edit Menufacturer' : 'Save Changes'}
+                {!isEdit ? 'Edit Manufacturer' : 'Save Changes'}
               </LoadingButton>
             </Stack>
           </Card>

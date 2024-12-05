@@ -202,9 +202,9 @@ export default function Router() {
          { path: 'categories/new', element: <CategoryNewPage /> },
          { path: 'categories/edit', element: <CategoryEditPage /> },
 
-         { path: 'menufacturer', element: <MenufacturerPage /> },
-         { path: '/dashboard/menufacturer/new', element: <MenufacturerNewPage /> },
-         { path: '/dashboard/menufacturer/edit', element: <MenufacturerEditForm /> },
+         { path: 'manufacturer', element: <MenufacturerPage /> },
+         { path: '/dashboard/manufacturer/new', element: <MenufacturerNewPage /> },
+         { path: '/dashboard/manufacturer/edit', element: <MenufacturerEditForm /> },
 
          { path: 'product', element: <ProductPage /> },
          { path: '/dashboard/product/new', element: <ProductNewPage /> },

@@ -22,7 +22,7 @@ export default function VendorsNewPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Menufacturer Information"
+          heading="Manufacturer Information"
           links={[
             {
               name: 'Dashboard',
