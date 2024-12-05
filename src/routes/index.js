@@ -178,16 +178,16 @@ export default function Router() {
             </GuestGuard>
           ),
         },
-        { path: 'login-unprotected', element: <LoginPage /> },
-        { path: 'register-unprotected', element: <RegisterPage /> },
-        {
-          element: <CompactLayout />,
-          children: [
-            { path: 'reset-password', element: <ResetPasswordPage /> },
-            { path: 'new-password', element: <NewPasswordPage /> },
-            { path: 'verify', element: <VerifyCodePage /> },
-          ],
-        },
+        // { path: 'login-unprotected', element: <LoginPage /> },
+        // { path: 'register-unprotected', element: <RegisterPage /> },
+        // {
+          // element: <CompactLayout />,
+          // children: [
+            // { path: 'reset-password', element: <ResetPasswordPage /> },
+            // { path: 'new-password', element: <NewPasswordPage /> },
+            // { path: 'verify', element: <VerifyCodePage /> },
+          // ],
+        // },
       ],
     },
 
