@@ -24,7 +24,7 @@ import {
   GeneralBookingPage,
   GeneralEcommercePage,
   GeneralCategoryPage,
-  
+
   // Dashboard: User
   UserListPage,
   UserEditPage,
@@ -130,11 +130,9 @@ import {
   CategoryPage,
   CategoryNewPage,
   CategoryEditPage,
-
   MenufacturerPage,
   MenufacturerNewPage,
   MenufacturerEditForm,
-
   ProductPage,
   ProductEditForm,
   ProductNewPage,
@@ -142,18 +140,25 @@ import {
   ProductGroup,
   ProductGroupNew,
   ProductGroupEdit,
-
   VendorsPage,
   VendorsNewPage,
   VendorsEditForm,
 } from './elements';
-
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
   return useRoutes([
     // Auth
+    {
+      path: '/',
+      element: (
+        <GuestGuard>
+          <LoginPage />
+        </GuestGuard>
+      ),
+    },
+
     {
       path: 'auth',
       children: [
@@ -199,24 +204,24 @@ export default function Router() {
         { path: 'app', element: <GeneralAppPage /> },
 
         { path: 'categories', element: <CategoryPage /> },
-         { path: 'categories/new', element: <CategoryNewPage /> },
-         { path: 'categories/edit', element: <CategoryEditPage /> },
+        { path: 'categories/new', element: <CategoryNewPage /> },
+        { path: 'categories/edit', element: <CategoryEditPage /> },
 
-         { path: 'manufacturer', element: <MenufacturerPage /> },
-         { path: '/dashboard/manufacturer/new', element: <MenufacturerNewPage /> },
-         { path: '/dashboard/manufacturer/edit', element: <MenufacturerEditForm /> },
+        { path: 'manufacturer', element: <MenufacturerPage /> },
+        { path: '/dashboard/manufacturer/new', element: <MenufacturerNewPage /> },
+        { path: '/dashboard/manufacturer/edit', element: <MenufacturerEditForm /> },
 
-         { path: 'product', element: <ProductPage /> },
-         { path: '/dashboard/product/new', element: <ProductNewPage /> },
-         { path: '/dashboard/product/edit', element: <ProductEditForm /> },
-         { path: '/dashboard/product/setting', element: <ProductSetting /> },
-         { path: '/dashboard/product/group', element: <ProductGroup /> },
-         { path: '/dashboard/product/group/new', element: <ProductGroupNew /> },
-         { path: '/dashboard/product/group/edit', element: <ProductGroupEdit/> },
+        { path: 'product', element: <ProductPage /> },
+        { path: '/dashboard/product/new', element: <ProductNewPage /> },
+        { path: '/dashboard/product/edit', element: <ProductEditForm /> },
+        { path: '/dashboard/product/setting', element: <ProductSetting /> },
+        { path: '/dashboard/product/group', element: <ProductGroup /> },
+        { path: '/dashboard/product/group/new', element: <ProductGroupNew /> },
+        { path: '/dashboard/product/group/edit', element: <ProductGroupEdit /> },
 
-         { path: 'vendors', element: <VendorsPage /> },
-         { path: '/dashboard/vendors/new', element: <VendorsNewPage /> },
-         { path: '/dashboard/vendors/edit', element: <VendorsEditForm /> },
+        { path: 'vendors', element: <VendorsPage /> },
+        { path: '/dashboard/vendors/new', element: <VendorsNewPage /> },
+        { path: '/dashboard/vendors/edit', element: <VendorsEditForm /> },
 
         { path: 'analytics', element: <GeneralCategoryPage /> },
         { path: 'booking', element: <GeneralBookingPage /> },
@@ -241,7 +246,7 @@ export default function Router() {
             { path: 'cards', element: <UserCardsPage /> },
             { path: 'list', element: <UserListPage /> },
             { path: 'new', element: <UserCreatePage /> },
-            { path: 'edit',element: <CategoryEditPage /> },
+            { path: 'edit', element: <CategoryEditPage /> },
             { path: ':name/edit', element: <UserEditPage /> },
             { path: 'account', element: <UserAccountPage /> },
           ],
@@ -291,111 +296,6 @@ export default function Router() {
       ],
     },
 
-    // Main Routes
-    {
-      element: <MainLayout />,
-      children: [
-        { element: <HomePage />, index: true },
-        { path: 'about-us', element: <AboutPage /> },
-        { path: 'contact-us', element: <Contact /> },
-        { path: 'faqs', element: <FaqsPage /> },
-        // Demo Components
-        {
-          path: 'components',
-          children: [
-            { element: <ComponentsOverviewPage />, index: true },
-            {
-              path: 'foundation',
-              children: [
-                { element: <Navigate to="/components/foundation/colors" replace />, index: true },
-                { path: 'colors', element: <FoundationColorsPage /> },
-                { path: 'typography', element: <FoundationTypographyPage /> },
-                { path: 'shadows', element: <FoundationShadowsPage /> },
-                { path: 'grid', element: <FoundationGridPage /> },
-                { path: 'icons', element: <FoundationIconsPage /> },
-              ],
-            },
-            {
-              path: 'mui',
-              children: [
-                { element: <Navigate to="/components/mui/accordion" replace />, index: true },
-                { path: 'accordion', element: <MUIAccordionPage /> },
-                { path: 'alert', element: <MUIAlertPage /> },
-                { path: 'autocomplete', element: <MUIAutocompletePage /> },
-                { path: 'avatar', element: <MUIAvatarPage /> },
-                { path: 'badge', element: <MUIBadgePage /> },
-                { path: 'breadcrumbs', element: <MUIBreadcrumbsPage /> },
-                { path: 'buttons', element: <MUIButtonsPage /> },
-                { path: 'checkbox', element: <MUICheckboxPage /> },
-                { path: 'chip', element: <MUIChipPage /> },
-                { path: 'data-grid', element: <MUIDataGridPage /> },
-                { path: 'dialog', element: <MUIDialogPage /> },
-                { path: 'list', element: <MUIListPage /> },
-                { path: 'menu', element: <MUIMenuPage /> },
-                { path: 'pagination', element: <MUIPaginationPage /> },
-                { path: 'pickers', element: <MUIPickersPage /> },
-                { path: 'popover', element: <MUIPopoverPage /> },
-                { path: 'progress', element: <MUIProgressPage /> },
-                { path: 'radio-button', element: <MUIRadioButtonsPage /> },
-                { path: 'rating', element: <MUIRatingPage /> },
-                { path: 'slider', element: <MUISliderPage /> },
-                { path: 'stepper', element: <MUIStepperPage /> },
-                { path: 'switch', element: <MUISwitchPage /> },
-                { path: 'table', element: <MUITablePage /> },
-                { path: 'tabs', element: <MUITabsPage /> },
-                { path: 'textfield', element: <MUITextFieldPage /> },
-                { path: 'timeline', element: <MUITimelinePage /> },
-                { path: 'tooltip', element: <MUITooltipPage /> },
-                { path: 'transfer-list', element: <MUITransferListPage /> },
-                { path: 'tree-view', element: <MUITreesViewPage /> },
-              ],
-            },
-            {
-              path: 'extra',
-              children: [
-                { element: <Navigate to="/components/extra/animate" replace />, index: true },
-                { path: 'animate', element: <DemoAnimatePage /> },
-                { path: 'carousel', element: <DemoCarouselsPage /> },
-                { path: 'chart', element: <DemoChartsPage /> },
-                { path: 'copy-to-clipboard', element: <DemoCopyToClipboardPage /> },
-                { path: 'editor', element: <DemoEditorPage /> },
-                { path: 'form-validation', element: <DemoFormValidationPage /> },
-                { path: 'image', element: <DemoImagePage /> },
-                { path: 'label', element: <DemoLabelPage /> },
-                { path: 'lightbox', element: <DemoLightboxPage /> },
-                { path: 'map', element: <DemoMapPage /> },
-                { path: 'mega-menu', element: <DemoMegaMenuPage /> },
-                { path: 'multi-language', element: <DemoMultiLanguagePage /> },
-                { path: 'navigation-bar', element: <DemoNavigationBarPage /> },
-                { path: 'organization-chart', element: <DemoOrganizationalChartPage /> },
-                { path: 'scroll', element: <DemoScrollbarPage /> },
-                { path: 'snackbar', element: <DemoSnackbarPage /> },
-                { path: 'text-max-line', element: <DemoTextMaxLinePage /> },
-                { path: 'upload', element: <DemoUploadPage /> },
-                { path: 'markdown', element: <DemoMarkdownPage /> },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      element: <SimpleLayout />,
-      children: [
-        { path: 'pricing', element: <PricingPage /> },
-        { path: 'payment', element: <PaymentPage /> },
-      ],
-    },
-    {
-      element: <CompactLayout />,
-      children: [
-        { path: 'coming-soon', element: <ComingSoonPage /> },
-        { path: 'maintenance', element: <MaintenancePage /> },
-        { path: '500', element: <Page500 /> },
-        { path: '404', element: <Page404 /> },
-        { path: '403', element: <Page403 /> },
-      ],
-    },
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }
