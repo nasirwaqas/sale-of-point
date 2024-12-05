@@ -1,5 +1,6 @@
 // ----------------------------------------------------------------------
 
+
 function path(root, sublink) {
   return `${root}${sublink}`;
 }
@@ -51,6 +52,8 @@ export const PATH_DASHBOARD = {
 
     categories :    path(ROOTS_DASHBOARD, '/categories'),
     companies: path(ROOTS_DASHBOARD, '/menufacturer'),
+    products: path(ROOTS_DASHBOARD, '/product'),
+    vendors: path(ROOTS_DASHBOARD, '/vendors'),
 
 
   },
@@ -67,6 +70,22 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/menufacturer'),
     new: path(ROOTS_DASHBOARD, '/menufacturer/new'),
     edit: path(ROOTS_DASHBOARD, '/menufacturer/edit'),
+
+  },
+  product: {
+    root: path(ROOTS_DASHBOARD, '/product'),
+    new: path(ROOTS_DASHBOARD, '/product/new'),
+    edit: path(ROOTS_DASHBOARD, '/product/edit'),
+    setting: path(ROOTS_DASHBOARD, '/product/setting'),
+    group: path(ROOTS_DASHBOARD, '/product/group'),
+    groupnew: path(ROOTS_DASHBOARD, '/product/group/new'),
+    groupedit: path(ROOTS_DASHBOARD, '/product/group/edit'),
+
+  },
+  vendors: {
+    root: path(ROOTS_DASHBOARD, '/vendors'),
+    new: path(ROOTS_DASHBOARD, '/vendors/new'),
+    edit: path(ROOTS_DASHBOARD, '/vendors/edit'),
 
   },
   user: {

@@ -81,10 +81,25 @@ export const CategoryPage = Loadable(lazy(() => import('../pages/dashboard/Categ
 export const CategoryNewPage = Loadable(lazy(() => import('../pages/dashboard/CategoryNewPage')));
 export const CategoryEditPage = Loadable(lazy(() => import('../pages/dashboard/CategoryEditPage')));
 
+
 // DASHBOARD: Company
 export const MenufacturerPage = Loadable(lazy(() => import('../pages/dashboard/MenufacturerPage')));
 export const MenufacturerNewPage = Loadable(lazy(() => import('../sections/@dashboard/general/companies/MenufacturerNewPage')));
 export const MenufacturerEditForm = Loadable(lazy(() => import('../sections/@dashboard/general/companies/MenufacturerEditForm')));
+
+// DASHBOARD: Product
+export const ProductPage = Loadable(lazy(() => import('../pages/dashboard/ProductPage')));
+export const ProductNewPage = Loadable(lazy(() => import('../sections/@dashboard/general/products/ProductNewPage')));
+export const ProductEditForm = Loadable(lazy(() => import('../sections/@dashboard/general/products/ProductEditForm')));
+export const ProductSetting = Loadable(lazy(()=> import('../sections/@dashboard/general/products/ProductSetting')));
+export const ProductGroup = Loadable(lazy(()=> import('../sections/@dashboard/general/products/ProductGroup')));
+export const ProductGroupNew = Loadable(lazy(()=> import ('../sections/@dashboard/general/products/ProductGroupNew')));
+export const ProductGroupEdit = Loadable(lazy(()=> import ('../sections/@dashboard/general/products/ProductGroupEdit')));
+
+// Dashboard: vendors
+export const VendorsPage = Loadable(lazy(() => import('../pages/dashboard/VendorsPage')));
+export const VendorsNewPage = Loadable(lazy(() => import('../sections/@dashboard/general/vendors/VendorsNewPage')));
+export const VendorsEditForm = Loadable(lazy(() => import('../sections/@dashboard/general/vendors/VendorsEditForm')));
 
 // DASHBOARD: BLOG
 export const BlogPostsPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostsPage')));

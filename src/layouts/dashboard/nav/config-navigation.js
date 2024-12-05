@@ -46,8 +46,9 @@ const navConfig = [
       { title: 'sale', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
       { title: 'categories', path: PATH_DASHBOARD.general.categories, icon: ICONS.analytics },
       { title: 'companies', path: PATH_DASHBOARD.general.companies, icon: ICONS.banking },
-      { title: 'products', path: PATH_DASHBOARD.general.booking, icon: ICONS.cart },
-      { title: 'vendors', path: PATH_DASHBOARD.general.file, icon: ICONS.dashboard },
+
+      { title: 'products', path: PATH_DASHBOARD.general.products, icon: ICONS.cart },
+      { title: 'vendors', path: PATH_DASHBOARD.general.vendors, icon: ICONS.dashboard },
 
       { title: 'customers', path: PATH_DASHBOARD.general.app, icon: ICONS.user },
       { title: 'income', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.invoice },

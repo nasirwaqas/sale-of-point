@@ -134,9 +134,20 @@ import {
   MenufacturerPage,
   MenufacturerNewPage,
   MenufacturerEditForm,
-  // MenufactorerNewPage,
-  // MenufactorerEditPage,
+
+  ProductPage,
+  ProductEditForm,
+  ProductNewPage,
+  ProductSetting,
+  ProductGroup,
+  ProductGroupNew,
+  ProductGroupEdit,
+
+  VendorsPage,
+  VendorsNewPage,
+  VendorsEditForm,
 } from './elements';
+
 
 // ----------------------------------------------------------------------
 
@@ -194,6 +205,18 @@ export default function Router() {
          { path: 'menufacturer', element: <MenufacturerPage /> },
          { path: '/dashboard/menufacturer/new', element: <MenufacturerNewPage /> },
          { path: '/dashboard/menufacturer/edit', element: <MenufacturerEditForm /> },
+
+         { path: 'product', element: <ProductPage /> },
+         { path: '/dashboard/product/new', element: <ProductNewPage /> },
+         { path: '/dashboard/product/edit', element: <ProductEditForm /> },
+         { path: '/dashboard/product/setting', element: <ProductSetting /> },
+         { path: '/dashboard/product/group', element: <ProductGroup /> },
+         { path: '/dashboard/product/group/new', element: <ProductGroupNew /> },
+         { path: '/dashboard/product/group/edit', element: <ProductGroupEdit/> },
+
+         { path: 'vendors', element: <VendorsPage /> },
+         { path: '/dashboard/vendors/new', element: <VendorsNewPage /> },
+         { path: '/dashboard/vendors/edit', element: <VendorsEditForm /> },
 
         { path: 'analytics', element: <GeneralCategoryPage /> },
         { path: 'booking', element: <GeneralBookingPage /> },
