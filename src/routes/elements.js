@@ -100,6 +100,7 @@ export const ProductGroupEdit = Loadable(lazy(()=> import ('../sections/@dashboa
 export const VendorsPage = Loadable(lazy(() => import('../pages/dashboard/VendorsPage')));
 export const VendorsNewPage = Loadable(lazy(() => import('../sections/@dashboard/general/vendors/VendorsNewPage')));
 export const VendorsEditForm = Loadable(lazy(() => import('../sections/@dashboard/general/vendors/VendorsEditForm')));
+export const VendorsAccount = Loadable(lazy(() => import('../sections/@dashboard/general/vendors/VendorsAccount')));
 
 // DASHBOARD: BLOG
 export const BlogPostsPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostsPage')));

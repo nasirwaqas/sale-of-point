@@ -146,6 +146,7 @@ import {
   VendorsPage,
   VendorsNewPage,
   VendorsEditForm,
+  VendorsAccount,
 } from './elements';
 
 
@@ -217,6 +218,7 @@ export default function Router() {
          { path: 'vendors', element: <VendorsPage /> },
          { path: '/dashboard/vendors/new', element: <VendorsNewPage /> },
          { path: '/dashboard/vendors/edit', element: <VendorsEditForm /> },
+         { path: '/dashboard/vendors/account' , element: <VendorsAccount />},
 
         { path: 'analytics', element: <GeneralCategoryPage /> },
         { path: 'booking', element: <GeneralBookingPage /> },

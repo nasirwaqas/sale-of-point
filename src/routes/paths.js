@@ -86,6 +86,7 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/vendors'),
     new: path(ROOTS_DASHBOARD, '/vendors/new'),
     edit: path(ROOTS_DASHBOARD, '/vendors/edit'),
+    account: path(ROOTS_DASHBOARD, '/vendors/account'),
 
   },
   user: {

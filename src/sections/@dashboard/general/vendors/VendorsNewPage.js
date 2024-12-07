@@ -22,16 +22,13 @@ export default function VendorsNewPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Menufacturer Information"
+          heading="Vendor Information"
           links={[
             {
-              name: 'Dashboard',
+              name: 'Vendors',
               href: PATH_DASHBOARD.root,
             },
-            {
-              
-              href: PATH_DASHBOARD.user.list,
-            },
+            
             
           ]}
         />
