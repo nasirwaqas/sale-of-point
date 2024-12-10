@@ -50,7 +50,7 @@ const navConfig = [
       { title: 'products', path: PATH_DASHBOARD.general.products, icon: ICONS.cart },
       { title: 'vendors', path: PATH_DASHBOARD.general.vendors, icon: ICONS.dashboard },
 
-      { title: 'customers', path: PATH_DASHBOARD.general.app, icon: ICONS.user },
+      { title: 'customers', path: PATH_DASHBOARD.general.customer, icon: ICONS.user },
       { title: 'income', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.invoice },
       { title: 'expense', path: PATH_DASHBOARD.general.analytics, icon: ICONS.invoice },
       { title: 'purchase', path: PATH_DASHBOARD.general.banking, icon: ICONS.invoice },

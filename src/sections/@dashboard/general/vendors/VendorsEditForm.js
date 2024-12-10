@@ -38,9 +38,9 @@ export default function VendorsEditForm({ isEdit = false, currentUser }) {
 
   const NewUserSchema = Yup.object().shape({
     // Field validations
-    manufecturerName: Yup.string()
-      .required('Manufacturer Name is required')
-      .min(3, 'Manufacturer Name must be at least 3 characters'),
+    vendorName: Yup.string()
+      .required('Vender Name is required')
+      .min(3, 'Vender Name must be at least 3 characters'),
 
     vendorPhone: Yup.string()
       .required('Phone number is required')
@@ -152,7 +152,7 @@ export default function VendorsEditForm({ isEdit = false, currentUser }) {
             >
 
 
-              <RHFTextField name="manufecturerName" label="Full Name" />
+              <RHFTextField name="vendorName" label="Full Name" />
               <RHFTextField name="vendorPhone" label="Phone" />
               <RHFTextField name="vendorAddress" multiline rows={2} label="Address" />
               <RHFTextField name="vendorEmail" label="Email" />

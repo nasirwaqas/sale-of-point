@@ -101,7 +101,15 @@ export const VendorsPage = Loadable(lazy(() => import('../pages/dashboard/Vendor
 export const VendorsNewPage = Loadable(lazy(() => import('../sections/@dashboard/general/vendors/VendorsNewPage')));
 export const VendorsEditForm = Loadable(lazy(() => import('../sections/@dashboard/general/vendors/VendorsEditForm')));
 export const VendorsAccount = Loadable(lazy(() => import('../sections/@dashboard/general/vendors/VendorsAccount')));
-
+// DASHBOARD: CUSTOMER
+export const CustomerPage = Loadable(lazy(() => import('../pages/dashboard/CustomerPage')));
+export const CustomerNewPage = Loadable(lazy(() => import('../sections/@dashboard/general/customers/CustomerNewPage')));
+export const CustomerEditForm = Loadable(lazy(() => import('../sections/@dashboard/general/customers/CustomerEditForm')));
+export const CustomerAccount = Loadable(lazy(() => import('../sections/@dashboard/general/customers/CustomerAccount')));
+export const CustomerSendMessage = Loadable(lazy(() => import('../sections/@dashboard/general/customers/CustomerSendMessage')));
+export const CustomerSendBalanceMessage = Loadable(lazy(() => import('../sections/@dashboard/general/customers/CustomerSendBalanceMessage')));
+export const CustomerImport = Loadable(lazy(() => import('../sections/@dashboard/general/customers/CustomerImport')));
+export const CustomerAreas = Loadable(lazy(() => import('../sections/@dashboard/general/customers/CustomerAreas')));
 // DASHBOARD: BLOG
 export const BlogPostsPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostsPage')));
 export const BlogPostPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostPage')));

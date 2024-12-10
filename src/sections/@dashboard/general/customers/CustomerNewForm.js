@@ -26,35 +26,35 @@ import FormProvider, {
 
 // ----------------------------------------------------------------------
 
-VendorsNewForm.propTypes = {
+CustomerNewForm.propTypes = {
   isEdit: PropTypes.bool,
   currentUser: PropTypes.object,
 };
 
-export default function VendorsNewForm({ isEdit = false, currentUser }) {
+export default function CustomerNewForm({ isEdit = false, currentUser }) {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
     // Field validations
-    venderName: Yup.string()
-      .required('Vender Name is required')
-      .min(3, 'Vender Name must be at least 3 characters'),
+    customerName: Yup.string()
+      .required('customer Name is required')
+      .min(3, 'customer Name must be at least 3 characters'),
 
-    vendorPhone: Yup.string()
+    customerPhone: Yup.string()
       .required('Phone number is required')
       .matches(/^\d{10,15}$/, 'Phone number must be 10 to 15 digits'),
 
-    vendorAddress: Yup.string()
+    customerAddress: Yup.string()
       .required('Address is required')
       .min(10, 'Address must be at least 10 characters'),
 
-    vendorEmail: Yup.string()
+    customerEmail: Yup.string()
       .required('Email is required')
       .email('Email must be a valid email address'),
 
-    vendorDiscription: Yup.string()
+    customerDiscription: Yup.string()
       .required('Description is required')
       .min(20, 'Description must be at least 20 characters'),
     discription: Yup.string().required('Description is required'),
@@ -64,13 +64,13 @@ export default function VendorsNewForm({ isEdit = false, currentUser }) {
 
   const defaultValues = useMemo(
     () => ({
-      vendorName: currentUser?.vendorName || '',
-      vendorAddress: currentUser?.vendorAddress || '',
-      vendorEmail: currentUser?.vendorEmail || '',
+      customerName: currentUser?.customerName || '',
+      customerAddress: currentUser?.customerAddress || '',
+      customerEmail: currentUser?.customerEmail || '',
 
-      vendorPhone: currentUser?.vendorPhone || '',
+      customerPhone: currentUser?.customerPhone || '',
 
-      vendorDiscription: currentUser?.vendorDiscription || '',
+      customerDiscription: currentUser?.customerDiscription || '',
       avatarUrl: currentUser?.avatarUrl || null,
       isVerified: currentUser?.isVerified || true,
 
@@ -151,14 +151,14 @@ export default function VendorsNewForm({ isEdit = false, currentUser }) {
             >
 
 
-              <RHFTextField name="venderName" label="Full Name" />
-              <RHFTextField name="vendorPhone" label="Phone" />
-              <RHFTextField name="vendorAddress" multiline rows={2} label="Address" />
-              <RHFTextField name="vendorEmail" label="Email" />
+              <RHFTextField name="customerName" label="Full Name" />
+              <RHFTextField name="customerPhone" label="Phone" />
+              <RHFTextField name="customerAddress" multiline rows={2} label="Address" />
+              <RHFTextField name="customerEmail" label="Email" />
 
               <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
 
-                <RHFTextField name="vendorDiscription" multiline rows={4} label="Discription" />
+                <RHFTextField name="customerDiscription" multiline rows={4} label="Discription" />
               </Stack>
             </Box>
 

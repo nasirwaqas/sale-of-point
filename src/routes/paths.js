@@ -1,6 +1,8 @@
 // ----------------------------------------------------------------------
 
 
+
+
 function path(root, sublink) {
   return `${root}${sublink}`;
 }
@@ -51,9 +53,10 @@ export const PATH_DASHBOARD = {
     file: path(ROOTS_DASHBOARD, '/file'),
 
     categories :    path(ROOTS_DASHBOARD, '/categories'),
-    companies: path(ROOTS_DASHBOARD, '/menufacturer'),
+    companies: path(ROOTS_DASHBOARD, '/manufacturer'),
     products: path(ROOTS_DASHBOARD, '/product'),
     vendors: path(ROOTS_DASHBOARD, '/vendors'),
+    customer: path(ROOTS_DASHBOARD, '/customer'),
 
 
   },
@@ -66,10 +69,10 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/chat/new'),
     view: (name) => path(ROOTS_DASHBOARD, `/chat/${name}`),
   },
-  menufacturer: {
-    root: path(ROOTS_DASHBOARD, '/menufacturer'),
-    new: path(ROOTS_DASHBOARD, '/menufacturer/new'),
-    edit: path(ROOTS_DASHBOARD, '/menufacturer/edit'),
+  manufacturer: {
+    root: path(ROOTS_DASHBOARD, '/manufacturer'),
+    new: path(ROOTS_DASHBOARD, '/manufacturer/new'),
+    edit: path(ROOTS_DASHBOARD, '/manufacturer/edit'),
 
   },
   product: {
@@ -88,6 +91,16 @@ export const PATH_DASHBOARD = {
     edit: path(ROOTS_DASHBOARD, '/vendors/edit'),
     account: path(ROOTS_DASHBOARD, '/vendors/account'),
 
+  },
+  customer: {
+    root: path(ROOTS_DASHBOARD, '/customer'),
+    new: path(ROOTS_DASHBOARD, '/customer/new'),
+    edit: path(ROOTS_DASHBOARD, '/customer/edit'),
+    account: path(ROOTS_DASHBOARD, '/customer/account'),
+    message: path(ROOTS_DASHBOARD, '/customer/message'),
+    balancemessage: path(ROOTS_DASHBOARD, '/customer/balancemessage'),
+    import: path(ROOTS_DASHBOARD, '/customer/import'),
+    areas: path(ROOTS_DASHBOARD, '/customer/areas'),
   },
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),

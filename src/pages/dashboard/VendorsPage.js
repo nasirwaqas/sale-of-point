@@ -44,7 +44,7 @@ import {
 } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/category/list';
-import VendorsBalanceReport from 'src/sections/@dashboard/general/vendors/VendorsBalanceReport';
+import CustomersBalanceReport from 'src/sections/@dashboard/general/customers/CustomersBalanceReport';
 
 
 // ----------------------------------------------------------------------
@@ -373,7 +373,7 @@ const handleOpen = () => {
 
           <Box sx={{ flexGrow: 1, height: '100%', overflow: 'hidden' }}>
             <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
-            <VendorsBalanceReport vendors={data} />
+            <CustomersBalanceReport customers={data} />
             </PDFViewer>
           </Box>
         </Box>

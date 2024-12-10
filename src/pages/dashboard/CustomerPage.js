@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
 import { useState } from 'react';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -15,7 +16,9 @@ import {
   Container,
   IconButton,
   TableRow, TableCell ,
-
+  DialogActions,
+  Dialog,
+  Box,
   TableContainer,
 } from '@mui/material';
 // routes
@@ -28,6 +31,7 @@ import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
+
 import {
   useTable,
   getComparator,
@@ -40,12 +44,15 @@ import {
 } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/category/list';
+import CustomersBalanceReport from 'src/sections/@dashboard/general/customers/CustomersBalanceReport';
+import CustomerTableToolbar from 'src/sections/@dashboard/general/customers/CustomerTableToolbar';
+
 
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
-const ROLE_OPTIONS = [
+const AREA_OPTIONS = [
   'all',
   'ux designer',
   'full stack designer',
@@ -59,17 +66,18 @@ const ROLE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'menufacturerName', label: 'Name', align: 'left' },
-  { id: 'menufactorerPhone', label: 'Phone', align: 'left' },
-  { id: 'menufactorerEmail', label: 'Email', align: 'left' },
-  { id: 'menufactorerAdddress', label: 'Address', align: 'left' },
+  { id: 'customerName', label: 'Name', align: 'left' },
+  { id: 'customerPhone', label: 'Phone', align: 'left' },
+  { id: 'customerCnic', label: 'CNIC', align: 'left' }, // Added CNIC column
+  { id: 'customerAdddress', label: 'Address', align: 'left' },
+  { id: 'customerAccount', label: 'Account', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 
 ];
 
 // ----------------------------------------------------------------------
 
-export default function MenufacturerPage() {
+export default function CustomerPage() {
   const {
     dense,
     page,
@@ -102,35 +110,48 @@ export default function MenufacturerPage() {
   const [filterRole, setFilterRole] = useState('all');
 
   const [filterStatus, setFilterStatus] = useState('all');
-  const data= [
+  const [showPreview, setShowPreview] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const data = [
     {
-      menufacturerName: "John Doe",
+      customerName: "John Doe",
       avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
-      menufacturerEmail: "menufcturer@gmail.com",
-      role: "Software Engineer",
-      isVerified: true,
-      status: "Active",
-      menufacturerName: "Technology",
-      menufacturerAddress: "Innovative tech products and solutions",
-      menufacturerPhone: "9230393839",
+      customerAccount: "8579827",
+      customerPhone: "9230393839",
+      customerAddress: "Innovative tech products and solutions",
+      customerCnic: "12345-6789012-3", // CNIC
     },
     {
-      menufacturerName: "Jane Smith",
+      customerName: "Jane Smith",
       avatarUrl: "https://randomuser.me/api/portraits/women/2.jpg",
-      menufacturerPhone: "929393939",
-      menufacturerEmail: "menu@gmail.com",
-      menufacturerAddress: "Organic farming and produce",
-      categoryAction: "Explore",
+      customerAccount: "298509",
+      customerPhone: "929393939",
+      customerAddress: "Organic farming and produce",
+      customerCnic: "98765-4321098-7", // CNIC
     },
     {
-        menufacturerName: "Mike Brown",
+      customerName: "Mike Brown",
       avatarUrl: "https://randomuser.me/api/portraits/men/3.jpg",
-      menufacturerEmail: "Health@gmial.com",
-      menufacturerAddress: "Product Manager",
-      categoryDescription: "Health and wellness products",
-      menufacturerPhone: "Contact",
+      customerAccount: "2578",
+      customerPhone: "Contact",
+      customerAddress: "Product Manager",
+      customerCnic: "54321-0987654-1", // CNIC
     },
-]
+  ];
+  
+
+const handleClose = () => {
+    setOpen(false);
+  };
+
+const handleOpen = () => {
+    console.log('Opening dialog...');
+    setOpen(true);
+  };
+
+  
+
   const dataFiltered = applyFilter({
     inputData: data ,
     comparator: getComparator(order, orderBy),
@@ -172,7 +193,10 @@ export default function MenufacturerPage() {
 
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.manufacturer.edit);
+    navigate(PATH_DASHBOARD.customer.edit);
+  };
+  const handleAccountRow = (id) => {
+    navigate(PATH_DASHBOARD.customer.account);
   };
 
   const handleResetFilter = () => {
@@ -184,38 +208,95 @@ export default function MenufacturerPage() {
   return (
     <>
       <Helmet>
-        <title> Manufacturer | Point of Sale UI</title>
+        <title> customer | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          
-          links={[
-            { name: 'Manufacturer', href: PATH_DASHBOARD.root },
-           
-          ]}
-          action={
+      <CustomBreadcrumbs
+         links={[
+      { name: 'customer', href: PATH_DASHBOARD.root },
+      ]}
+        action={
+    <>  
+       {/* New Button: customers Balance Report */}
+      <Button
+        onClick={handleOpen}
+        variant="contained"
+        color="primary"
+        sx={{ ml: 2 }} // Adds some space between the buttons
+      >
+        customers Balance Report
+        
+      </Button>
+            {/* New Button: customers Balance Report */}
             <Button
-              component={RouterLink}
-              to={PATH_DASHBOARD.manufacturer.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New 
-            </Button>
-          }
-        />
+        component={RouterLink}
+        to={PATH_DASHBOARD.customer.balancemessage}
+        variant="contained"
+        color="primary"
+        sx={{ ml: 2 }} // Adds some space between the buttons
+      >
+        Send Balance Message
+        
+      </Button>
+            {/* New Button: customers Balance Report */}
+            <Button
+                component={RouterLink}
+                to={PATH_DASHBOARD.customer.areas}
+        variant="contained"
+        color="primary"
+        sx={{ ml: 2 }} // Adds some space between the buttons
+      >
+        Areas
+        
+      </Button>
+            {/* New Button: customers Balance Report */}
+            <Button
+          component={RouterLink}
+          to={PATH_DASHBOARD.customer.import}
+        variant="contained"
+        color="primary"
+        sx={{ ml: 2 }} // Adds some space between the buttons
+      >
+        Import
+        
+      </Button>
+            {/* New Button: customers Balance Report */}
+            <Button
+         component={RouterLink}
+         to={PATH_DASHBOARD.customer.import}
+        variant="contained"
+        color="primary"
+        sx={{ ml: 2 }} // Adds some space between the buttons
+      >
+        Export
+        
+      </Button>
+      <Button
+        component={RouterLink}
+        to={PATH_DASHBOARD.customer.new}
+        variant="contained"
+        sx={{ ml: 2 }} // Adds some space between the buttons
+
+      >
+        New
+      </Button>
+     </>
+        }
+     />
+
 
         <Card>
     
-          <UserTableToolbar
+        <CustomerTableToolbar
             filterName={filterName}
             filterRole={filterRole}
-            optionsRole={ROLE_OPTIONS}
+            optionsRole={AREA_OPTIONS}
             onFilterName={handleFilterName}
             onFilterRole={handleFilterRole}
             onResetFilter={handleResetFilter}
           />
+          
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           
@@ -235,10 +316,11 @@ export default function MenufacturerPage() {
                 <TableBody>
   {dataInPage.map((row, index) => (
     <TableRow key={index}>
-      <TableCell>{row.menufacturerName}</TableCell>
-      <TableCell>{row.menufacturerEmail}</TableCell>
-      <TableCell>{row.menufacturerPhone}</TableCell>
-      <TableCell>{row.menufacturerAddress}</TableCell>
+      <TableCell>{row.customerName}</TableCell>
+        <TableCell>{row.customerPhone}</TableCell>
+        <TableCell>{row.customerCnic}</TableCell>
+        <TableCell>{row.customerAddress}</TableCell>
+        <TableCell>{row.customerAccount}</TableCell>
       <TableCell>
         <Button 
           variant="outlined" 
@@ -248,6 +330,16 @@ export default function MenufacturerPage() {
         >
           Edit
         </Button>
+        <Button 
+          variant="contained" 
+          color="success" 
+          size="small" 
+          sx={{ ml: 1 }}
+          onClick={() => handleAccountRow(row.categoryName)}
+        >
+          Account
+        </Button>
+
         <Button 
           variant="contained" 
           color="success" 
@@ -305,6 +397,29 @@ export default function MenufacturerPage() {
           </Button>
         }
       />
+            <Dialog fullScreen open={open}>
+        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <DialogActions
+            sx={{
+              zIndex: 9,
+              padding: '12px !important',
+              boxShadow: (theme) => theme.customShadows.z8,
+            }}
+          >
+            <Tooltip title="Close">
+              <IconButton color="inherit" onClick={handleClose}>
+                <Iconify icon="eva:close-fill" />
+              </IconButton>
+            </Tooltip>
+          </DialogActions>
+
+          <Box sx={{ flexGrow: 1, height: '100%', overflow: 'hidden' }}>
+            <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
+            <CustomersBalanceReport customer={data} />
+            </PDFViewer>
+          </Box>
+        </Box>
+      </Dialog>
     </>
   );
 }
