@@ -153,7 +153,14 @@ import {
   CustomerSendBalanceMessage,
   CustomerImport,
   CustomerAreas,
-
+  IncomeNew,
+  IncomeHistory,
+  IncomeTypes,
+  ExpenseNew,
+  ExpenseHistory,
+  ExpenseTypes,
+  Purchase,
+  PurchaseReturn,
 } from './elements';
 
 
@@ -250,6 +257,34 @@ export default function Router() {
         { path: 'analytics', element: <GeneralCategoryPage /> },
         { path: 'booking', element: <GeneralBookingPage /> },
         { path: 'file', element: <GeneralFilePage /> },
+
+        {
+          path: 'income',
+          children: [
+            { element: <Navigate to="/dashboard/income/new" replace />, index: true },
+            { path: 'new', element: <IncomeNew /> },
+            { path: 'history', element: <IncomeHistory /> },
+            { path: 'types', element: <IncomeTypes /> },
+          ],
+        },
+        {
+          path: 'expense',
+          children: [
+            { element: <Navigate to="/dashboard/expense/new" replace />, index: true },
+            { path: 'new', element: <ExpenseNew /> },
+            { path: 'history', element: <ExpenseHistory /> },
+            { path: 'types', element: <ExpenseTypes /> },
+          ],
+        },
+        {
+          path: 'purchase',
+          children: [
+            { element: <Navigate to="/dashboard/purchase" replace />, index: true },
+            { path: 'purchase', element: <Purchase /> },
+            { path: 'purchase/return', element: <PurchaseReturn /> },
+          ],
+        },
+
         {
           path: 'e-commerce',
           children: [

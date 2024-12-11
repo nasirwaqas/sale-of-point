@@ -49,11 +49,35 @@ const navConfig = [
 
       { title: 'products', path: PATH_DASHBOARD.general.products, icon: ICONS.cart },
       { title: 'vendors', path: PATH_DASHBOARD.general.vendors, icon: ICONS.dashboard },
-
       { title: 'customers', path: PATH_DASHBOARD.general.customer, icon: ICONS.user },
-      { title: 'income', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.invoice },
-      { title: 'expense', path: PATH_DASHBOARD.general.analytics, icon: ICONS.invoice },
-      { title: 'purchase', path: PATH_DASHBOARD.general.banking, icon: ICONS.invoice },
+
+      { title: 'income', 
+        path: PATH_DASHBOARD.income.root, 
+        icon: ICONS.invoice,
+        children: [
+          { title: 'new', path: PATH_DASHBOARD.income.new, icon: ICONS.invoice },
+          { title: 'history', path: PATH_DASHBOARD.income.history, icon: ICONS.invoice },
+          { title: 'types', path: PATH_DASHBOARD.income.types, icon: ICONS.invoice },
+        ],
+      },
+      { title: 'expense', 
+        path: PATH_DASHBOARD.expense.root, 
+        icon: ICONS.invoice,
+        children: [
+          { title: 'new', path: PATH_DASHBOARD.expense.new, icon: ICONS.invoice },
+          { title: 'history', path: PATH_DASHBOARD.expense.history, icon: ICONS.invoice },
+          { title: 'types', path: PATH_DASHBOARD.expense.types, icon: ICONS.invoice },
+        ],
+      },
+      { title: 'purchase', 
+        path: PATH_DASHBOARD.purchase.root, 
+        icon: ICONS.invoice,
+        children: [
+          { title: 'purchase', path: PATH_DASHBOARD.purchase.purchase, icon: ICONS.invoice },
+          { title: 'return', path: PATH_DASHBOARD.purchase.return, icon: ICONS.invoice },
+        ],
+      },
+
       { title: 'stock', path: PATH_DASHBOARD.general.booking, icon: ICONS.ecommerce },
       { title: 'stock adjustment', path: PATH_DASHBOARD.general.file, icon: ICONS.ecommerce },
       { title: 'report', path: PATH_DASHBOARD.general.file, icon: ICONS.file },

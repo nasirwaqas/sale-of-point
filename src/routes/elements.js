@@ -110,6 +110,18 @@ export const CustomerSendMessage = Loadable(lazy(() => import('../sections/@dash
 export const CustomerSendBalanceMessage = Loadable(lazy(() => import('../sections/@dashboard/general/customers/CustomerSendBalanceMessage')));
 export const CustomerImport = Loadable(lazy(() => import('../sections/@dashboard/general/customers/CustomerImport')));
 export const CustomerAreas = Loadable(lazy(() => import('../sections/@dashboard/general/customers/CustomerAreas')));
+// DASHBOARD: Income
+export const IncomeNew = Loadable(lazy(() => import('../sections/@dashboard/general/income/IncomeNew')));
+export const IncomeHistory = Loadable(lazy(() => import('../sections/@dashboard/general/income/IncomeHistory')));
+export const IncomeTypes = Loadable(lazy(() => import('../sections/@dashboard/general/income/IncomeTypes')));
+// DASHBOARD: Expense
+export const ExpenseNew = Loadable(lazy(() => import('../sections/@dashboard/general/expense/ExpenseNew')));
+export const ExpenseHistory = Loadable(lazy(() => import('../sections/@dashboard/general/expense/ExpenseHistory')));
+export const ExpenseTypes = Loadable(lazy(() => import('../sections/@dashboard/general/expense/ExpenseTypes')));
+
+// DASHBOARD: Purchase
+export const Purchase = Loadable(lazy(() => import('../sections/@dashboard/general/purchase/Purchase')));
+export const PurchaseReturn = Loadable(lazy(() => import('../sections/@dashboard/general/purchase/PurchaseReturn')));
 // DASHBOARD: BLOG
 export const BlogPostsPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostsPage')));
 export const BlogPostPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostPage')));

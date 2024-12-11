@@ -52,13 +52,30 @@ export const PATH_DASHBOARD = {
     booking: path(ROOTS_DASHBOARD, '/booking'),
     file: path(ROOTS_DASHBOARD, '/file'),
 
-    categories :    path(ROOTS_DASHBOARD, '/categories'),
+    categories : path(ROOTS_DASHBOARD, '/categories'),
     companies: path(ROOTS_DASHBOARD, '/manufacturer'),
     products: path(ROOTS_DASHBOARD, '/product'),
     vendors: path(ROOTS_DASHBOARD, '/vendors'),
     customer: path(ROOTS_DASHBOARD, '/customer'),
 
 
+  },
+  income: {
+    root: path(ROOTS_DASHBOARD, '/income'),
+    new: path(ROOTS_DASHBOARD, '/income/new'),
+    history: path(ROOTS_DASHBOARD, '/income/history'),
+    types: path(ROOTS_DASHBOARD, '/income/types'),
+  },
+  expense: {
+    root: path(ROOTS_DASHBOARD, '/expense'),
+    new: path(ROOTS_DASHBOARD, '/expense/new'),
+    history: path(ROOTS_DASHBOARD, '/expense/history'),
+    types: path(ROOTS_DASHBOARD, '/expense/types'),
+  },
+  purchase: {
+    root: path(ROOTS_DASHBOARD, '/purchase'),
+    purchase: path(ROOTS_DASHBOARD, '/purchase'),
+    return: path(ROOTS_DASHBOARD, '/purchase/return'),
   },
   mail: {
     root: path(ROOTS_DASHBOARD, '/mail'),
