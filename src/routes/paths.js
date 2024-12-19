@@ -47,6 +47,7 @@ export const PATH_DASHBOARD = {
   blank: path(ROOTS_DASHBOARD, '/blank'),
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
+    sale: path(ROOTS_DASHBOARD, '/sale'),
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
     analytics: path(ROOTS_DASHBOARD, '/analytics'),
     booking: path(ROOTS_DASHBOARD, '/booking'),
@@ -74,7 +75,7 @@ export const PATH_DASHBOARD = {
   },
   purchase: {
     root: path(ROOTS_DASHBOARD, '/purchase'),
-    purchase: path(ROOTS_DASHBOARD, '/purchase'),
+    purchase: path(ROOTS_DASHBOARD, '/purchase/purchase'),
     return: path(ROOTS_DASHBOARD, '/purchase/return'),
   },
   mail: {

@@ -43,7 +43,7 @@ const navConfig = [
     subheader: 'general',
     items: [
       { title: 'dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'sale', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
+      { title: 'sale', path: PATH_DASHBOARD.general.sale, icon: ICONS.ecommerce },
       { title: 'categories', path: PATH_DASHBOARD.general.categories, icon: ICONS.analytics },
       { title: 'companies', path: PATH_DASHBOARD.general.companies, icon: ICONS.banking },
 
@@ -73,8 +73,8 @@ const navConfig = [
         path: PATH_DASHBOARD.purchase.root, 
         icon: ICONS.invoice,
         children: [
-          { title: 'purchase', path: PATH_DASHBOARD.purchase.purchase, icon: ICONS.invoice },
-          { title: 'return', path: PATH_DASHBOARD.purchase.return, icon: ICONS.invoice },
+          { title: 'purchase', path: PATH_DASHBOARD.purchase.purchase, },
+          { title: 'return', path: PATH_DASHBOARD.purchase.return, },
         ],
       },
 

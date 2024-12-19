@@ -161,6 +161,7 @@ import {
   ExpenseTypes,
   Purchase,
   PurchaseReturn,
+  SaleInvoice,
 } from './elements';
 
 
@@ -221,7 +222,7 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
-
+        { path: 'sale', element: <SaleInvoice /> },
         { path: 'categories', element: <CategoryPage /> },
         { path: 'categories/new', element: <CategoryNewPage /> },
         { path: 'categories/edit', element: <CategoryEditPage /> },
@@ -279,9 +280,9 @@ export default function Router() {
         {
           path: 'purchase',
           children: [
-            { element: <Navigate to="/dashboard/purchase" replace />, index: true },
+            { element: <Navigate to="/dashboard/purchase/purchase" replace />, index: true },
             { path: 'purchase', element: <Purchase /> },
-            { path: 'purchase/return', element: <PurchaseReturn /> },
+            { path: 'return', element: <PurchaseReturn /> },
           ],
         },
 
