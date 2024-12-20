@@ -58,7 +58,8 @@ export const PATH_DASHBOARD = {
     products: path(ROOTS_DASHBOARD, '/product'),
     vendors: path(ROOTS_DASHBOARD, '/vendors'),
     customer: path(ROOTS_DASHBOARD, '/customer'),
-
+    
+    stock: path(ROOTS_DASHBOARD, '/stock'),
 
   },
   income: {

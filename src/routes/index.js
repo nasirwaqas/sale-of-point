@@ -162,6 +162,7 @@ import {
   Purchase,
   PurchaseReturn,
   SaleInvoice,
+  Stock,
 } from './elements';
 
 
@@ -226,7 +227,7 @@ export default function Router() {
         { path: 'categories', element: <CategoryPage /> },
         { path: 'categories/new', element: <CategoryNewPage /> },
         { path: 'categories/edit', element: <CategoryEditPage /> },
-
+        {  path: 'stock', element: <Stock/>},
         { path: 'manufacturer', element: <MenufacturerPage /> },
         { path: '/dashboard/manufacturer/new', element: <MenufacturerNewPage /> },
         { path: '/dashboard/manufacturer/edit', element: <MenufacturerEditForm /> },
@@ -285,6 +286,7 @@ export default function Router() {
             { path: 'return', element: <PurchaseReturn /> },
           ],
         },
+
 
         {
           path: 'e-commerce',

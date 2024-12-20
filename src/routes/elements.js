@@ -137,6 +137,8 @@ export const CalendarPage = Loadable(lazy(() => import('../pages/dashboard/Calen
 export const KanbanPage = Loadable(lazy(() => import('../pages/dashboard/KanbanPage')));
 // Dashboard: Sale
 export const SaleInvoice = Loadable(lazy(() => import('../sections/@dashboard/general/sale/Sale')));
+// Dashboard: Stock
+export const Stock = Loadable(lazy(() => import('../sections/@dashboard/general/stock/Stock')));
 
 // TEST RENDER PAGE BY ROLE
 export const PermissionDeniedPage = Loadable(

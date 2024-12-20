@@ -78,7 +78,7 @@ const navConfig = [
         ],
       },
 
-      { title: 'stock', path: PATH_DASHBOARD.general.booking, icon: ICONS.ecommerce },
+      { title: 'stock', path: PATH_DASHBOARD.general.stock, icon: ICONS.ecommerce },
       { title: 'stock adjustment', path: PATH_DASHBOARD.general.file, icon: ICONS.ecommerce },
       { title: 'report', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
     ],
