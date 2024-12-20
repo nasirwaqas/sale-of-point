@@ -111,6 +111,26 @@ export const PATH_DASHBOARD = {
     account: path(ROOTS_DASHBOARD, '/vendors/account'),
 
   },
+  report: {
+    root: path(ROOTS_DASHBOARD, '/report'),
+    customerRegister: path(ROOTS_DASHBOARD, '/report/customerRegister'),
+    customerSaleProducts: path(ROOTS_DASHBOARD, '/report/customerSaleProducts'),
+    purchaseHistory: path(ROOTS_DASHBOARD, '/report/purchaseHistory'),
+    purchaseReturnHistory: path(ROOTS_DASHBOARD, '/report/purchaseReturnHistory'),
+    productPurchaseHistory: path(ROOTS_DASHBOARD, '/report/productPurchaseHistory'),
+    saleHistory: path(ROOTS_DASHBOARD, '/report/saleHistory'),
+    userSaleHistory: path(ROOTS_DASHBOARD, '/report/userSaleHistory'),
+    shiftSaleHistory: path(ROOTS_DASHBOARD, '/report/shiftSaleHistory'),
+    categorySaleHistory: path(ROOTS_DASHBOARD, '/report/categorySaleHistory'),
+    productSaleHistory: path(ROOTS_DASHBOARD, '/report/productSaleHistory'),
+    saleHistoryCategoryProduct: path(ROOTS_DASHBOARD, '/report/saleHistoryCategoryProduct'),
+    customerSaleHistory: path(ROOTS_DASHBOARD, '/report/customerSaleHistory'),
+    saleSummary: path(ROOTS_DASHBOARD, '/report/saleSummary'),
+    saleReturnHistory: path(ROOTS_DASHBOARD, '/report/saleReturnHistory'),
+    cashStates: path(ROOTS_DASHBOARD, '/report/cashStates'),
+    productLowStock: path(ROOTS_DASHBOARD, '/report/productLowStock'),
+    
+  },
   customer: {
     root: path(ROOTS_DASHBOARD, '/customer'),
     new: path(ROOTS_DASHBOARD, '/customer/new'),

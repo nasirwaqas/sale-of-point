@@ -163,6 +163,23 @@ import {
   PurchaseReturn,
   SaleInvoice,
   Stock,
+  // Report
+  CustomerRegister,
+  CustomerSaleProducts,
+  PurchaseHistory,
+  PurchaseReturnHistory,
+  ProductPurchaseHistory,
+  SaleHistory,
+  UserSaleHistory,
+  ShiftSaleHistory,
+  CategorySaleHistory,
+  ProductSaleHistory,
+  SaleHistoryCategoryProduct,
+  CustomerSaleHistory,
+  SaleSummary,
+  SaleReturnHistory,
+  CashStates,
+  ProductLowStock,
 } from './elements';
 
 
@@ -287,7 +304,29 @@ export default function Router() {
           ],
         },
 
+        {
+          path: 'report',
+          children: [
+            { element: <Navigate to="/dashboard/report/customerRegister" replace />, index: true },
+            {  path: 'customerRegister', element: <CustomerRegister /> },
+            {  path: 'salesProducts', element: <CustomerSaleProducts /> },
+            {  path: 'purchaseHistory', element: <PurchaseHistory /> },
+            {  path: 'purchaseRetrunHistory', element: <PurchaseReturnHistory /> },
+            {  path: 'productpurchasehistory', element: <ProductPurchaseHistory /> },
+            {  path: 'saleHistory', element: <SaleHistory /> },
+            {  path: 'userSaleHistory', element: <UserSaleHistory /> },
+            {  path: 'shiftSaleHistory', element: <ShiftSaleHistory /> },
+            {  path: 'categorySaleHistory', element: <CategorySaleHistory /> },
+            {  path: 'productSaleHistory', element: <ProductSaleHistory /> },
+            {  path: 'saleHistoryCategoryProduct', element: <SaleHistoryCategoryProduct /> },
+            {  path: 'customerSaleHistory', element: <CustomerSaleHistory /> },
+            {  path: 'saleSummary', element: <SaleSummary /> },
+            {  path: 'saleReturnHistory', element: <SaleReturnHistory /> },
+            {  path: 'cashStates', element: <CashStates /> },
+            {  path: 'productLowStock', element: <ProductLowStock /> },
 
+          ],
+        },
         {
           path: 'e-commerce',
           children: [

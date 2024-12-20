@@ -4,6 +4,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import Label from '../../../components/label';
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
+import { title } from 'src/_mock/assets';
 
 // ----------------------------------------------------------------------
 
@@ -80,7 +81,29 @@ const navConfig = [
 
       { title: 'stock', path: PATH_DASHBOARD.general.stock, icon: ICONS.ecommerce },
       { title: 'stock adjustment', path: PATH_DASHBOARD.general.file, icon: ICONS.ecommerce },
-      { title: 'report', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
+
+      { title: 'report',
+         path: PATH_DASHBOARD.report.root, 
+         icon: ICONS.file ,
+         children: [
+          { title: 'customerRegister', path:  PATH_DASHBOARD.report.customerRegister, },
+          { title: 'customerSaleProducts', path: PATH_DASHBOARD.report.customerSaleProducts, },
+          { title: 'purchaseHistory', path: PATH_DASHBOARD.report.purchaseHistory, },
+          { title: 'purchaseReturnHistory', path: PATH_DASHBOARD.report.purchaseReturnHistory, },
+          { title: 'productPurchaseHistory', path: PATH_DASHBOARD.report.productPurchaseHistory, },
+          { title: 'saleHistory', path: PATH_DASHBOARD.report.saleHistory, },
+          { title: 'userSaleHistory', path: PATH_DASHBOARD.report.userSaleHistory, },
+          { title: 'shiftSaleHistory', path: PATH_DASHBOARD.report.shiftSaleHistory, },
+          { title: 'categorySaleHistory', path: PATH_DASHBOARD.report.categorySaleHistory , },
+          { title: 'productSaleHistory', path: PATH_DASHBOARD.report.productSaleHistory,}  ,
+          { title: 'saleHistoryCategoryProduct', path: PATH_DASHBOARD.report.saleHistoryCategoryProduct , },
+          { title: 'customerSaleHistory', path: PATH_DASHBOARD.report.customerSaleHistory, },
+          { title: 'saleSummary', path: PATH_DASHBOARD.report.saleSummary, },
+          { title: 'saleReturnHistory', path: PATH_DASHBOARD.report.saleReturnHistory, },
+          { title: 'cashStates', path: PATH_DASHBOARD.report.cashStates, },
+          { title: 'productLowStock', path: PATH_DASHBOARD.report.productLowStock ,},
+         ],
+        },
     ],
   },
 
