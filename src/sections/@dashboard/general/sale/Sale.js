@@ -192,7 +192,7 @@ export default function SaleInvoice() {
         </Table>
       </TableContainer>
 
-      <Divider sx={{ my: 6 }} />
+      <Divider sx={{ my: 3 }} />
 
       {/* Second Section */}
       <Grid 
