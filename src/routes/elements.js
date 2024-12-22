@@ -140,6 +140,13 @@ export const SaleReturnHistory = Loadable(lazy(() => import('../sections/@dashbo
 export const CashStates = Loadable(lazy(() => import('../sections/@dashboard/general/report/CashStates') ));
 export const ProductLowStock = Loadable(lazy(() => import('../sections/@dashboard/general/report/ProductLowStock') ));
 
+export const AllStock = Loadable(lazy(() => import('../sections/@dashboard/general/report/AllStock') ));
+export const StockExpiry = Loadable(lazy(() => import('../sections/@dashboard/general/report/StockExpiry') ));
+export const ZeroStock = Loadable(lazy(() => import('../sections/@dashboard/general/report/ZeroStock') ));
+export const StockAdjustment = Loadable(lazy(() => import('../sections/@dashboard/general/report/StockAdjustment') ));
+export const VendorPurchaseHistory = Loadable(lazy(() => import('../sections/@dashboard/general/report/VendorPurchaseHistory')));
+export const CashInHand = Loadable(lazy(() => import('../sections/@dashboard/general/report/CashInHand') ));
+
 // DASHBOARD: BLOG
 export const BlogPostsPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostsPage')));
 export const BlogPostPage = Loadable(lazy(() => import('../pages/dashboard/BlogPostPage')));
