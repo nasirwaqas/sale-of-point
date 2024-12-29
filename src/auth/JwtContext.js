@@ -5,6 +5,7 @@ import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
+import { jwtDecode } from 'jwt-decode';
 
 // ----------------------------------------------------------------------
 
@@ -68,35 +69,25 @@ export function AuthProvider({ children }) {
 
   const storageAvailable = localStorageAvailable();
 
-  const initialize = useCallback(async () => {
-    try {
-      const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
+  const initialize = useCallback(() => {
+    const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
+    console.log({ accessToken });
+    console.log( isValidToken(accessToken) );
+    console.log( jwtDecode(accessToken) );
 
-      if (accessToken && isValidToken(accessToken)) {
-        setSession(accessToken);
+    if (accessToken && isValidToken(accessToken)) {
+      // setSession(accessToken);
+      const user = jwtDecode(accessToken);
+      console.log({ user });
 
-        const response = await axios.get('/api/account/my-account');
-
-        const { user } = response.data;
-
-        dispatch({
-          type: 'INITIAL',
-          payload: {
-            isAuthenticated: true,
-            user,
-          },
-        });
-      } else {
-        dispatch({
-          type: 'INITIAL',
-          payload: {
-            isAuthenticated: false,
-            user: null,
-          },
-        });
-      }
-    } catch (error) {
-      console.error(error);
+      dispatch({
+        type: 'INITIAL',
+        payload: {
+          isAuthenticated: true,
+          user: user,
+        },
+      });
+    } else {
       dispatch({
         type: 'INITIAL',
         payload: {
@@ -112,15 +103,9 @@ export function AuthProvider({ children }) {
   }, [initialize]);
 
   // LOGIN
-  const login = useCallback(async (email, password) => {
-    const response = await axios.post('https://mock-api-nine.vercel.app/api/account/login', {
-      email,
-      password,
-    });
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
-
+  const login = useCallback((accessToken, user) => {
+    // setSession(accessToken);
+    localStorage.setItem('accessToken', accessToken);
     dispatch({
       type: 'LOGIN',
       payload: {
@@ -130,17 +115,9 @@ export function AuthProvider({ children }) {
   }, []);
 
   // REGISTER
-  const register = useCallback(async (email, password, firstName, lastName) => {
-    const response = await axios.post('/api/account/register', {
-      email,
-      password,
-      firstName,
-      lastName,
-    });
-    const { accessToken, user } = response.data;
-
+  const register = useCallback((accessToken, user) => {
+    setSession(accessToken);
     localStorage.setItem('accessToken', accessToken);
-
     dispatch({
       type: 'REGISTER',
       payload: {
@@ -152,6 +129,7 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback(() => {
     setSession(null);
+    localStorage.removeItem('accessToken');
     dispatch({
       type: 'LOGOUT',
     });

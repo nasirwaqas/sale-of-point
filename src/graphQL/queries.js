@@ -1,8 +1,16 @@
 import { gql } from '@apollo/client';
 
 // ==============> LOGIN <================
-export const SAVE_TRADOS_ID = gql`
-query SaveTradosId($fileUrl:String,$barzanoId:String, $workflowId:String, $projectId:String,$lang:String, $token:String){
-  saveTradoProjectId(fileUrl:$fileUrl,barzanoId:$barzanoId, workflowId:$workflowId, projectId:$projectId,lang:$lang, token:$token)
+export const LOGIN_USER = gql`
+query Login($username: String, $password: String) {
+  login(username: $username, password: $password) {
+    id
+    password
+    email
+    role
+    name
+    permission
+    token
+  }
 }
 `

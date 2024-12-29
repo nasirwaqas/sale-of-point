@@ -14,22 +14,26 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
+import { LOGIN_USER } from 'src/graphQL/queries';
+import { useLazyQuery } from '@apollo/client';
 
 // ----------------------------------------------------------------------
 
 export default function AuthLoginForm() {
   const { login } = useAuthContext();
-
+  const [loginUser, { data, loading, error }] = useLazyQuery(LOGIN_USER, {
+    fetchPolicy: 'no-cache',
+  });
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    username: Yup.string().required('Username is required'),
     password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    username: 'abdulwaqar844',
+    password: 'User@12345',
   };
 
   const methods = useForm({
@@ -45,14 +49,26 @@ export default function AuthLoginForm() {
   } = methods;
 
   const onSubmit = async (data) => {
+    // Input validation
+    if (!data.username || !data.password) {
+      setError('afterSubmit', {
+        message: 'Username and password are required.',
+      });
+      return;
+    }
+
     try {
-      await login(data.email, data.password);
+      const response = await loginUser({
+        variables: { username: data.username, password: data.password },
+      });
+
+      const { token, ...userData } = response.data.login;
+      await login(token, userData);
     } catch (error) {
-      console.error(error);
+      console.error('Login error:', error);
       reset();
       setError('afterSubmit', {
-        ...error,
-        message: error.message || error,
+        message: error.message || 'An unexpected error occurred. Please try again.',
       });
     }
   };
@@ -62,7 +78,7 @@ export default function AuthLoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="username" label="Username" />
 
         <RHFTextField
           name="password"
