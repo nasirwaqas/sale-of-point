@@ -17,7 +17,7 @@ export default function CategoryNewPage() {
   return (
     <>
       <Helmet>
-        <title> User: Create a new user | Point of Sale UI</title>
+        <title> Category: Create a new Category | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -29,10 +29,12 @@ export default function CategoryNewPage() {
               href: PATH_DASHBOARD.root,
             },
             {
-              
-              href: PATH_DASHBOARD.user.list,
-            },
-            
+              name: 'Categories',
+              href: PATH_DASHBOARD.general.categories,
+            },{
+              name: 'New Category',
+
+            }
           ]}
         />
         <CategoryNewEditForm />

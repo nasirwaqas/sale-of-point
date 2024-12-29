@@ -14,8 +14,8 @@ import {
   TableBody,
   Container,
   IconButton,
-  TableRow, TableCell ,
-
+  TableRow,
+  TableCell,
   TableContainer,
 } from '@mui/material';
 // routes
@@ -40,6 +40,8 @@ import {
 } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/category/list';
+import { useQuery } from '@apollo/client';
+import { GET_CATEGORIES_BY_BRANCH } from 'src/graphQL/queries';
 
 // ----------------------------------------------------------------------
 
@@ -62,7 +64,6 @@ const TABLE_HEAD = [
   { id: 'categoryName', label: 'Name', align: 'left' },
   { id: 'categoryDescription', label: 'Discription', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
-
 ];
 
 // ----------------------------------------------------------------------
@@ -75,12 +76,10 @@ export default function GeneralCategoryPage() {
     orderBy,
     rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
     onSelectAllRows,
-    //
     onSort,
     onChangeDense,
     onChangePage,
@@ -90,90 +89,30 @@ export default function GeneralCategoryPage() {
   const { themeStretch } = useSettingsContext();
 
   const navigate = useNavigate();
-
   const [tableData, setTableData] = useState([]);
-
-  const [openConfirm, setOpenConfirm] = useState(false);
-
+  console.log({tableData});
   const [filterName, setFilterName] = useState('');
-
-  const [filterRole, setFilterRole] = useState('all');
-
-  const [filterStatus, setFilterStatus] = useState('all');
-  const data= [
-    {
-      name: "John Doe",
-      avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
-      company: "Tech Solutions",
-      role: "Software Engineer",
-      isVerified: true,
-      status: "Active",
-      categoryName: "Technology",
-      categoryDescription: "Innovative tech products and solutions",
-      categoryAction: "View Details",
+  const {data, error, loading} = useQuery(GET_CATEGORIES_BY_BRANCH, {
+    variables: {
+      branchId: '6770c752a14170831ad68c75',
+      limit: rowsPerPage,
+      name: filterName,
+      offset: page,
+      orderBy: orderBy,
+      order: order,
     },
-    {
-      name: "Jane Smith",
-      avatarUrl: "https://randomuser.me/api/portraits/women/2.jpg",
-      company: "Green Valley",
-      role: "Marketing Manager",
-      isVerified: true,
-      status: "Active",
-      categoryName: "Agriculture",
-      categoryDescription: "Organic farming and produce",
-      categoryAction: "Explore",
+    onCompleted: (data) => {
+      console.log(data);
+      setTableData(data.getCategoriesByBranch);
     },
-    {
-      name: "Mike Brown",
-      avatarUrl: "https://randomuser.me/api/portraits/men/3.jpg",
-      company: "Health First",
-      role: "Product Manager",
-      isVerified: false,
-      status: "Inactive",
-      categoryName: "Healthcare",
-      categoryDescription: "Health and wellness products",
-      categoryAction: "Contact",
-    },
-]
-  const dataFiltered = applyFilter({
-    inputData: data ,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterRole,
-    filterStatus,
   });
-
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
+ 
   const denseHeight = dense ? 52 : 72;
-
-
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleFilterStatus = (event, newValue) => {
-    setPage(0);
-    setFilterStatus(newValue);
-  };
 
   const handleFilterName = (event) => {
     setPage(0);
     setFilterName(event.target.value);
   };
-
-  const handleFilterRole = (event) => {
-    setPage(0);
-    setFilterRole(event.target.value);
-  };
-
-
-
 
   const handleEditRow = (id) => {
     navigate(PATH_DASHBOARD.user.edit);
@@ -181,23 +120,17 @@ export default function GeneralCategoryPage() {
 
   const handleResetFilter = () => {
     setFilterName('');
-    setFilterRole('all');
-    setFilterStatus('all');
   };
 
   return (
     <>
       <Helmet>
-        <title> User: List | Point of Sale UI</title>
+        <title> Categories: List | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          
-          links={[
-            { name: 'Categories', href: PATH_DASHBOARD.root },
-           
-          ]}
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Categories' }]}
           action={
             <Button
               component={RouterLink}
@@ -205,94 +138,61 @@ export default function GeneralCategoryPage() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              New 
+              New
             </Button>
           }
         />
 
         <Card>
-    
-          <UserTableToolbar
-            filterName={filterName}
-            filterRole={filterRole}
-            optionsRole={ROLE_OPTIONS}
-            onFilterName={handleFilterName}
-            onFilterRole={handleFilterRole}
-            onResetFilter={handleResetFilter}
-          />
-
+          <UserTableToolbar filterName={filterName} onFilterName={handleFilterName} />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          
-
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
+                  rowCount={tableData?.categoryItems?.length}
                   onSort={onSort}
                 />
 
-                {/* <TableBody>
-                  {dataFiltered
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <UserTableRow
-                        key={row.id}
-                        row={row}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.name)}
-                      />
-                    ))}
+                <TableBody>
+                  {tableData?.categoryItems?.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row?.name}</TableCell>
+                      <TableCell>{row?.description}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          size="small"
+                          onClick={() => handleEditRow(row.categoryName)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="success"
+                          size="small"
+                          sx={{ ml: 1 }} // Add some margin between buttons
+                        >
+                          Active
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, tableData?.categoryItems?.length)}
                   />
-
-                </TableBody> */}
-                <TableBody>
-  {dataInPage.map((row, index) => (
-    <TableRow key={index}>
-      <TableCell>{row.categoryName}</TableCell>
-      <TableCell>{row.categoryDescription}</TableCell>
-      <TableCell>
-        <Button 
-          variant="outlined" 
-          color="primary" 
-          size="small" 
-          onClick={() => handleEditRow(row.categoryName)}
-        >
-          Edit
-        </Button>
-        <Button 
-          variant="contained" 
-          color="success" 
-          size="small" 
-          sx={{ ml: 1 }} // Add some margin between buttons
-        >
-          Active
-        </Button>
-      </TableCell>
-    </TableRow>
-  ))}
-
-  <TableEmptyRows
-    height={denseHeight}
-    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-  />
-</TableBody>
-
+                </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
 
           <TablePaginationCustom
-            count={dataFiltered.length}
+            count={tableData.filterCount}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -303,59 +203,6 @@ export default function GeneralCategoryPage() {
           />
         </Card>
       </Container>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
     </>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-
-  if (filterStatus !== 'all') {
-    inputData = inputData.filter((user) => user.status === filterStatus);
-  }
-
-  if (filterRole !== 'all') {
-    inputData = inputData.filter((user) => user.role === filterRole);
-  }
-
-  return inputData;
 }
