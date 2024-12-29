@@ -1,6 +1,5 @@
 // i18n
 import './locales/i18n';
-
 // scroll bar
 import 'simplebar-react/dist/simplebar.min.css';
 
@@ -25,7 +24,12 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 // ----------------------------------------------------------------------
-
+import { createUploadLink } from 'apollo-upload-client';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { onError } from '@apollo/client/link/error';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from, split } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -48,44 +52,75 @@ import ScrollToTop from './components/scroll-to-top';
 import { MotionLazyContainer } from './components/animate';
 import { ThemeSettings, SettingsProvider } from './components/settings';
 
-// Check our docs
-// https://docs.minimals.cc/authentication/js-version
-
 import { AuthProvider } from './auth/JwtContext';
-// import { AuthProvider } from './auth/Auth0Context';
-// import { AuthProvider } from './auth/FirebaseContext';
-// import { AuthProvider } from './auth/AwsCognitoContext';
 
 // ----------------------------------------------------------------------
+const wsLink = new WebSocketLink({
+  uri: process.env.REACT_APP_APOLLO_WEBSOCKET_URL,
+
+  options: {
+    reconnect: true,
+  },
+});
+
+let httpLink = createUploadLink({
+  uri: process.env.REACT_APP_APOLLO_SERVER_URL,
+});
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('accessToken');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+httpLink = authLink.concat(httpLink);
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+  },
+  wsLink,
+  httpLink
+);
+
+const client = new ApolloClient({
+  cache: new InMemoryCache({ addTypename: false }),
+  link: splitLink,
+});
 
 export default function App() {
   return (
-    <AuthProvider>
-      <HelmetProvider>
-        <ReduxProvider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <SettingsProvider>
-                <BrowserRouter>
-                  <ScrollToTop />
-                  <MotionLazyContainer>
-                    <ThemeProvider>
-                      <ThemeSettings>
-                        <ThemeLocalization>
-                          <SnackbarProvider>
-                            <StyledChart />
-                            <Router />
-                          </SnackbarProvider>
-                        </ThemeLocalization>
-                      </ThemeSettings>
-                    </ThemeProvider>
-                  </MotionLazyContainer>
-                </BrowserRouter>
-              </SettingsProvider>
-            </LocalizationProvider>
-          </PersistGate>
-        </ReduxProvider>
-      </HelmetProvider>
-    </AuthProvider>
+    <ApolloProvider client={client}>
+      <AuthProvider>
+        <HelmetProvider>
+          <ReduxProvider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <SettingsProvider>
+                  <BrowserRouter>
+                    <ScrollToTop />
+                    <MotionLazyContainer>
+                      <ThemeProvider>
+                        <ThemeSettings>
+                          <ThemeLocalization>
+                            <SnackbarProvider>
+                              <StyledChart />
+                              <Router />
+                            </SnackbarProvider>
+                          </ThemeLocalization>
+                        </ThemeSettings>
+                      </ThemeProvider>
+                    </MotionLazyContainer>
+                  </BrowserRouter>
+                </SettingsProvider>
+              </LocalizationProvider>
+            </PersistGate>
+          </ReduxProvider>
+        </HelmetProvider>
+      </AuthProvider>
+    </ApolloProvider>
   );
 }
