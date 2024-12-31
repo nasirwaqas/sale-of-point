@@ -1,10 +1,7 @@
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import Label from '../../../components/label';
-import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
-import { title } from 'src/_mock/assets';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +36,6 @@ const ICONS = {
   folder: icon('ic_folder'),
   banking: icon('ic_banking'),
   booking: icon('ic_booking'),
-  invoice: icon('ic_invoice'),
   calendar: icon('ic_calendar'),
   disabled: icon('ic_disabled'),
   external: icon('ic_external'),
@@ -58,7 +54,7 @@ const navConfig = [
     items: [
       { title: 'dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'sale', path: PATH_DASHBOARD.general.sale, icon: ICONS.sale },
-      { title: 'categories', path: PATH_DASHBOARD.general.categories, icon: ICONS.category },
+      { title: 'categories', path: PATH_DASHBOARD.categories.list, icon: ICONS.category },
       { title: 'companies', path: PATH_DASHBOARD.general.companies, icon: ICONS.company },
 
       { title: 'products', path: PATH_DASHBOARD.general.products, icon: ICONS.products },

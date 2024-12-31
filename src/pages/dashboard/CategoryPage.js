@@ -37,32 +37,21 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
+  TableSkeleton,
 } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/category/list';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { GET_CATEGORIES_BY_BRANCH } from 'src/graphQL/queries';
+import { EDIT_CATEGORY } from 'src/graphQL/mutations';
 
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
-const ROLE_OPTIONS = [
-  'all',
-  'ux designer',
-  'full stack designer',
-  'backend developer',
-  'project manager',
-  'leader',
-  'ui designer',
-  'ui/ux designer',
-  'front end developer',
-  'full stack developer',
-];
-
 const TABLE_HEAD = [
   { id: 'categoryName', label: 'Name', align: 'left' },
-  { id: 'categoryDescription', label: 'Discription', align: 'left' },
+  { id: 'categoryDescription', label: 'Description', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
 
@@ -90,9 +79,11 @@ export default function GeneralCategoryPage() {
 
   const navigate = useNavigate();
   const [tableData, setTableData] = useState([]);
-  console.log({tableData});
+  console.log({ tableData });
   const [filterName, setFilterName] = useState('');
-  const {data, error, loading} = useQuery(GET_CATEGORIES_BY_BRANCH, {
+  const [editCategory] = useMutation(EDIT_CATEGORY);
+
+  const { data, error, loading, refetch } = useQuery(GET_CATEGORIES_BY_BRANCH, {
     variables: {
       branchId: '6770c752a14170831ad68c75',
       limit: rowsPerPage,
@@ -101,12 +92,12 @@ export default function GeneralCategoryPage() {
       orderBy: orderBy,
       order: order,
     },
+    fetchPolicy: 'no-cache',
     onCompleted: (data) => {
-      console.log(data);
       setTableData(data.getCategoriesByBranch);
     },
   });
- 
+
   const denseHeight = dense ? 52 : 72;
 
   const handleFilterName = (event) => {
@@ -115,7 +106,17 @@ export default function GeneralCategoryPage() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.user.edit);
+    console.log(id);
+    navigate(PATH_DASHBOARD.categories.edit(id));
+  };
+  const handleStatusRow = async (id, status) => {
+    await editCategory({
+      variables: {
+        editCategoryId: id,
+        status: status,
+      },
+    });
+    refetch();
   };
 
   const handleResetFilter = () => {
@@ -157,30 +158,29 @@ export default function GeneralCategoryPage() {
                 />
 
                 <TableBody>
-                  {tableData?.categoryItems?.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{row?.name}</TableCell>
-                      <TableCell>{row?.description}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          size="small"
-                          onClick={() => handleEditRow(row.categoryName)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          size="small"
-                          sx={{ ml: 1 }} // Add some margin between buttons
-                        >
-                          Active
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {!data && loading && <TableSkeleton />}
+                  {data &&
+                    !loading &&
+                    tableData?.categoryItems?.map((row, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{row?.name}</TableCell>
+                        <TableCell>{row?.description}</TableCell>
+                        <TableCell>
+                          <Button variant="outlined" color="primary" size="small" onClick={() => handleEditRow(row.id)}>
+                            Edit
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color={ row?.status === 'active' ? 'error' : 'success'}
+                            size="small"
+                            sx={{ ml: 1 }}
+                            onClick={() => handleStatusRow(row.id, row?.status === 'active' ? 'deactive' : 'active')}
+                          >
+                            {row?.status === 'active' ?  'Deactive' : 'Active' }
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
 
                   <TableEmptyRows
                     height={denseHeight}
@@ -197,7 +197,6 @@ export default function GeneralCategoryPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
             dense={dense}
             onChangeDense={onChangeDense}
           />

@@ -8,6 +8,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel } from '@mui/material';
+import { useMutation } from '@apollo/client';
+
 // utils
 import { fData } from '../../../../utils/formatNumber';
 // routes
@@ -17,25 +19,20 @@ import { parentcategory } from '../../../../assets/data';
 // components
 import Label from '../../../../components/label';
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFSwitch,
-  RHFTextField,
-  RHFUploadAvatar,
-} from '../../../../components/hook-form';
-import { useMutation } from '@apollo/client';
-import { CREATE_CATEGORY } from 'src/graphQL/mutations';
+import FormProvider, { RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../../components/hook-form';
+import { CREATE_CATEGORY, EDIT_CATEGORY } from '../../../../graphQL/mutations';
 
 // ----------------------------------------------------------------------
 
 CategoryNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
-  currentUser: PropTypes.object,
+  currentCategory: PropTypes.object,
 };
 
-export default function CategoryNewEditForm({ isEdit = false, currentUser }) {
+export default function CategoryNewEditForm({ isEdit = false, currentCategory }) {
   const navigate = useNavigate();
-  const [createCategory, { data, loading, error }] = useMutation(CREATE_CATEGORY);
+  const [createCategory] = useMutation(CREATE_CATEGORY);
+  const [editCategory] = useMutation(EDIT_CATEGORY);
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
@@ -47,16 +44,14 @@ export default function CategoryNewEditForm({ isEdit = false, currentUser }) {
 
   const defaultValues = useMemo(
     () => ({
-      categoryname: currentUser?.categoryname || '',
-
-      parentCategory: currentUser?.parentCategory || '',
-
-      description: currentUser?.description || '',
-
-      image: currentUser?.image || null,
+      categoryname: currentCategory?.name || '',
+      parentCategory: currentCategory?.parent_category || '',
+      description: currentCategory?.description || '',
+      image: currentCategory?.image || null,
+      status: currentCategory?.status || 'active',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser]
+    [currentCategory]
   );
 
   const methods = useForm({
@@ -73,33 +68,46 @@ export default function CategoryNewEditForm({ isEdit = false, currentUser }) {
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
-
   useEffect(() => {
-    if (isEdit && currentUser) {
+    if (isEdit && currentCategory) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentUser]);
+  }, [isEdit, currentCategory]);
 
+  // eslint-disable-next-line no-shadow
   const onSubmit = async (data) => {
     try {
-      await createCategory({
-        variables: {
-          branchId: '6770c752a14170831ad68c75',
-          parentCategory: data.parentCategory,
-          name: data.categoryname,
-          description: data.description,
-          image: data.image,
-          status: 'active',
-        },
-      });
+      if (isEdit) {
+        await editCategory({
+          variables: {
+            editCategoryId: currentCategory.id,
+            parentCategory: data.parentCategory,
+            name: data.categoryname,
+            description: data.description,
+            ...(typeof data.image !== 'string' && { image: data.image }),
+            status: data?.status,
+          },
+        });
+      } else {
+        await createCategory({
+          variables: {
+            branchId: '6770c752a14170831ad68c75',
+            parentCategory: data.parentCategory,
+            name: data.categoryname,
+            description: data.description,
+            image: data.image,
+            status: data?.status,
+          },
+        });
+      }
       reset();
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.general.categories);
+      navigate(PATH_DASHBOARD.categories.list);
+      // eslint-disable-next-line no-shadow
     } catch (error) {
       console.error(error);
     }
@@ -132,12 +140,7 @@ export default function CategoryNewEditForm({ isEdit = false, currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFSelect
-                native
-                name="parentCategory"
-                label="Parent Category"
-                placeholder="Parent Category"
-              >
+              <RHFSelect native name="parentCategory" label="Parent Category" placeholder="Parent Category">
                 <option value="" />
                 {parentcategory.map((parentCategory) => (
                   <option key={parentCategory.code} value={parentCategory.label}>

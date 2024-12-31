@@ -30,7 +30,7 @@ export default function CategoryNewPage() {
             },
             {
               name: 'Categories',
-              href: PATH_DASHBOARD.general.categories,
+              href: PATH_DASHBOARD.categories.list,
             },{
               name: 'New Category',
 

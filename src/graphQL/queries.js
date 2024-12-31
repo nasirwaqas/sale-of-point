@@ -47,3 +47,18 @@ query GetCategoriesByBranch(
     total
   }
 }`
+export const GET_CATEGORY_BY_ID = gql`
+query GetCategoryById($id: ID!) {
+  getCategoryById(id: $id) {
+    id
+    branchId
+    parent_category
+    name
+    description
+    color
+    image
+    createdAt
+    updatedAt
+    status
+  }
+}`

@@ -53,7 +53,6 @@ export const PATH_DASHBOARD = {
     booking: path(ROOTS_DASHBOARD, '/booking'),
     file: path(ROOTS_DASHBOARD, '/file'),
 
-    categories : path(ROOTS_DASHBOARD, '/categories'),
     companies: path(ROOTS_DASHBOARD, '/manufacturer'),
     products: path(ROOTS_DASHBOARD, '/product'),
     vendors: path(ROOTS_DASHBOARD, '/vendors'),
@@ -148,10 +147,15 @@ export const PATH_DASHBOARD = {
     import: path(ROOTS_DASHBOARD, '/customer/import'),
     areas: path(ROOTS_DASHBOARD, '/customer/areas'),
   },
-  user: {
-    root: path(ROOTS_DASHBOARD, '/user'),
+  categories: {
+    list: path(ROOTS_DASHBOARD, '/categories'),
     new: path(ROOTS_DASHBOARD, '/categories/new'),
-    edit: path(ROOTS_DASHBOARD, '/categories/edit'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/categories/edit/${id}`),
+  },
+   user: {
+    root: path(ROOTS_DASHBOARD, '/user'),
+    new: path(ROOTS_DASHBOARD, '/user/new'),
+    edit: path(ROOTS_DASHBOARD, '/user/edit'),
 
     list: path(ROOTS_DASHBOARD, '/user/list'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),

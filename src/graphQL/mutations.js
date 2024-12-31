@@ -23,13 +23,29 @@ mutation CreateCategory(
   ) {
     id
     branchId
-    parent_category
-    name
-    description
-    color
-    image
-    createdAt
-    updatedAt
-    status
+  }
+}`
+export const EDIT_CATEGORY = gql`
+mutation EditCategory(
+  $editCategoryId: ID!
+  $branchId: ID
+  $parentCategory: String
+  $name: String
+  $description: String
+  $color: String
+  $image: Upload
+  $status: String
+) {
+  editCategory(
+    id: $editCategoryId
+    branchId: $branchId
+    parent_category: $parentCategory
+    name: $name
+    description: $description
+    color: $color
+    image: $image
+    status: $status
+  ) {
+    id
   }
 }`
