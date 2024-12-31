@@ -127,6 +127,7 @@ import {
   DemoTextMaxLinePage,
   DemoUploadPage,
   DemoMarkdownPage,
+  //category
   CategoryPage,
   CategoryNewPage,
   CategoryEditPage,

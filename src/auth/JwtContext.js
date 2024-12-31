@@ -71,9 +71,6 @@ export function AuthProvider({ children }) {
 
   const initialize = useCallback(() => {
     const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
-    console.log({ accessToken });
-    console.log( isValidToken(accessToken) );
-    console.log( jwtDecode(accessToken) );
 
     if (accessToken && isValidToken(accessToken)) {
       // setSession(accessToken);

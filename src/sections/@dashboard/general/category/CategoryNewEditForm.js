@@ -99,7 +99,7 @@ export default function CategoryNewEditForm({ isEdit = false, currentUser }) {
       });
       reset();
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.user.list);
+      navigate(PATH_DASHBOARD.general.categories);
     } catch (error) {
       console.error(error);
     }
