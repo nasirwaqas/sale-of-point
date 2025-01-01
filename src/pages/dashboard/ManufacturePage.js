@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-// @mui
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Tab,
   Tabs,
@@ -18,18 +19,15 @@ import {
   TableCell,
   TableContainer,
 } from '@mui/material';
-import { useMutation, useQuery } from '@apollo/client';
-
-// routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// _mock_
-// import { _userList } from '../../_mock/arrays';
-// components
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
+import { UserTableToolbar } from '../../sections/@dashboard/category/list';
+import { GET_MANUFACTURES_BY_BRANCH } from '../../graphQL/queries';
+import { EDIT_MANUFACTURE } from '../../graphQL/mutations';
 import {
   useTable,
   emptyRows,
@@ -40,21 +38,20 @@ import {
 } from '../../components/table';
 
 // sections
-import { UserTableToolbar } from '../../sections/@dashboard/category/list';
-import { GET_CATEGORIES_BY_BRANCH } from '../../graphQL/queries';
-import { EDIT_CATEGORY } from '../../graphQL/mutations';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'categoryName', label: 'Name', align: 'left' },
-  { id: 'categoryDescription', label: 'Description', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'phone', label: 'Phone', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'address', label: 'Address', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function GeneralCategoryPage() {
+export default function GeneralManufacturePage() {
   const {
     dense,
     page,
@@ -62,10 +59,6 @@ export default function GeneralCategoryPage() {
     orderBy,
     rowsPerPage,
     setPage,
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
     onSort,
     onChangeDense,
     onChangePage,
@@ -78,9 +71,9 @@ export default function GeneralCategoryPage() {
   const [tableData, setTableData] = useState([]);
   console.log({ tableData });
   const [filterName, setFilterName] = useState('');
-  const [editCategory] = useMutation(EDIT_CATEGORY);
+  const [editManufacture] = useMutation(EDIT_MANUFACTURE);
 
-  const { data, error, loading, refetch } = useQuery(GET_CATEGORIES_BY_BRANCH, {
+  const { data, error, loading, refetch } = useQuery(GET_MANUFACTURES_BY_BRANCH, {
     variables: {
       branchId: '6770c752a14170831ad68c75',
       limit: rowsPerPage,
@@ -92,7 +85,7 @@ export default function GeneralCategoryPage() {
     fetchPolicy: 'no-cache',
     // eslint-disable-next-line no-shadow
     onCompleted: (data) => {
-      setTableData(data.getCategoriesByBranch);
+      setTableData(data.getManufacturesByBranch);
     },
   });
 
@@ -105,33 +98,31 @@ export default function GeneralCategoryPage() {
 
   const handleEditRow = (id) => {
     console.log(id);
-    navigate(PATH_DASHBOARD.categories.edit(id));
+    navigate(PATH_DASHBOARD.manufacture.edit(id));
   };
   const handleStatusRow = async (id, status) => {
-    await editCategory({
+    await editManufacture({
       variables: {
-        editCategoryId: id,
+        editManufactureId: id,
         status,
       },
     });
     refetch();
   };
 
-
-
   return (
     <>
       <Helmet>
-        <title> Categories: List | Point of Sale UI</title>
+        <title> Manufactures: List | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Categories' }]}
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Manufactures' }]}
           action={
             <Button
               component={RouterLink}
-              to={PATH_DASHBOARD.user.new}
+              to={PATH_DASHBOARD.manufacture.new}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
@@ -149,7 +140,7 @@ export default function GeneralCategoryPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData?.categoryItems?.length}
+                  rowCount={tableData?.Items?.length}
                   onSort={onSort}
                 />
 
@@ -157,22 +148,34 @@ export default function GeneralCategoryPage() {
                   {!data && loading && <TableSkeleton />}
                   {data &&
                     !loading &&
-                    tableData?.categoryItems?.map((row, index) => (
+                    tableData?.Items?.map((row, index) => (
                       <TableRow key={index}>
                         <TableCell>{row?.name}</TableCell>
-                        <TableCell>{row?.description}</TableCell>
+                        <TableCell>{row?.phone}</TableCell>
+                        <TableCell>{row?.email}</TableCell>
+                        <TableCell>{row?.address}</TableCell>
                         <TableCell>
-                          <Button variant="outlined" color="primary" size="small" onClick={() => handleEditRow(row.id)}>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            size="small"
+                            onClick={() => handleEditRow(row.id)}
+                          >
                             Edit
                           </Button>
                           <Button
                             variant="contained"
-                            color={ row?.status === 'active' ? 'error' : 'success'}
+                            color={row?.status === 'active' ? 'error' : 'success'}
                             size="small"
                             sx={{ ml: 1 }}
-                            onClick={() => handleStatusRow(row.id, row?.status === 'active' ? 'deactive' : 'active')}
+                            onClick={() =>
+                              handleStatusRow(
+                                row.id,
+                                row?.status === 'active' ? 'deactive' : 'active'
+                              )
+                            }
                           >
-                            {row?.status === 'active' ?  'Deactive' : 'Active' }
+                            {row?.status === 'active' ? 'Deactive' : 'Active'}
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -180,7 +183,7 @@ export default function GeneralCategoryPage() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData?.categoryItems?.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, tableData?.Items?.length)}
                   />
                 </TableBody>
               </Table>

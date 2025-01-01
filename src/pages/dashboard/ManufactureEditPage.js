@@ -1,33 +1,33 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-// @mui
 import { Container, Skeleton } from '@mui/material';
 import { useParams } from 'react-router';
 import { useQuery } from '@apollo/client';
-// routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// components
 import { useSettingsContext } from '../../components/settings';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-// sections
-import CategoryNewEditForm from '../../sections/@dashboard/general/category/CategoryNewEditForm';
+import ManufactureNewEditForm from '../../sections/@dashboard/general/manufacture/ManufactureNewEditForm';
+import { GET_MANUFACTURE_BY_ID } from '../../graphQL/queries';
 
-import { GET_CATEGORY_BY_ID } from '../../graphQL/queries';
+// @mui
+// routes
+// components
+// sections
 
 // ----------------------------------------------------------------------
 
-export default function CategoryEditPage() {
+export default function ManufactureEditPage() {
   const { themeStretch } = useSettingsContext();
-  const [currentProduct, setCurrentProduct] = useState(null);
+  const [currentManufacture, setCurrentManufacture] = useState(null);
   const { id } = useParams();
 
   // console.log(id);
-  const { loading, error } = useQuery(GET_CATEGORY_BY_ID, {
+  const { loading, error } = useQuery(GET_MANUFACTURE_BY_ID, {
     variables: { id },
     fetchPolicy: 'no-cache',
     onCompleted: (completedData) => {
       console.log(completedData);
-      setCurrentProduct(completedData.getCategoryById);
+      setCurrentManufacture(completedData.getManufactureById);
     },
   });
   if (loading) return <Skeleton width="100%" height={300} />;
@@ -35,27 +35,27 @@ export default function CategoryEditPage() {
   return (
     <>
       <Helmet>
-        <title> Category: Edit Category | Point of Sale UI</title>
+        <title> Manufacturer: Edit Manufacturer | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Category Information"
+          heading="Manufacturer Information"
           links={[
             {
               name: 'Dashboard',
               href: PATH_DASHBOARD.root,
             },
             {
-              name: 'Categories',
-              href: PATH_DASHBOARD.categories.list,
+              name: 'Manufacturers',
+              href: PATH_DASHBOARD.manufacture.root,
             },
             {
-              name: 'Edit Category',
+              name: 'Edit Manufacturer',
             },
           ]}
         />
-        <CategoryNewEditForm isEdit="true" currentCategory={currentProduct} />
+        <ManufactureNewEditForm isEdit="true" currentManufacture={currentManufacture} />
       </Container>
     </>
   );

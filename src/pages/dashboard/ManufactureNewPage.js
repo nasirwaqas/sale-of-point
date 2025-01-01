@@ -2,22 +2,22 @@ import { Helmet } from 'react-helmet-async';
 // @mui
 import { Container } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../routes/paths';
 // components
-import { useSettingsContext } from '../../../../components/settings';
-import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
+import { useSettingsContext } from '../../components/settings';
+import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
-import MenufacturerNewForm from './MenufacturerEditForm';
+import ManufactureNewEditForm from '../../sections/@dashboard/general/manufacture/ManufactureNewEditForm';
 
 // ----------------------------------------------------------------------
 
-export default function MenufacturerNewPage() {
+export default function ManufactureNewPage() {
   const { themeStretch } = useSettingsContext();
 
   return (
     <>
       <Helmet>
-        <title>  Create Manufacturer | Point of Sale UI</title>
+        <title> Create Manufacturer | Point of Sale UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -29,13 +29,12 @@ export default function MenufacturerNewPage() {
               href: PATH_DASHBOARD.root,
             },
             {
-              
-              href: PATH_DASHBOARD.user.list,
+              name: 'Manufactures',
+              href: PATH_DASHBOARD.manufacture.root,
             },
-            
           ]}
         />
-        <MenufacturerNewForm />
+        <ManufactureNewEditForm />
       </Container>
     </>
   );

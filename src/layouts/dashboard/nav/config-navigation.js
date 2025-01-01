@@ -55,7 +55,7 @@ const navConfig = [
       { title: 'dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'sale', path: PATH_DASHBOARD.general.sale, icon: ICONS.sale },
       { title: 'categories', path: PATH_DASHBOARD.categories.list, icon: ICONS.category },
-      { title: 'companies', path: PATH_DASHBOARD.general.companies, icon: ICONS.company },
+      { title: 'companies', path: PATH_DASHBOARD.manufacture.root, icon: ICONS.company },
 
       { title: 'products', path: PATH_DASHBOARD.general.products, icon: ICONS.products },
       { title: 'vendors', path: PATH_DASHBOARD.general.vendors, icon: ICONS.sellers },

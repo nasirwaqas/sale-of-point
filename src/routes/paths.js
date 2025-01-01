@@ -78,20 +78,12 @@ export const PATH_DASHBOARD = {
     order: path(ROOTS_DASHBOARD, '/purchase/order'),
     return: path(ROOTS_DASHBOARD, '/purchase/return'),
   },
-  mail: {
-    root: path(ROOTS_DASHBOARD, '/mail'),
-    all: path(ROOTS_DASHBOARD, '/mail/all'),
-  },
-  chat: {
-    root: path(ROOTS_DASHBOARD, '/chat'),
-    new: path(ROOTS_DASHBOARD, '/chat/new'),
-    view: (name) => path(ROOTS_DASHBOARD, `/chat/${name}`),
-  },
-  manufacturer: {
-    root: path(ROOTS_DASHBOARD, '/manufacturer'),
-    new: path(ROOTS_DASHBOARD, '/manufacturer/new'),
-    edit: path(ROOTS_DASHBOARD, '/manufacturer/edit'),
 
+
+  manufacture: {
+    root: path(ROOTS_DASHBOARD, '/manufacture'),
+    new: path(ROOTS_DASHBOARD, '/manufacture/new'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/manufacture/edit/${id}`),
   },
   product: {
     root: path(ROOTS_DASHBOARD, '/product'),
@@ -108,7 +100,6 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/vendors/new'),
     edit: path(ROOTS_DASHBOARD, '/vendors/edit'),
     account: path(ROOTS_DASHBOARD, '/vendors/account'),
-
   },
   report: {
     root: path(ROOTS_DASHBOARD, '/report'),
@@ -184,13 +175,7 @@ export const PATH_DASHBOARD = {
     demoEdit: path(ROOTS_DASHBOARD, '/invoice/e99f09a7-dd88-49d5-b1c8-1daf80c2d7b1/edit'),
     demoView: path(ROOTS_DASHBOARD, '/invoice/e99f09a7-dd88-49d5-b1c8-1daf80c2d7b5'),
   },
-  blog: {
-    root: path(ROOTS_DASHBOARD, '/blog'),
-    posts: path(ROOTS_DASHBOARD, '/blog/posts'),
-    new: path(ROOTS_DASHBOARD, '/blog/new'),
-    view: (title) => path(ROOTS_DASHBOARD, `/blog/post/${title}`),
-    demoView: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),
-  },
+
 };
 
 export const PATH_DOCS = {

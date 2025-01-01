@@ -83,9 +83,9 @@ export const CategoryEditPage = Loadable(lazy(() => import('../pages/dashboard/C
 
 
 // DASHBOARD: Company
-export const MenufacturerPage = Loadable(lazy(() => import('../pages/dashboard/MenufacturerPage')));
-export const MenufacturerNewPage = Loadable(lazy(() => import('../sections/@dashboard/general/companies/MenufacturerNewPage')));
-export const MenufacturerEditForm = Loadable(lazy(() => import('../sections/@dashboard/general/companies/MenufacturerEditForm')));
+export const ManufacturePage = Loadable(lazy(() => import('../pages/dashboard/ManufacturePage')));
+export const ManufactureNewPage = Loadable(lazy(() => import('../pages/dashboard/ManufactureNewPage')));
+export const ManufactureEditForm = Loadable(lazy(() => import('../pages/dashboard/ManufactureEditPage')));
 
 // DASHBOARD: Product
 export const ProductPage = Loadable(lazy(() => import('../pages/dashboard/ProductPage')));

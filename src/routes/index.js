@@ -61,9 +61,9 @@ import {
   CategoryPage,
   CategoryNewPage,
   CategoryEditPage,
-  MenufacturerPage,
-  MenufacturerNewPage,
-  MenufacturerEditForm,
+  ManufacturePage,
+  ManufactureNewPage,
+  ManufactureEditForm,
   ProductPage,
   ProductEditForm,
   ProductNewPage,
@@ -182,9 +182,7 @@ export default function Router() {
         { path: 'sale', element: <SaleInvoice /> },
        
         {  path: 'stock', element: <Stock/>},
-        { path: 'manufacturer', element: <MenufacturerPage /> },
-        { path: '/dashboard/manufacturer/new', element: <MenufacturerNewPage /> },
-        { path: '/dashboard/manufacturer/edit', element: <MenufacturerEditForm /> },
+       
 
         { path: 'product', element: <ProductPage /> },
         { path: '/dashboard/product/new', element: <ProductNewPage /> },
@@ -220,6 +218,14 @@ export default function Router() {
             { path: '', element: <CategoryPage /> },
             { path: 'new', element: <CategoryNewPage /> },
             { path: 'edit/:id', element: <CategoryEditPage /> },
+          ],
+        },        
+        {
+          path: 'manufacture',
+          children: [
+            { path: '', element: <ManufacturePage /> },
+            { path: 'new', element: <ManufactureNewPage /> },
+            { path: 'edit/:id', element: <ManufactureEditForm /> },
           ],
         },
         {

@@ -49,3 +49,33 @@ mutation EditCategory(
     id
   }
 }`
+
+export const CREATE_MANUFACTURE = gql`
+mutation CreateManufacture($manufactureInput: ManufactureInput) {
+  createManufacture(manufactureInput: $manufactureInput) {
+    id
+    branchId
+    name
+  }
+}`
+export const EDIT_MANUFACTURE = gql`
+mutation EditManufacture($id: ID!  $manufactureInput: ManufactureInput) {
+  editManufacture(id: $id, manufactureInput: $manufactureInput) {
+    id
+    branchId
+    name
+    email
+    phone
+    address
+    description
+    image
+  }
+}`
+export const DELETE_CATEGORY = gql`
+mutation DeleteCategory($deleteCategoryId: ID!) {
+  deleteCategory(id: $deleteCategoryId)
+}`
+export const DELETE_MANUFACTURE = gql`
+mutation DeleteManufacture($deleteManufactureId: ID!) {
+  deleteManufacture(id: $deleteManufactureId)
+}`

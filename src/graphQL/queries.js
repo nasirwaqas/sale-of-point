@@ -62,3 +62,49 @@ query GetCategoryById($id: ID!) {
     status
   }
 }`
+
+export const GET_MANUFACTURES_BY_BRANCH = gql`
+query GetManufacturesByBranch(
+  $branchId: ID!
+  $name: String
+  $limit: Int
+  $offset: Int
+  $orderBy: String
+  $order: String
+) {
+  getManufacturesByBranch(
+    branchId: $branchId
+    name: $name
+    limit: $limit
+    offset: $offset
+    orderBy: $orderBy
+    order: $order
+  ) {
+    Items {
+      id
+      branchId
+      name
+      email
+      phone
+      address
+      description
+      image
+    }
+    filterCount
+    total
+  }
+}`
+
+export const GET_MANUFACTURE_BY_ID = gql`
+query GetManufactureById($id: ID!) {
+  getManufactureById(id: $id) {
+    id
+    branchId
+    name
+    email
+    phone
+    address
+    description
+    image
+  }
+}`
