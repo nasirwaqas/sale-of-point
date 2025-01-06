@@ -62,7 +62,7 @@ query GetCategoryById($id: ID!) {
     status
   }
 }`
-
+// ==============> MANUFACTURES QUERIES <================
 export const GET_MANUFACTURES_BY_BRANCH = gql`
 query GetManufacturesByBranch(
   $branchId: ID!
@@ -109,7 +109,7 @@ query GetManufactureById($id: ID!) {
   }
 }`
 
-
+// ==============> INCOME QUERIES <================
 export const GET_INCOME_TYPES_BY_BRANCH = gql`
 query GetIncomeTypesByBranch($branchId: ID!) {
   getIncomeTypesByBranch(branchId: $branchId) {
@@ -134,6 +134,41 @@ export const GET_INCOMES_BY_BRANCH = gql`
   query GetIncomesByBranch($branchId: ID!, $incomeTypeId: ID, $fromDate: Date, $toDate: Date) {
     getIncomesByBranch(branchId: $branchId, incomeTypeId: $incomeTypeId, fromDate: $fromDate, toDate: $toDate) {
       incomeItems {
+        id
+        amount
+        description
+        createdAt
+      }
+    }
+  }
+`
+
+// ==============> EXPENSE QUERIES <================
+
+export const GET_EXPENSE_TYPES_BY_BRANCH = gql`
+query GetExpenseTypesByBranch($branchId: ID!) {
+  getExpenseTypesByBranch(branchId: $branchId) {
+    id
+    branchId
+    name
+    description
+  }
+}`
+
+export const GET_EXPENSE_TYPE_BY_ID = gql`
+query GetExpenseTypeById($id: ID!) {
+  getExpenseTypeById(id: $id) {
+    id
+    branchId
+    name
+    description
+  }
+}`
+
+export const GET_EXPENSES_BY_BRANCH = gql`
+  query GetExpensesByBranch($branchId: ID!, $expenseTypeId: ID, $fromDate: Date, $toDate: Date) {
+    getExpensesByBranch(branchId: $branchId, expenseTypeId: $expenseTypeId, fromDate: $fromDate, toDate: $toDate) {
+      expenseItems {
         id
         amount
         description

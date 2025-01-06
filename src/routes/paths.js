@@ -67,12 +67,14 @@ export const PATH_DASHBOARD = {
     history: path(ROOTS_DASHBOARD, '/income/history'),
     types: path(ROOTS_DASHBOARD, '/income/types'),
     edit: (id) => path(ROOTS_DASHBOARD, `/income/edit/${id}`),
+    
   },
   expense: {
     root: path(ROOTS_DASHBOARD, '/expense'),
     new: path(ROOTS_DASHBOARD, '/expense/new'),
     history: path(ROOTS_DASHBOARD, '/expense/history'),
     types: path(ROOTS_DASHBOARD, '/expense/types'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/expense/edit/${id}`),
   },
   purchase: {
     root: path(ROOTS_DASHBOARD, '/purchase'),

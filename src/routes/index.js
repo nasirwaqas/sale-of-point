@@ -119,6 +119,7 @@ import {
   VendorPurchaseHistory,
   CashInHand,
   IncomeTypeEdit,
+  ExpenseTypeEdit,
 
 } from './elements';
 
@@ -246,6 +247,7 @@ export default function Router() {
             { path: 'new', element: <ExpenseNew /> },
             { path: 'history', element: <ExpenseHistory /> },
             { path: 'types', element: <ExpenseTypes /> },
+            {  path: 'edit/:id', element: <ExpenseTypeEdit /> },
           ],
         },
         {

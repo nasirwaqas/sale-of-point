@@ -119,6 +119,7 @@ export const IncomeTypeEdit = Loadable(lazy(() => import('../sections/@dashboard
 export const ExpenseNew = Loadable(lazy(() => import('../sections/@dashboard/general/expense/ExpenseNew')));
 export const ExpenseHistory = Loadable(lazy(() => import('../sections/@dashboard/general/expense/ExpenseHistory')));
 export const ExpenseTypes = Loadable(lazy(() => import('../sections/@dashboard/general/expense/ExpenseTypes')));
+export const ExpenseTypeEdit = Loadable(lazy(() => import('../sections/@dashboard/general/expense/ExpenseTypeEdit')));
 
 // DASHBOARD: Purchase
 export const Purchase = Loadable(lazy(() => import('../sections/@dashboard/general/purchase/Purchase')));
