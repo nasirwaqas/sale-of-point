@@ -1,9 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useQuery, useApolloClient } from '@apollo/client';
-import { Button, TextField, MenuItem, Grid, Table, TableBody, TableCell, TableHead, TableRow, CircularProgress } from '@mui/material';
+import { Button, TextField, MenuItem, Grid, Table, TableBody, TableCell, TableHead, TableRow, CircularProgress, Container, FormControlLabel, Switch, Card, TableContainer, Paper } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { PDFViewer, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { GET_INCOME_TYPES_BY_BRANCH, GET_INCOMES_BY_BRANCH } from '../../../../graphQL/queries';
+import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
+import { useSettingsContext } from '../../../../components/settings';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
+import {
+  useTable,
+  emptyRows,
+  TableEmptyRows,
+  TableHeadCustom,
+  TablePaginationCustom,
+  TableSkeleton,
+} from '../../../../components/table';
+import Scrollbar from '../../../../components/scrollbar';
+
+const TABLE_HEAD = [
+  { id: 'amount', label: 'Amount', align: 'left' },
+  { id: 'description', label: 'Description', align: 'left' },
+  { id: 'date', label: 'Date', align: 'left' },
+];
 
 const IncomeHistory = () => {
   const [selectedIncomeType, setSelectedIncomeType] = useState('');
@@ -13,29 +32,33 @@ const IncomeHistory = () => {
   const [showPDF, setShowPDF] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const client = useApolloClient();
+  const { themeStretch } = useSettingsContext();
+
+  const {
+    dense,
+    page,
+    order,
+    orderBy,
+    rowsPerPage,
+    setPage,
+    onSort,
+    onChangeDense,
+    onChangePage,
+    onChangeRowsPerPage,
+  } = useTable();
 
   const { loading, error, data: incomeTypesData } = useQuery(GET_INCOME_TYPES_BY_BRANCH, {
     variables: { branchId: '6770c752a14170831ad68c75' },
   });
 
-  const handleIncomeTypeChange = (event) => {
-    setSelectedIncomeType(event.target.value);
-  };
-
-  const handleFromDateChange = (event) => {
-    setFromDate(event.target.value);
-  };
-
-  const handleToDateChange = (event) => {
-    setToDate(event.target.value);
-  };
-
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     const searchVariables = {
       branchId: '6770c752a14170831ad68c75',
       incomeTypeId: selectedIncomeType || null,
       fromDate: fromDate ? new Date(fromDate).toISOString() : null,
       toDate: toDate ? new Date(toDate).toISOString() : null,
+      limit: rowsPerPage,
+      offset: page * rowsPerPage,
     };
 
     console.log('Searching with variables:', searchVariables); // Log the search variables
@@ -50,6 +73,22 @@ const IncomeHistory = () => {
       console.error('Error fetching income data:', err);
       enqueueSnackbar(`Error fetching income data: ${err.message}`, { variant: 'error' });
     }
+  }, [client, enqueueSnackbar, fromDate, page, rowsPerPage, selectedIncomeType, toDate]);
+
+  useEffect(() => {
+    handleSearch();
+  }, [handleSearch]);
+
+  const handleIncomeTypeChange = (event) => {
+    setSelectedIncomeType(event.target.value);
+  };
+
+  const handleFromDateChange = (event) => {
+    setFromDate(event.target.value);
+  };
+
+  const handleToDateChange = (event) => {
+    setToDate(event.target.value);
   };
 
   const styles = StyleSheet.create({
@@ -110,91 +149,125 @@ const IncomeHistory = () => {
   if (error) return <p>Error loading income types!</p>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Income History</h2>
+    <>
+      <Helmet>
+        <title>Income History | Point of Sale UI</title>
+      </Helmet>
 
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            select
-            label="Income Type"
-            variant="outlined"
-            fullWidth
-            value={selectedIncomeType}
-            onChange={handleIncomeTypeChange}
-          >
-            {incomeTypesData.getIncomeTypesByBranch.map((incomeType) => (
-              <MenuItem key={incomeType.id} value={incomeType.id}>
-                {incomeType.name}
-              </MenuItem>
-            ))}
-          </TextField>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+        <CustomBreadcrumbs
+          heading="Income History"
+          links={[
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Income', href: PATH_DASHBOARD.root.income },
+            { name: 'History' },
+          ]}
+        />
+      </Container>
+
+      <div style={{ padding: '20px' }}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              select
+              label="Income Type"
+              variant="outlined"
+              fullWidth
+              value={selectedIncomeType}
+              onChange={handleIncomeTypeChange}
+            >
+              {incomeTypesData.getIncomeTypesByBranch.map((incomeType) => (
+                <MenuItem key={incomeType.id} value={incomeType.id}>
+                  {incomeType.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              label="From Date"
+              type="date"
+              variant="outlined"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              value={fromDate}
+              onChange={handleFromDateChange}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              label="To Date"
+              type="date"
+              variant="outlined"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              value={toDate}
+              onChange={handleToDateChange}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={1.5}>
+            <Button variant="contained" color="primary" fullWidth onClick={handleSearch}>
+              Search
+            </Button>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={1.5}>
+            <Button variant="contained" color="secondary" fullWidth onClick={() => setShowPDF(true)}>
+              Print
+            </Button>
+          </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            label="From Date"
-            type="date"
-            variant="outlined"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-            value={fromDate}
-            onChange={handleFromDateChange}
+        <Card>
+          <TableContainer component={Paper}>
+            <Scrollbar>
+              <Table size={dense ? 'small' : 'medium'}>
+                <TableHeadCustom
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={incomeData.length}
+                  onSort={onSort}
+                />
+                <TableBody>
+                  {!incomeData.length && loading && <TableSkeleton />}
+                  {incomeData.length > 0 && incomeData.map((income) => (
+                    <TableRow key={income.id}>
+                      <TableCell>{income.amount}</TableCell>
+                      <TableCell>{income.description}</TableCell>
+                      <TableCell>{new Date(income.createdAt).toLocaleDateString()}</TableCell>
+                    </TableRow>
+                  ))}
+                  <TableEmptyRows
+                    height={dense ? 52 : 72}
+                    emptyRows={emptyRows(page, rowsPerPage, incomeData.length)}
+                  />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+
+          <TablePaginationCustom
+            count={incomeData.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+            dense={dense}
+            onChangeDense={onChangeDense}
           />
-        </Grid>
+        </Card>
 
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            label="To Date"
-            type="date"
-            variant="outlined"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-            value={toDate}
-            onChange={handleToDateChange}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={1.5}>
-          <Button variant="contained" color="primary" fullWidth onClick={handleSearch}>
-            Search
-          </Button>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={1.5}>
-          <Button variant="contained" color="secondary" fullWidth onClick={() => setShowPDF(true)}>
-            Print
-          </Button>
-        </Grid>
-      </Grid>
-
-      {incomeData.length > 0 && (
-        <Table style={{ marginTop: '20px' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Amount</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Date</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {incomeData.map((income) => (
-              <TableRow key={income.id}>
-                <TableCell>{income.amount}</TableCell>
-                <TableCell>{income.description}</TableCell>
-                <TableCell>{new Date(income.createdAt).toLocaleDateString()}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
-
-      {showPDF && (
-        <PDFViewer width="100%" height="600">
-          <MyDocument />
-        </PDFViewer>
-      )}
-    </div>
+        {showPDF && (
+          <PDFViewer width="100%" height="600">
+            <MyDocument />
+          </PDFViewer>
+        )}
+      </div>
+    </>
   );
 };
 

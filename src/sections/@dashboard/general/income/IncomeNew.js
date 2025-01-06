@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
-import { Button, TextField, MenuItem, CircularProgress } from '@mui/material';
+import { Button, TextField, MenuItem, CircularProgress, Container } from '@mui/material';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { useSnackbar } from 'notistack';
+import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
+import { useSettingsContext } from '../../../../components/settings';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 
 const GET_INCOME_TYPES_BY_BRANCH = gql`
   query GetIncomeTypesByBranch($branchId: ID!) {
@@ -38,6 +42,7 @@ const IncomeNew = () => {
   const [description, setDescription] = useState('');
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar(); // Hook to trigger notifications
+  const { themeStretch } = useSettingsContext();
 
   const { loading, error: queryError, data } = useQuery(GET_INCOME_TYPES_BY_BRANCH, {
     variables: { branchId: '6770c752a14170831ad68c75' },
@@ -101,56 +106,73 @@ const IncomeNew = () => {
   if (queryError) return <p>Error loading income types!</p>;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
-      <h2 style={{ marginBottom: '20px' }}>Income Information</h2>
+    <>
+      <Helmet>
+        <title>Income New | Point of Sale UI</title>
+      </Helmet>
 
-      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', width: '100%', maxWidth: '500px' }}>
-        <TextField
-          select
-          label="Income Type"
-          variant="outlined"
-          fullWidth
-          value={selectedIncomeType}
-          onChange={handleIncomeTypeChange}
-        >
-          {data.getIncomeTypesByBranch.map((incomeType) => (
-            <MenuItem key={incomeType.id} value={incomeType.id}>
-              {incomeType.name}
-            </MenuItem>
-          ))}
-        </TextField>
-
-        <TextField
-          label="Amount"
-          type="number"
-          variant="outlined"
-          fullWidth
-          value={amount}
-          onChange={handleAmountChange}
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+        <CustomBreadcrumbs
+          heading="Income Types"
+          links={[
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Income', href: PATH_DASHBOARD.root.income },
+            { name: ' New' },
+          ]}
         />
-      </div>
+      </Container>
 
-      <div style={{ marginBottom: '20px', width: '100%', maxWidth: '500px' }}>
-        <TextField
-          label="Description"
-          multiline
-          rows={4}
-          variant="outlined"
-          fullWidth
-          value={description}
-          onChange={handleDescriptionChange}
-        />
-      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+        <h2 style={{ marginBottom: '20px' }}>Income Information</h2>
 
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-        <Button variant="contained" color="primary" onClick={handleSave}>
-          Save
-        </Button>
-        <Button variant="outlined" color="secondary" onClick={handleCancel}>
-          Cancel
-        </Button>
+        <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', width: '100%', maxWidth: '500px' }}>
+          <TextField
+            select
+            label="Income Type"
+            variant="outlined"
+            fullWidth
+            value={selectedIncomeType}
+            onChange={handleIncomeTypeChange}
+          >
+            {data.getIncomeTypesByBranch.map((incomeType) => (
+              <MenuItem key={incomeType.id} value={incomeType.id}>
+                {incomeType.name}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            label="Amount"
+            type="number"
+            variant="outlined"
+            fullWidth
+            value={amount}
+            onChange={handleAmountChange}
+          />
+        </div>
+
+        <div style={{ marginBottom: '20px', width: '100%', maxWidth: '500px' }}>
+          <TextField
+            label="Description"
+            multiline
+            rows={4}
+            variant="outlined"
+            fullWidth
+            value={description}
+            onChange={handleDescriptionChange}
+          />
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+          <Button variant="contained" color="primary" onClick={handleSave}>
+            Save
+          </Button>
+          <Button variant="outlined" color="secondary" onClick={handleCancel}>
+            Cancel
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

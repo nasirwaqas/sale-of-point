@@ -12,6 +12,9 @@ import {
   Paper,
   TextField,
   Container,
+  FormControlLabel,
+  Switch,
+  Card,
 } from '@mui/material';
 import * as Yup from 'yup';
 import { useMutation, useQuery } from '@apollo/client';
@@ -19,7 +22,22 @@ import { CREATE_INCOME_TYPE, DELETE_INCOME_TYPE } from '../../../../graphQL/muta
 import { GET_INCOME_TYPES_BY_BRANCH } from '../../../../graphQL/queries';
 import { useSettingsContext } from '../../../../components/settings';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
+import {
+  useTable,
+  emptyRows,
+  TableEmptyRows,
+  TableHeadCustom,
+  TablePaginationCustom,
+  TableSkeleton,
+} from '../../../../components/table';
+import Scrollbar from '../../../../components/scrollbar';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
+
+const TABLE_HEAD = [
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'description', label: 'Description', align: 'left' },
+  { id: 'action', label: 'Action', align: 'left' },
+];
 
 const IncomeTypes = () => {
   const { themeStretch } = useSettingsContext();
@@ -29,8 +47,25 @@ const IncomeTypes = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  const {
+    dense,
+    page,
+    order,
+    orderBy,
+    rowsPerPage,
+    setPage,
+    selected,
+    setSelected,
+    onSelectRow,
+    onSelectAllRows,
+    onSort,
+    onChangeDense,
+    onChangePage,
+    onChangeRowsPerPage,
+  } = useTable();
+
   const { data, loading, error: queryError, refetch } = useQuery(GET_INCOME_TYPES_BY_BRANCH, {
-    variables: { branchId: '6770c752a14170831ad68c75' },
+    variables: { branchId: '6770c752a14170831ad68c75', limit: rowsPerPage, offset: page * rowsPerPage, orderBy, order },
   });
 
   const [createIncomeType] = useMutation(CREATE_INCOME_TYPE, {
@@ -74,8 +109,7 @@ const IncomeTypes = () => {
     console.log('Editing income type with ID:', id);
     navigate(PATH_DASHBOARD.income.edit(id));
   };
-  
-  
+
   const handleDelete = (id) => {
     if (!id) {
       console.error('Invalid ID for deletion:', id);
@@ -83,8 +117,6 @@ const IncomeTypes = () => {
     }
     deleteIncomeType({ variables: { id } });
   };
-  
-  
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -114,6 +146,8 @@ const IncomeTypes = () => {
     }
   };
 
+  const denseHeight = dense ? 52 : 72;
+
   if (loading) return <p>Loading...</p>;
   if (queryError) {
     console.error('Error loading income types:', queryError);
@@ -132,7 +166,7 @@ const IncomeTypes = () => {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Income', href: PATH_DASHBOARD.root.income },
-            { name: 'Income Types' },
+            { name: 'Types' },
           ]}
         />
       </Container>
@@ -141,12 +175,11 @@ const IncomeTypes = () => {
         <div
           style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end', // Align to the end of the right side
             alignItems: 'center',
             marginBottom: '20px',
           }}
         >
-          
           <Button variant="contained" color="primary" onClick={handleShowForm}>
             New
           </Button>
@@ -192,52 +225,67 @@ const IncomeTypes = () => {
           </Paper>
         )}
 
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data?.getIncomeTypesByBranch?.length > 0 ? (
-                data.getIncomeTypesByBranch.map((incomeType) => (
-                  <TableRow key={incomeType.id}>
-                    <TableCell>{incomeType.name}</TableCell>
-                    <TableCell>{incomeType.description}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        size="small"
-                        onClick={() => handleEdit(incomeType.id)}
-                      >
-                        Edit
-                      </Button>
+        <Card>
+          <TableContainer component={Paper}>
+            <Scrollbar>
+              <Table size={dense ? 'small' : 'medium'}>
+                <TableHeadCustom
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={data?.getIncomeTypesByBranch?.length || 0}
+                  onSort={onSort}
+                />
+                <TableBody>
+                  {!data && loading && <TableSkeleton />}
+                  {data &&
+                    !loading &&
+                    data.getIncomeTypesByBranch
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((incomeType) => (
+                        <TableRow key={incomeType.id}>
+                          <TableCell>{incomeType.name}</TableCell>
+                          <TableCell>{incomeType.description}</TableCell>
+                          <TableCell>
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              size="small"
+                              onClick={() => handleEdit(incomeType.id)}
+                            >
+                              Edit
+                            </Button>
 
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        size="small"
-                        onClick={() => handleDelete(incomeType.id)}
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={3} align="center">
-                    No income types found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              size="small"
+                              onClick={() => handleDelete(incomeType.id)}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  <TableEmptyRows
+                    height={denseHeight}
+                    emptyRows={emptyRows(page, rowsPerPage, data?.getIncomeTypesByBranch?.length || 0)}
+                  />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+
+          <TablePaginationCustom
+            count={data?.getIncomeTypesByBranch?.length || 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+            dense={dense}
+            onChangeDense={onChangeDense}
+          />
+        </Card>
       </div>
     </>
   );
