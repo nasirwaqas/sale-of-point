@@ -118,6 +118,7 @@ import {
   StockAdjustment,
   VendorPurchaseHistory,
   CashInHand,
+  IncomeTypeEdit,
 
 } from './elements';
 
@@ -235,6 +236,7 @@ export default function Router() {
             { path: 'new', element: <IncomeNew /> },
             { path: 'history', element: <IncomeHistory /> },
             { path: 'types', element: <IncomeTypes /> },
+            {  path: 'edit/:id', element: <IncomeTypeEdit /> },
           ],
         },
         {

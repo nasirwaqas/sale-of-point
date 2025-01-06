@@ -108,3 +108,37 @@ query GetManufactureById($id: ID!) {
     image
   }
 }`
+
+
+export const GET_INCOME_TYPES_BY_BRANCH = gql`
+query GetIncomeTypesByBranch($branchId: ID!) {
+  getIncomeTypesByBranch(branchId: $branchId) {
+    id
+    branchId
+    name
+    description
+  }
+}`
+
+export const GET_INCOME_TYPE_BY_ID = gql`
+query GetIncomeTypeById($id: ID!) {
+  getIncomeTypeById(id: $id) {
+    id
+    branchId
+    name
+    description
+  }
+}`
+
+export const GET_INCOMES_BY_BRANCH = gql`
+  query GetIncomesByBranch($branchId: ID!, $incomeTypeId: ID, $fromDate: Date, $toDate: Date) {
+    getIncomesByBranch(branchId: $branchId, incomeTypeId: $incomeTypeId, fromDate: $fromDate, toDate: $toDate) {
+      incomeItems {
+        id
+        amount
+        description
+        createdAt
+      }
+    }
+  }
+`
