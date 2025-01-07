@@ -169,7 +169,7 @@ const IncomeTypes = () => {
             { name: 'Types' },
           ]}
         />
-      </Container>
+  
 
       <div style={{ padding: '20px' }}>
         <div
@@ -286,7 +286,8 @@ const IncomeTypes = () => {
             onChangeDense={onChangeDense}
           />
         </Card>
-      </div>
+      </div> 
+         </Container>
     </>
   );
 };

@@ -98,9 +98,7 @@ const ExpenseTypeEdit = () => {
             { name: 'Edit Expense Type' },
           ]}
         />
-      </Container>
-
-      <div style={{ padding: '20px' }}>
+            <div style={{ padding: '20px' }}>
         <Paper sx={{ padding: '20px', marginBottom: '20px' }}>
           <h3 style={{ textAlign: 'center', marginBottom: '20px' }}>Edit Expense Type</h3>
           <form onSubmit={handleSubmit}>
@@ -146,6 +144,9 @@ const ExpenseTypeEdit = () => {
           </form>
         </Paper>
       </div>
+      </Container>
+
+  
     </>
   );
 };

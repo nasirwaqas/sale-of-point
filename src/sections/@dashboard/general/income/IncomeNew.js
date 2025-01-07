@@ -19,8 +19,18 @@ const GET_INCOME_TYPES_BY_BRANCH = gql`
 `;
 
 const CREATE_INCOME = gql`
-  mutation CreateIncome($branchId: ID!, $incomeType: IncomeTypeInput!, $amount: Float!, $description: String) {
-    createIncome(branchId: $branchId, incomeType: $incomeType, amount: $amount, description: $description) {
+  mutation CreateIncome(
+    $branchId: ID!
+    $incomeType: IncomeTypeInput!
+    $amount: Float!
+    $description: String
+  ) {
+    createIncome(
+      branchId: $branchId
+      incomeType: $incomeType
+      amount: $amount
+      description: $description
+    ) {
       id
       branchId
       incomeType {
@@ -44,7 +54,11 @@ const IncomeNew = () => {
   const { enqueueSnackbar } = useSnackbar(); // Hook to trigger notifications
   const { themeStretch } = useSettingsContext();
 
-  const { loading, error: queryError, data } = useQuery(GET_INCOME_TYPES_BY_BRANCH, {
+  const {
+    loading,
+    error: queryError,
+    data,
+  } = useQuery(GET_INCOME_TYPES_BY_BRANCH, {
     variables: { branchId: '6770c752a14170831ad68c75' },
   });
 
@@ -120,58 +134,72 @@ const IncomeNew = () => {
             { name: ' New' },
           ]}
         />
-      </Container>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '20px',
+          }}
+        >
+          <h2 style={{ marginBottom: '20px' }}>Income Information</h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
-        <h2 style={{ marginBottom: '20px' }}>Income Information</h2>
-
-        <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', width: '100%', maxWidth: '500px' }}>
-          <TextField
-            select
-            label="Income Type"
-            variant="outlined"
-            fullWidth
-            value={selectedIncomeType}
-            onChange={handleIncomeTypeChange}
+          <div
+            style={{
+              display: 'flex',
+              gap: '20px',
+              marginBottom: '20px',
+              width: '100%',
+              // maxWidth: '500px',
+            }}
           >
-            {data.getIncomeTypesByBranch.map((incomeType) => (
-              <MenuItem key={incomeType.id} value={incomeType.id}>
-                {incomeType.name}
-              </MenuItem>
-            ))}
-          </TextField>
+            <TextField
+              select
+              label="Income Type"
+              variant="outlined"
+              fullWidth
+              value={selectedIncomeType}
+              onChange={handleIncomeTypeChange}
+            >
+              {data.getIncomeTypesByBranch.map((incomeType) => (
+                <MenuItem key={incomeType.id} value={incomeType.id}>
+                  {incomeType.name}
+                </MenuItem>
+              ))}
+            </TextField>
 
-          <TextField
-            label="Amount"
-            type="number"
-            variant="outlined"
-            fullWidth
-            value={amount}
-            onChange={handleAmountChange}
-          />
-        </div>
+            <TextField
+              label="Amount"
+              type="number"
+              variant="outlined"
+              fullWidth
+              value={amount}
+              onChange={handleAmountChange}
+            />
+          </div>
 
-        <div style={{ marginBottom: '20px', width: '100%', maxWidth: '500px' }}>
-          <TextField
-            label="Description"
-            multiline
-            rows={4}
-            variant="outlined"
-            fullWidth
-            value={description}
-            onChange={handleDescriptionChange}
-          />
-        </div>
+          <div style={{ marginBottom: '20px', width: '100%' }}>
+            <TextField
+              label="Description"
+              multiline
+              rows={4}
+              variant="outlined"
+              fullWidth
+              value={description}
+              onChange={handleDescriptionChange}
+            />
+          </div>
 
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Save
-          </Button>
-          <Button variant="outlined" color="secondary" onClick={handleCancel}>
-            Cancel
-          </Button>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+            <Button variant="contained" color="primary" onClick={handleSave}>
+              Save
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </div>
         </div>
-      </div>
+      </Container>
     </>
   );
 };
