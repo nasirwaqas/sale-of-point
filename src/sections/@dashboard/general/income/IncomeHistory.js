@@ -162,10 +162,7 @@ const IncomeHistory = () => {
             { name: 'Income', href: PATH_DASHBOARD.root.income },
             { name: 'History' },
           ]}
-        />
-      </Container>
-
-      <div style={{ padding: '20px' }}>
+        />    <div style={{ padding: '20px' }}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} sm={6} md={3}>
             <TextField
@@ -267,6 +264,9 @@ const IncomeHistory = () => {
           </PDFViewer>
         )}
       </div>
+      </Container>
+
+  
     </>
   );
 };

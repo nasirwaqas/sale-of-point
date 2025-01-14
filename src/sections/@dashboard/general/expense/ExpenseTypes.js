@@ -176,8 +176,6 @@ const ExpenseTypes = () => {
             { name: 'Types' },
           ]}
         />
-      </Container>
-
       <div style={{ padding: '20px' }}>
         <div
           style={{
@@ -294,6 +292,8 @@ const ExpenseTypes = () => {
           />
         </Card>
       </div>
+      </Container>
+
     </>
   );
 };

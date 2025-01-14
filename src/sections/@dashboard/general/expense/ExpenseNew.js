@@ -19,8 +19,18 @@ const GET_EXPENSE_TYPES_BY_BRANCH = gql`
 `;
 
 const CREATE_EXPENSE = gql`
-  mutation CreateExpense($branchId: ID!, $expenseType: ExpenseTypeInput!, $amount: Float!, $description: String) {
-    createExpense(branchId: $branchId, expenseType: $expenseType, amount: $amount, description: $description) {
+  mutation CreateExpense(
+    $branchId: ID!
+    $expenseType: ExpenseTypeInput!
+    $amount: Float!
+    $description: String
+  ) {
+    createExpense(
+      branchId: $branchId
+      expenseType: $expenseType
+      amount: $amount
+      description: $description
+    ) {
       id
       branchId
       expenseType {
@@ -44,7 +54,11 @@ const ExpenseNew = () => {
   const { enqueueSnackbar } = useSnackbar(); // Hook to trigger notifications
   const { themeStretch } = useSettingsContext();
 
-  const { loading, error: queryError, data } = useQuery(GET_EXPENSE_TYPES_BY_BRANCH, {
+  const {
+    loading,
+    error: queryError,
+    data,
+  } = useQuery(GET_EXPENSE_TYPES_BY_BRANCH, {
     variables: { branchId: '6770c752a14170831ad68c75' },
   });
 
@@ -120,58 +134,73 @@ const ExpenseNew = () => {
             { name: ' New' },
           ]}
         />
-      </Container>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
-        <h2 style={{ marginBottom: '20px' }}>Expense Information</h2>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '20px',
+          }}
+        >
+          <h2 style={{ marginBottom: '20px' }}>Expense Information</h2>
 
-        <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', width: '100%', maxWidth: '500px' }}>
-          <TextField
-            select
-            label="Expense Type"
-            variant="outlined"
-            fullWidth
-            value={selectedExpenseType}
-            onChange={handleExpenseTypeChange}
+          <div
+            style={{
+              display: 'flex',
+              gap: '20px',
+              marginBottom: '20px',
+              width: '100%',
+              // maxWidth: '500px',
+            }}
           >
-            {data.getExpenseTypesByBranch.map((expenseType) => (
-              <MenuItem key={expenseType.id} value={expenseType.id}>
-                {expenseType.name}
-              </MenuItem>
-            ))}
-          </TextField>
+            <TextField
+              select
+              label="Expense Type"
+              variant="outlined"
+              fullWidth
+              value={selectedExpenseType}
+              onChange={handleExpenseTypeChange}
+            >
+              {data.getExpenseTypesByBranch.map((expenseType) => (
+                <MenuItem key={expenseType.id} value={expenseType.id}>
+                  {expenseType.name}
+                </MenuItem>
+              ))}
+            </TextField>
 
-          <TextField
-            label="Amount"
-            type="number"
-            variant="outlined"
-            fullWidth
-            value={amount}
-            onChange={handleAmountChange}
-          />
-        </div>
+            <TextField
+              label="Amount"
+              type="number"
+              variant="outlined"
+              fullWidth
+              value={amount}
+              onChange={handleAmountChange}
+            />
+          </div>
 
-        <div style={{ marginBottom: '20px', width: '100%', maxWidth: '500px' }}>
-          <TextField
-            label="Description"
-            multiline
-            rows={4}
-            variant="outlined"
-            fullWidth
-            value={description}
-            onChange={handleDescriptionChange}
-          />
-        </div>
+          <div style={{ marginBottom: '20px', width: '100%', }}>
+            <TextField
+              label="Description"
+              multiline
+              rows={4}
+              variant="outlined"
+              fullWidth
+              value={description}
+              onChange={handleDescriptionChange}
+            />
+          </div>
 
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Save
-          </Button>
-          <Button variant="outlined" color="secondary" onClick={handleCancel}>
-            Cancel
-          </Button>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+            <Button variant="contained" color="primary" onClick={handleSave}>
+              Save
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </div>
         </div>
-      </div>
+      </Container>
     </>
   );
 };
