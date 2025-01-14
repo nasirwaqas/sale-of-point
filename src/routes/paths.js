@@ -101,8 +101,8 @@ export const PATH_DASHBOARD = {
   vendors: {
     root: path(ROOTS_DASHBOARD, '/vendors'),
     new: path(ROOTS_DASHBOARD, '/vendors/new'),
-    edit: path(ROOTS_DASHBOARD, '/vendors/edit'),
-    account: path(ROOTS_DASHBOARD, '/vendors/account'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/vendors/edit/${id}`),
+    account: (id) => path(ROOTS_DASHBOARD, `/vendors/account/${id}`),
   },
   report: {
     root: path(ROOTS_DASHBOARD, '/report'),

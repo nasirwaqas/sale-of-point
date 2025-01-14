@@ -1,8 +1,7 @@
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-// @mui
 import {
   Card,
   Table,
@@ -12,10 +11,9 @@ import {
   TableRow,
   TableCell,
   TableContainer,
+  Typography,
 } from '@mui/material';
-// routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// components
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
@@ -29,11 +27,8 @@ import {
   TablePaginationCustom,
   TableSkeleton,
 } from '../../components/table';
-// sections
 import { UserTableToolbar } from '../../sections/@dashboard/category/list';
 import { GET_VENDORS_BY_BRANCH, GET_TOTAL_BALANCE_BY_BRANCH_ID } from '../../graphQL/queries';
-
-// ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
@@ -41,11 +36,9 @@ const TABLE_HEAD = [
   { id: 'address', label: 'Address', align: 'left' },
   { id: 'email', label: 'Email', align: 'left' },
   { id: 'description', label: 'Description', align: 'left' },
-  { id: 'totalBalance', label: 'Account', align: 'left' },
+  { id: 'totalBalance', label: 'Total Balance', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
-
-// ----------------------------------------------------------------------
 
 export default function VendorsPage() {
   const {
@@ -66,27 +59,37 @@ export default function VendorsPage() {
   } = useTable();
 
   const { themeStretch } = useSettingsContext();
-
   const navigate = useNavigate();
   const [tableData, setTableData] = useState([]);
   const [filterName, setFilterName] = useState('');
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [balances, setBalances] = useState({});
 
-  const { data, error, loading, refetch } = useQuery(GET_VENDORS_BY_BRANCH, {
-    variables: {
-      branchId: '6770c752a14170831ad68c75',
-    },
+  const branchId = '6770c752a14170831ad68c75';
+
+  const { data: vendorsData, error: vendorsError, loading: vendorsLoading, refetch: refetchVendors } = useQuery(GET_VENDORS_BY_BRANCH, {
+    variables: { branchId },
     fetchPolicy: 'no-cache',
     onCompleted: (responseData) => {
       setTableData(responseData.getVendors);
-    },    
+      console.log('Vendors data:', responseData.getVendors);
+    },
   });
 
-  const { data: balanceData, loading: balanceLoading } = useQuery(GET_TOTAL_BALANCE_BY_BRANCH_ID, {
-    variables: {
-      branchId: '6770c752a14170831ad68c75',
-    },
+  const { data: branchBalanceData, error: branchBalanceError, loading: branchBalanceLoading } = useQuery(GET_TOTAL_BALANCE_BY_BRANCH_ID, {
+    variables: { branchId },
     fetchPolicy: 'no-cache',
+    onCompleted: (responseData) => {
+      const balances = responseData.getTotalBalanceByBranchId.reduce((acc, balance) => {
+        acc[balance.vendorId] = balance.totalBalance;
+        return acc;
+      }, {});
+      setBalances(balances);
+      console.log('Total branch balance:', responseData.getTotalBalanceByBranchId);
+    },
+    onError: (error) => {
+      console.error('Error fetching total balances:', error);
+    },
   });
 
   const denseHeight = dense ? 52 : 72;
@@ -96,22 +99,14 @@ export default function VendorsPage() {
     setFilterName(event.target.value);
   };
 
-  const filteredData = tableData.filter((vendor) =>
-    vendor.name.toLowerCase().includes(filterName.toLowerCase()) ||
-    vendor.phone.toLowerCase().includes(filterName.toLowerCase()) ||
-    vendor.address.toLowerCase().includes(filterName.toLowerCase()) ||
-    vendor.email.toLowerCase().includes(filterName.toLowerCase()) ||
-    vendor.description.toLowerCase().includes(filterName.toLowerCase())
-  );
-
   const handleEditRow = (id) => {
-    console.log('Vendor ID passed to edit:', id);  // Log the ID to the console
-    navigate(PATH_DASHBOARD.vendors.edit(id));  // Navigate to the edit page
+    console.log('Vendor ID passed to edit:', id);
+    navigate(PATH_DASHBOARD.vendors.edit(id));
   };
 
   const handleAccountRow = (id) => {
-    console.log('Vendor ID passed to Account:', id);  // Log the ID to the console
-    navigate(`/dashboard/vendors/account/${id}`);  // Navigate to the account page with the correct URL
+    console.log('Vendor ID passed to Account:', id);
+    navigate(`/dashboard/vendors/account/${id}`);
   };
 
   const handleResetFilter = () => {
@@ -134,7 +129,6 @@ export default function VendorsPage() {
 
   const handleDeleteVendor = (id) => {
     console.log(`Deleting vendor with ID: ${id}`);
-    // Add actual deletion logic here (e.g., API call)
   };
 
   return (
@@ -173,55 +167,55 @@ export default function VendorsPage() {
                 />
 
                 <TableBody>
-                  {!data && loading && <TableSkeleton />}
-                  {data &&
-                    !loading &&
-                    filteredData.map((row) => {
-                      const totalBalance = balanceData?.getTotalBalanceByBranchId.find(
-                        (balance) => balance.vendorId === row.id
-                      )?.totalBalance || 'N/A';
+                  {!vendorsData && vendorsLoading && <TableSkeleton />}
+                  {vendorsData &&
+                    !vendorsLoading &&
+                    tableData.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell>{row.name}</TableCell>
+                        <TableCell>{row.phone}</TableCell>
+                        <TableCell>{row.address}</TableCell>
+                        <TableCell>{row.email}</TableCell>
+                        <TableCell>{row.description}</TableCell>
+                        <TableCell>
+                          {balances[row.id] !== undefined ? (
+                            <Typography variant="body2">{balances[row.id]}</Typography>
+                          ) : (
+                            <Typography variant="body2">Loading...</Typography>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            size="small"
+                            onClick={() => handleEditRow(row.id)}
+                            style={{ marginRight: 8 }}
+                          >
+                            Edit
+                          </Button>
 
-                      return (
-                        <TableRow key={row.id}>
-                          <TableCell>{row.name}</TableCell>
-                          <TableCell>{row.phone}</TableCell>
-                          <TableCell>{row.address}</TableCell>
-                          <TableCell>{row.email}</TableCell>
-                          <TableCell>{row.description}</TableCell>
-                          <TableCell>{totalBalance}</TableCell>
-                          <TableCell>
-                            <Button
-                              variant="outlined"
-                              color="primary"
-                              size="small"
-                              onClick={() => handleEditRow(row.id)} // Edit button click
-                              style={{ marginRight: 8 }}
-                            >
-                              Edit
-                            </Button>
+                          <Button
+                            variant="outlined"
+                            color="info"
+                            size="small"
+                            onClick={() => handleAccountRow(row.id)}
+                            style={{ marginRight: 8 }}
+                          >
+                            Account
+                          </Button>
 
-                            <Button
-                              variant="outlined"
-                              color="info"
-                              size="small"
-                              onClick={() => handleAccountRow(row.id)} // Account button click
-                              style={{ marginRight: 8 }}
-                            >
-                              Account
-                            </Button>
-
-                            <Button
-                              variant="outlined"
-                              color="error"
-                              size="small"
-                              onClick={() => handleDeleteVendor(row.id)} // Delete button click
-                            >
-                              Delete
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            size="small"
+                            onClick={() => handleDeleteVendor(row.id)}
+                          >
+                            Delete
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
 
                   <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
                 </TableBody>
@@ -266,8 +260,6 @@ export default function VendorsPage() {
     </>
   );
 }
-
-// ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);

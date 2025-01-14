@@ -196,8 +196,8 @@ export default function Router() {
 
          { path: 'vendors', element: <VendorsPage /> },
          { path: '/dashboard/vendors/new', element: <VendorsNewPage /> },
-         { path: '/dashboard/vendors/edit', element: <VendorsEditForm /> },
-         { path: '/dashboard/vendors/account' , element: <VendorsAccount />},
+         { path: '/dashboard/vendors/edit/:id', element: <VendorsEditForm /> },
+         { path: '/dashboard/vendors/account/:id' , element: <VendorsAccount />},
 
          { path: 'customer', element: <CustomerPage /> },
          { path: '/dashboard/customer/new', element: <CustomerNewPage /> },

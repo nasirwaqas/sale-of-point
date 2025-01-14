@@ -1,192 +1,179 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-// form
+import React from 'react';
+import { useMutation } from '@apollo/client';
 import { useForm, Controller } from 'react-hook-form';
+import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel } from '@mui/material';
-// utils
-import { fData } from '../../../../utils/formatNumber';
-// routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
-// assets
-import { parentcategory } from '../../../../assets/data';
-// components
-import Label from '../../../../components/label';
+import { TextField, Button, Typography, CircularProgress, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFSwitch,
-  RHFTextField,
-  RHFUploadAvatar,
-} from '../../../../components/hook-form';
+import { CREATE_VENDOR } from '../../../../graphQL/mutations';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 
-// ----------------------------------------------------------------------
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required('Name is required'),
+  phone: Yup.string().required('Phone is required'),
+  address: Yup.string().required('Address is required'),
+  email: Yup.string().email('Invalid email').required('Email is required'),
+  description: Yup.string().required('Description is required'),
+});
 
-VendorsNewForm.propTypes = {
-  isEdit: PropTypes.bool,
-  currentUser: PropTypes.object,
-};
-
-export default function VendorsNewForm({ isEdit = false, currentUser }) {
-  const navigate = useNavigate();
-
+const VendorsNewForm = () => {
+  const branchId = '6770c752a14170831ad68c75'; // Hardcoded branch ID
   const { enqueueSnackbar } = useSnackbar();
-
-  const NewUserSchema = Yup.object().shape({
-    // Field validations
-    venderName: Yup.string()
-      .required('Vender Name is required')
-      .min(3, 'Vender Name must be at least 3 characters'),
-
-    vendorPhone: Yup.string()
-      .required('Phone number is required')
-      .matches(/^\d{10,15}$/, 'Phone number must be 10 to 15 digits'),
-
-    vendorAddress: Yup.string()
-      .required('Address is required')
-      .min(10, 'Address must be at least 10 characters'),
-
-    vendorEmail: Yup.string()
-      .required('Email is required')
-      .email('Email must be a valid email address'),
-
-    vendorDiscription: Yup.string()
-      .required('Description is required')
-      .min(20, 'Description must be at least 20 characters'),
-    discription: Yup.string().required('Description is required'),
-    avatarUrl: Yup.mixed().required('Avatar is required'),
-  });
-
-
-  const defaultValues = useMemo(
-    () => ({
-      vendorName: currentUser?.vendorName || '',
-      vendorAddress: currentUser?.vendorAddress || '',
-      vendorEmail: currentUser?.vendorEmail || '',
-
-      vendorPhone: currentUser?.vendorPhone || '',
-
-      vendorDiscription: currentUser?.vendorDiscription || '',
-      avatarUrl: currentUser?.avatarUrl || null,
-      isVerified: currentUser?.isVerified || true,
-
-
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser]
-  );
-
-  const methods = useForm({
-    resolver: yupResolver(NewUserSchema),
-    defaultValues,
+  const navigate = useNavigate();
+  const [createVendor, { loading, error: mutationError }] = useMutation(CREATE_VENDOR, {
+    onCompleted: (data) => {
+      enqueueSnackbar('Vendor created successfully!', { variant: 'success' });
+      navigate(PATH_DASHBOARD.general.vendors);
+    },
+    onError: (err) => {
+      enqueueSnackbar(`Error creating vendor: ${err.message}`, { variant: 'error' });
+    },
   });
 
   const {
-    reset,
-    watch,
-    control,
-    setValue,
     handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
-
-  const values = watch();
-
-  useEffect(() => {
-    if (isEdit && currentUser) {
-      reset(defaultValues);
-    }
-    if (!isEdit) {
-      reset(defaultValues);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentUser]);
+    control,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      name: '',
+      phone: '',
+      address: '',
+      email: '',
+      description: '',
+    },
+  });
 
   const onSubmit = async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.user.list);
-      console.log('DATA', data);
-    } catch (error) {
-      console.error(error);
+      await createVendor({
+        variables: {
+          branchId,
+          ...data,
+        },
+      });
+      reset(); // Reset form after successful submission
+    } catch (err) {
+      console.error('Error creating vendor:', err);
     }
   };
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
-
-      if (file) {
-        setValue('avatarUrl', newFile, { shouldValidate: true });
-      }
-    },
-    [setValue]
-  );
-
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Typography variant="h4" gutterBottom>
+        Create New Vendor
+      </Typography>
 
+      {/* Inline Inputs: Name and Phone */}
+      <Box display="flex" gap={2} marginBottom={2}>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Name"
+              variant="outlined"
+              fullWidth
+              error={!!errors.name}
+              helperText={errors.name ? errors.name.message : ''}
+            />
+          )}
+        />
 
-        <Grid item xs={12} md={12}>
-          <Card sx={{ p: 3 }}>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
+        <Controller
+          name="phone"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Phone"
+              variant="outlined"
+              fullWidth
+              error={!!errors.phone}
+              helperText={errors.phone ? errors.phone.message : ''}
+            />
+          )}
+        />
+      </Box>
 
+      {/* Inline Inputs: Address and Email */}
+      <Box display="flex" gap={2} marginBottom={2}>
+        <Controller
+          name="address"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Address"
+              variant="outlined"
+              fullWidth
+              error={!!errors.address}
+              helperText={errors.address ? errors.address.message : ''}
+            />
+          )}
+        />
 
-              <RHFTextField name="venderName" label="Full Name" />
-              <RHFTextField name="vendorPhone" label="Phone" />
-              <RHFTextField name="vendorAddress" multiline rows={2} label="Address" />
-              <RHFTextField name="vendorEmail" label="Email" />
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Email"
+              variant="outlined"
+              fullWidth
+              error={!!errors.email}
+              helperText={errors.email ? errors.email.message : ''}
+            />
+          )}
+        />
+      </Box>
 
-              <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+      {/* Full-line Input: Description */}
+      <Box marginBottom={2}>
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Description"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={4}
+              error={!!errors.description}
+              helperText={errors.description ? errors.description.message : ''}
+            />
+          )}
+        />
+      </Box>
 
-                <RHFTextField name="vendorDiscription" multiline rows={4} label="Discription" />
-              </Stack>
-            </Box>
+      {/* Submit Button */}
+      <Box display="flex" justifyContent="center">
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="small"
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size={24} /> : 'Submit'}
+        </Button>
+      </Box>
 
-            <Stack
-              direction="row"
-              spacing={2}
-              alignItems="center"
-              justifyContent="center" // Center the buttons horizontally
-              sx={{ mt: 3 }}
-            >
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
-                {!isEdit ? 'Save' : 'Save Changes'}
-              </LoadingButton>
-              <LoadingButton
-                variant="outlined"
-                onClick={() => navigate(-1)} // Go back to the previous page
-              >
-                Cancel
-              </LoadingButton>
-            </Stack>
-
-          </Card>
-        </Grid>
-      </Grid>
-    </FormProvider>
+      {/* Error Message */}
+      {mutationError && (
+        <Typography color="error" style={{ marginTop: '16px' }}>
+          {mutationError.message}
+        </Typography>
+      )}
+    </form>
   );
-}
+};
+
+export default VendorsNewForm;

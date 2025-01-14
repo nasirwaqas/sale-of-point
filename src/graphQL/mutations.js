@@ -179,3 +179,82 @@ export const DELETE_EXPENSE_TYPE = gql`
     deleteExpenseType(id: $id)
   }
 `;
+
+// ==============> EXPENSE MUTATIONS <================
+
+
+export const CREATE_VENDOR = gql`
+  mutation CreateVendor( $branchId: ID! $name: String! $phone: String! $address: String! $email: String! $description: String! ) {
+    createVendor( branchId: $branchId name: $name phone: $phone address: $address email: $email description: $description ) {
+      id
+      name
+      phone
+      address
+      email
+      description
+      branchId
+    }
+  }
+`;
+
+export const DELETE_VENDOR = gql`
+  mutation DeleteVendor($id: ID!) {
+    deleteVendor(id: $id)
+  }
+`;
+
+// Define the GraphQL mutation for editing a vendor
+export const EDIT_VENDOR = gql`
+  mutation EditVendor(
+    $id: ID!,
+    $name: String,
+    $phone: String,
+    $address: String,
+    $email: String,
+    $description: String
+  ) {
+    editVendor(
+      id: $id,
+      name: $name,
+      phone: $phone,
+      address: $address,
+      email: $email,
+      description: $description
+    ) {
+      id
+      name
+      phone
+      address
+      email
+      description
+    }
+  }
+`;
+
+export const CREATE_BALANCE = gql`
+  mutation CreateBalance(
+    $vendorId: ID!
+    $branchId: ID!
+    $type: String!
+    $date: Date!
+    $amount: Float!
+    $description: String!
+  ) {
+    createBalance(
+      vendorId: $vendorId
+      branchId: $branchId
+      type: $type
+      date: $date
+      amount: $amount
+      description: $description
+    ) {
+      id
+      vendorId
+      branchId
+      type
+      date
+      amount
+      description
+    }
+  }
+`;

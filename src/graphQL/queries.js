@@ -177,3 +177,74 @@ export const GET_EXPENSES_BY_BRANCH = gql`
     }
   }
 `
+
+export const GET_VENDORS_BY_BRANCH = gql`
+  query GetVendorsByBranch($branchId: ID!) {
+    getVendors(branchId: $branchId) {
+      id
+      name
+      phone
+      address
+      email
+      description
+      branchId
+    }
+  }
+`;
+
+export const GET_VENDOR_BY_ID = gql`
+query GetVendorById($id: ID!) {
+  getVendorById(id: $id) {
+    id
+    branchId
+    name
+    phone
+    email
+    address
+    description
+  }
+}`;
+
+export const GET_TOTAL_BALANCE_BY_ID = gql`
+  query GetTotalBalanceById($id: ID!) {
+    getTotalBalanceById(id: $id)
+  }
+`;
+
+export const GET_TOTAL_BALANCE_BY_VENDOR_AND_BRANCH = gql`
+  query GetTotalBalanceByVendorAndBranch($branchId: ID!, $vendorId: ID!) {
+    getTotalBalanceByVendorAndBranch(branchId: $branchId, vendorId: $vendorId)
+  }
+`;
+
+// export const GET_TOTAL_BALANCE_BY_BRANCH_ID = gql`
+//   query GetTotalBalanceByBranchId($branchId: ID!) {
+//     getTotalBalanceByBranchId(branchId: $branchId)
+//   }
+// `;
+
+
+export const GET_TOTAL_BALANCE_BY_BRANCH_ID = gql`
+  query GetTotalBalanceByBranchId($branchId: ID!) {
+    getTotalBalanceByBranchId(branchId: $branchId) {
+      vendorId
+      totalBalance
+    }
+  }
+`;
+
+export const SEARCH_BALANCES = gql`
+  query SearchBalances($vendorId: ID!, $fromDate: String, $toDate: String) {
+    searchBalances(vendorId: $vendorId, fromDate: $fromDate, toDate: $toDate) {
+      balances {
+        id
+        vendorId
+        amount
+        type
+        date
+        description
+      }
+      totalBalance
+    }
+  }
+`;
