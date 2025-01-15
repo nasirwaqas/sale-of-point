@@ -3,17 +3,21 @@ import { Helmet } from 'react-helmet-async';
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // _mock_
-import { _analyticPost, _analyticOrderTimeline, _analyticTraffic, _appFeatured,
+import {
+  _analyticPost,
+  _analyticOrderTimeline,
+  _analyticTraffic,
+  _appFeatured,
   _appAuthors,
   _appInstalled,
   _appRelated,
-  _appInvoices,} from '../../_mock/arrays';
+  _appInvoices,
+} from '../../_mock/arrays';
 // components
 import { useSettingsContext } from '../../components/settings';
 // sections
 import {
   Category,
-  CategoryNew,
   AnalyticsTasks,
   AnalyticsNewsUpdate,
   AnalyticsOrderTimeline,
@@ -29,8 +33,9 @@ import {
 
 export default function GeneralCategoryPage() {
   const theme = useTheme();
-  
+
   const { themeStretch } = useSettingsContext();
+
   return (
     <>
       <Helmet>
@@ -38,16 +43,16 @@ export default function GeneralCategoryPage() {
       </Helmet>
 
       <Grid item xs={12} lg={6}>
-            <AnalyticsCategory
-              title="Category"
-              tableData={_appInvoices}
-              tableLabels={[
-                { id: 'name', label: 'Name' },
-                { id: 'discription', label: 'Discription' },
-                { id: 'action', label: 'Action' },
-              ]}
-            />
-          </Grid>
+        <Category
+          title="Category"
+          tableData={_appInvoices}
+          tableLabels={[
+            { id: 'name', label: 'Name' },
+            { id: 'discription', label: 'Discription' },
+            { id: 'action', label: 'Action' },
+          ]}
+        />
+      </Grid>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h4" sx={{ mb: 5 }}>
@@ -89,7 +94,6 @@ export default function GeneralCategoryPage() {
               icon="ant-design:bug-filled"
             />
           </Grid>
-
         </Grid>
       </Container>
     </>

@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
 // utils
-import axios from '../utils/axios';
+
+import { jwtDecode } from 'jwt-decode';
 import localStorageAvailable from '../utils/localStorageAvailable';
+import axios from '../utils/axios';
 //
 import { isValidToken, setSession } from './utils';
-import { jwtDecode } from 'jwt-decode';
 
 // ----------------------------------------------------------------------
 
@@ -81,7 +82,7 @@ export function AuthProvider({ children }) {
         type: 'INITIAL',
         payload: {
           isAuthenticated: true,
-          user: user,
+          user,
         },
       });
     } else {

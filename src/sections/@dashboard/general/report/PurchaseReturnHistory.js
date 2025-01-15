@@ -13,6 +13,7 @@ import {
   Paper,
 } from '@mui/material';
 import { PDFViewer, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import PropTypes from 'prop-types';
 
 // Styles for the PDF
 const pdfStyles = StyleSheet.create({
@@ -68,6 +69,17 @@ const PDFTable = ({ data }) => (
     </Page>
   </Document>
 );
+
+PDFTable.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      invoiceNumber: PropTypes.string.isRequired,
+      purchaseInvoiceNumber: PropTypes.string.isRequired,
+      totalAmount: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};
 
 export default function PurchaseReturnHistory() {
   const [showTable, setShowTable] = useState(false);

@@ -99,7 +99,7 @@ export default function CustomerRegister() {
       </TableContainer>
 
       {/* CSS for Print */}
-      <style jsx>{`
+      <style>{`
         @media print {
           body * {
             visibility: hidden;

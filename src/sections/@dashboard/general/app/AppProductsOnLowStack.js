@@ -40,16 +40,15 @@ export default function AppProductsOnLowStack({ title, subheader, tableData, tab
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
 
       <TableContainer sx={{ overflow: 'unset' }}>
-       
-          <Table sx={{ minWidth: 720 }}>
-            <TableHeadCustom headLabel={tableLabels} />
+        <Table sx={{ minWidth: 720 }}>
+          <TableHeadCustom headLabel={tableLabels} />
 
-            <TableBody>
-              {tableData.map((row) => (
-                <AppProductsOnLowStackRow key={row.id} row={row} />
-              ))}
-            </TableBody>
-          </Table>
+          <TableBody>
+            {tableData.map((row) => (
+              <AppProductsOnLowStackRow key={row.id} row={row} />
+            ))}
+          </TableBody>
+        </Table>
       </TableContainer>
 
       <Divider />
@@ -73,7 +72,10 @@ AppProductsOnLowStackRow.propTypes = {
   row: PropTypes.shape({
     code: PropTypes.number,
     name: PropTypes.string,
-
+    type: PropTypes.string, // Add this line
+    time: PropTypes.string, // Add this line
+    invoice: PropTypes.number, // Add this line
+    totalamount: PropTypes.number, // Add this line
   }),
 };
 
@@ -92,14 +94,9 @@ function AppProductsOnLowStackRow({ row }) {
     <>
       <TableRow>
         <TableCell>{row.type}</TableCell>
-
         <TableCell>{row.time}</TableCell>
-
         <TableCell>{fCurrency(row.invoice)}</TableCell>
-
         <TableCell>{fCurrency(row.totalamount)}</TableCell>
-
-    
       </TableRow>
 
       <MenuPopover
@@ -107,9 +104,7 @@ function AppProductsOnLowStackRow({ row }) {
         onClose={handleClosePopover}
         arrow="right-top"
         sx={{ width: 160 }}
-      >
-       
-      </MenuPopover>
+      />
     </>
   );
 }

@@ -13,13 +13,11 @@ export default function AllStock() {
     { Code: 'P003', Product: 'Product C', Batch: 'B003', SalePrice: 90, PurchasePrice: 60, Quantity: 200 },
   ];
 
-  const calculateTotals = (data) => {
-    return data.map(item => ({
-      ...item,
-      TotalSalePrice: item.SalePrice * item.Quantity,
-      TotalPurchasePrice: item.PurchasePrice * item.Quantity,
-    }));
-  };
+  const calculateTotals = (data) => data.map(item => ({
+    ...item,
+    TotalSalePrice: item.SalePrice * item.Quantity,
+    TotalPurchasePrice: item.PurchasePrice * item.Quantity,
+  }));
 
   const handleSearch = () => {
     setShowReport(true);
@@ -30,7 +28,7 @@ export default function AllStock() {
     header: { fontSize: 12, marginBottom: 10, textAlign: 'center', fontWeight: 'bold' },
     table: { display: 'table', width: '100%', borderCollapse: 'collapse', margin: '10px 0' },
     tableRow: { flexDirection: 'row' },
-    tableCol: {fontSize: '9', flex: 1, borderWidth: 1, borderColor: '#000', padding: 1, textAlign: 'center' },
+    tableCol: { fontSize: '9', flex: 1, borderWidth: 1, borderColor: '#000', padding: 1, textAlign: 'center' },
     tableHeader: { fontSize: '9', fontWeight: 'bold', backgroundColor: '#f2f2f2', padding: 0, marginTop: 3, textAlign: 'center' },
   });
 

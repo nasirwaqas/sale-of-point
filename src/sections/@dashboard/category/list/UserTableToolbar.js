@@ -9,9 +9,9 @@ import Iconify from '../../../../components/iconify';
 UserTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
-
+  filterRole: PropTypes.string, // Add this line
   onFilterName: PropTypes.func,
-
+  onFilterRole: PropTypes.func, // Add this line
   onResetFilter: PropTypes.func,
   optionsRole: PropTypes.arrayOf(PropTypes.string),
 };
@@ -36,11 +36,9 @@ export default function UserTableToolbar({
       }}
       sx={{ px: 2.5, py: 3 }}
     >
-
-
       <TextField
         sx={{
-          maxWidth:300
+          maxWidth: 300
         }}
         value={filterName}
         onChange={onFilterName}
@@ -56,9 +54,7 @@ export default function UserTableToolbar({
 
       {isFiltered && (
         <Button
-          color="error"
-          sx={{ flexShrink: 0 }}
-          color={{ xs: 'primary.main', sm: 'error' }}
+          sx={{ flexShrink: 0, color: { xs: 'primary.main', sm: 'error.main' } }}
           onClick={onResetFilter}
           startIcon={<Iconify icon="eva:trash-2-outline" />}
         >

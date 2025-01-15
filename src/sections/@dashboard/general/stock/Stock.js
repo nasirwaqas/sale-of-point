@@ -15,6 +15,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import PropTypes from 'prop-types';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -32,6 +33,12 @@ function TabPanel(props) {
     </Typography>
   );
 }
+
+TabPanel.propTypes = {
+  children: PropTypes.node.isRequired,
+  value: PropTypes.number.isRequired,
+  index: PropTypes.number.isRequired,
+};
 
 function a11yProps(index) {
   return {
@@ -109,9 +116,9 @@ export default function Stock() {
                   onChange={(event) => setCompany(event.target.value)}
                   label="Company"
                 >
-                  {companies.map((company) => (
-                    <MenuItem key={company} value={company}>
-                      {company}
+                  {companies.map((comp) => (
+                    <MenuItem key={comp} value={comp}>
+                      {comp}
                     </MenuItem>
                   ))}
                 </Select>
@@ -143,9 +150,9 @@ export default function Stock() {
                   onChange={(event) => setCompany(event.target.value)}
                   label="Company"
                 >
-                  {companies.map((company) => (
-                    <MenuItem key={company} value={company}>
-                      {company}
+                  {companies.map((comp) => (
+                    <MenuItem key={comp} value={comp}>
+                      {comp}
                     </MenuItem>
                   ))}
                 </Select>
@@ -170,9 +177,9 @@ export default function Stock() {
                   onChange={(event) => setCompany(event.target.value)}
                   label="Company"
                 >
-                  {companies.map((company) => (
-                    <MenuItem key={company} value={company}>
-                      {company}
+                  {companies.map((comp) => (
+                    <MenuItem key={comp} value={comp}>
+                      {comp}
                     </MenuItem>
                   ))}
                 </Select>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Paper, FormControlLabel, Switch, Typography } from '@mui/material';
-import { pdf } from '@react-pdf/renderer';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import PropTypes from 'prop-types';
 
 export default function LowStockReport() {
   const [dense, setDense] = useState(false);
@@ -164,8 +164,16 @@ const PDFTableRow = ({ children }) => (
   </View>
 );
 
+PDFTableRow.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 const PDFTableCell = ({ children }) => (
   <View style={styles.tableCell}>
     <Text>{children}</Text>
   </View>
 );
+
+PDFTableCell.propTypes = {
+  children: PropTypes.node.isRequired,
+};

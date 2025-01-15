@@ -40,17 +40,15 @@ export default function AppTopSaleProducts({ title, subheader, tableData, tableL
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
 
       <TableContainer sx={{ overflow: 'unset' }}>
-       
-          <Table sx={{ minWidth: 650 }}>
-            <TableHeadCustom headLabel={tableLabels} />
+        <Table sx={{ minWidth: 650 }}>
+          <TableHeadCustom headLabel={tableLabels} />
 
-            <TableBody>
-              {tableData.map((row) => (
-                <AppTopSaleProductsRow key={row.id} row={row} />
-              ))}
-            </TableBody>
-          </Table>
-       
+          <TableBody>
+            {tableData.map((row) => (
+              <AppTopSaleProductsRow key={row.id} row={row} />
+            ))}
+          </TableBody>
+        </Table>
       </TableContainer>
 
       <Divider />
@@ -74,7 +72,6 @@ AppTopSaleProductsRow.propTypes = {
   row: PropTypes.shape({
     code: PropTypes.number,
     name: PropTypes.string,
-
   }),
 };
 
@@ -93,10 +90,7 @@ function AppTopSaleProductsRow({ row }) {
     <>
       <TableRow>
         <TableCell>{row.code}</TableCell>
-
         <TableCell>{row.name}</TableCell>
-
-    
       </TableRow>
 
       <MenuPopover
@@ -104,9 +98,7 @@ function AppTopSaleProductsRow({ row }) {
         onClose={handleClosePopover}
         arrow="right-top"
         sx={{ width: 160 }}
-      >
-       
-      </MenuPopover>
+      />
     </>
   );
 }

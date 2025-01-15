@@ -167,6 +167,11 @@ export default function ProductPage() {
     navigate(PATH_DASHBOARD.product.edit);
   };
 
+  const handleDeleteRows = (selectedRows) => {
+    // Implement the delete logic here
+    console.log('Deleting rows:', selectedRows);
+  };
+
   const handleResetFilter = () => {
     setFilterName('');
     setFilterRole('all');

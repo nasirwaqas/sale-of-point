@@ -1,8 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import CustomerSendMessage from './CustomerSendMessage';
-import { PATH_DASHBOARD } from '../../../../routes/paths';
-import { Outlet } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import {
   Box,
   Typography,
@@ -19,6 +18,9 @@ import {
   Button,
 } from '@mui/material';
 
+import { PATH_DASHBOARD } from '../../../../routes/paths';
+import CustomerSendMessage from './CustomerSendMessage';
+
 const CustomerAccount = ({ customerDetails }) => {
   const navigate = useNavigate(); // Initialize navigate function
 
@@ -30,7 +32,6 @@ const CustomerAccount = ({ customerDetails }) => {
   };
 
   return (
-    
     <Box sx={{ p: 3, border: '1px solid #ddd', borderRadius: 2, backgroundColor: '#fff' }}>
       {/* Customer Details Section */}
       <Box sx={{ mb: 3, position: 'relative' }}>
@@ -40,7 +41,7 @@ const CustomerAccount = ({ customerDetails }) => {
 
         {/* Buttons in Top Right */}
         <Box sx={{ position: 'absolute', top: 0, right: 0, display: 'flex', gap: 2 }}>
-          <Button variant="contained" color="primary" size="small" onClick={handleMessage} >
+          <Button variant="contained" color="primary" size="small" onClick={handleMessage}>
             Send Message
           </Button>
           <Button variant="outlined" color="primary" size="small" onClick={handleBackClick}>
@@ -68,7 +69,7 @@ const CustomerAccount = ({ customerDetails }) => {
       </Box>
 
       {/* Bottom Border Line */}
-      <Box sx={{ height: 2, backgroundColor: '#ddd', my: 3 }}></Box>
+      <Box sx={{ height: 2, backgroundColor: '#ddd', my: 3 }} />
 
       {/* Manage Balance Section */}
       <Box sx={{ mb: 3 }}>
@@ -179,7 +180,7 @@ const CustomerAccount = ({ customerDetails }) => {
       </Box>
 
       {/* Bottom Border Line */}
-      <Box sx={{ height: 2, backgroundColor: '#ddd', my: 3 }}></Box>
+      <Box sx={{ height: 2, backgroundColor: '#ddd', my: 3 }} />
 
       {/* History Section */}
       <Box>
@@ -224,6 +225,15 @@ const CustomerAccount = ({ customerDetails }) => {
       <Outlet />
     </Box>
   );
+};
+
+CustomerAccount.propTypes = {
+  customerDetails: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    phone: PropTypes.string,
+    totalBalance: PropTypes.string,
+  }),
 };
 
 export default CustomerAccount;

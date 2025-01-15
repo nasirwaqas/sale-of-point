@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Box, Button, TextField, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, FormControlLabel, Switch } from '@mui/material';
-import { pdf } from '@react-pdf/renderer';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
 // Custom TableRow and TableCell components for PDF rendering
 const PDFTableRow = ({ children }) => (
@@ -10,11 +10,20 @@ const PDFTableRow = ({ children }) => (
   </View>
 );
 
+PDFTableRow.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 const PDFTableCell = ({ children, style }) => (
   <View style={[styles.tableCell, style]}>
     <Text>{children}</Text>
   </View>
 );
+
+PDFTableCell.propTypes = {
+  children: PropTypes.node.isRequired,
+  style: PropTypes.object,
+};
 
 export default function CashStates() {
   const [showTable, setShowTable] = useState(false);

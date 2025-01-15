@@ -11,30 +11,27 @@ import {
   FormControlLabel,
   Table,
   TableBody,
-  
   TableCell,
   TableHead,
   TableRow,
-  Size,
-  Item,
   Paper,
 } from '@mui/material';
 
 export default function PurchaseReturn() {
-    const [rows, setRows] = useState([
-        {
-          id: 1,
-          code: "123",
-          name: "Example Product",
-          boxQuantity: 5,
-          boxPurchasePrice: 100,
-          purchasePrice: 100,
-          salePrice: 120,
-          quantity: 20,
-          expiryDate: "2022-12-12",
-          total: 1080,
-        },
-      ]);
+  const [rows, setRows] = useState([
+    {
+      id: 1,
+      code: "123",
+      name: "Example Product",
+      boxQuantity: 5,
+      boxPurchasePrice: 100,
+      purchasePrice: 100,
+      salePrice: 120,
+      quantity: 20,
+      expiryDate: "2022-12-12",
+      total: 1080,
+    },
+  ]);
   const [discountValue, setDiscountValue] = useState({ percentage: 0, amount: 0 });
   const [amount, setAmount] = useState(0);
 
@@ -48,6 +45,15 @@ export default function PurchaseReturn() {
     const value = parseFloat(e.target.value) || 0;
     const calculatedPercentage = (value / amount) * 100;
     setDiscountValue({ percentage: calculatedPercentage, amount: value });
+  };
+
+  const handleInputChange = (e, id, field) => {
+    const value = e.target.value;
+    setRows((prevRows) =>
+      prevRows.map((row) =>
+        row.id === id ? { ...row, [field]: value } : row
+      )
+    );
   };
 
   return (
@@ -98,13 +104,13 @@ export default function PurchaseReturn() {
       </Box>
 
       <Divider sx={{ my: 3 }} />
-            {/* Table Section */}
-            <TableContainer component={Paper} sx={{ mb: 3 }}>
+      {/* Table Section */}
+      <TableContainer component={Paper} sx={{ mb: 3 }}>
         <Table>
           <TableHead>
             <TableRow>
-            <TableCell>Sr#</TableCell>
-            <TableCell>Code</TableCell>
+              <TableCell>Sr#</TableCell>
+              <TableCell>Code</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Box Quantities</TableCell>
               <TableCell>Box Purchase Price</TableCell>
@@ -168,129 +174,126 @@ export default function PurchaseReturn() {
 
       {/* Second Section */}
       <Grid 
-  container 
-  spacing={0} 
-  wrap="wrap" 
-  sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}
->
-  {[
-    {
-      label: 'Total Quantity',
-      value: '10',
-    },
-    {
-      label: 'Discount(alt+d)%/Rs',
-      inputs: ['%', 'Rs'],
-    },
-    {
-      label: 'Tax',
-      inputs: ['%', 'Rs'],
-    },
-    {
-      label: 'Total Amount',
-      value: '30',
-    },
-    {
-      label: 'Payable',
-      value: '30',
-    },
-    {
-      label: 'Enter Amount(alt+e)',
-      inputs: [''],
-    },
-    {
-      label: 'Receivable',
-      value: '30',
-    },
-    {
-      label: 'Balance',
-      value: '30',
-    },
-    {
-      label: 'Return',
-      value: '30',
-    },
-  ].map((item, index) => (
-    <Grid item xs={12} sm={6} md={2} key={index} sx={{ minWidth: 100 }}>
-      <Box sx={{ border: '1px solid #ccc', textAlign: 'center' }}>
-        <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize:'0.8rem'}}>
-          {item.label}
-        </Typography>
-        {item.value ? (
-          <Box
-            sx={{
-              bgcolor: 'black',
-              color: 'white',
-              fontFamily: 'sans-serif',
-              p: 1,
-              borderRadius: 1,
+        container 
+        spacing={0} 
+        wrap="wrap" 
+        sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}
+      >
+        {[
+          {
+            label: 'Total Quantity',
+            value: '10',
+          },
+          {
+            label: 'Discount(alt+d)%/Rs',
+            inputs: ['%', 'Rs'],
+          },
+          {
+            label: 'Tax',
+            inputs: ['%', 'Rs'],
+          },
+          {
+            label: 'Total Amount',
+            value: '30',
+          },
+          {
+            label: 'Payable',
+            value: '30',
+          },
+          {
+            label: 'Enter Amount(alt+e)',
+            inputs: [''],
+          },
+          {
+            label: 'Receivable',
+            value: '30',
+          },
+          {
+            label: 'Balance',
+            value: '30',
+          },
+          {
+            label: 'Return',
+            value: '30',
+          },
+        ].map((item, index) => (
+          <Grid item xs={12} sm={6} md={2} key={index} sx={{ minWidth: 100 }}>
+            <Box sx={{ border: '1px solid #ccc', textAlign: 'center' }}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize:'0.8rem'}}>
+                {item.label}
+              </Typography>
+              {item.value ? (
+                <Box
+                  sx={{
+                    bgcolor: 'black',
+                    color: 'white',
+                    fontFamily: 'sans-serif',
+                    p: 1,
+                    borderRadius: 1,
+                  }}
+                >
+                  <Typography>{item.value}</Typography>
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  {item.inputs.map((inputLabel, idx) => (
+                    <TextField
+                      key={idx}
+                      size="small"
+                      label={inputLabel}
+                      sx={{
+                        bgcolor: 'white',
+                        borderRadius: 1,
+                        flex: 1,
+                      }}
+                    />
+                  ))}
+                </Box>
+              )}
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+      <Divider sx={{ my: 2 }} />
+      <Grid container alignItems="center" justifyContent="center" spacing={1}>
+        <Grid item xs={12} textAlign="center">
+          <Button
+            variant="contained"
+            sx={{ 
+              m: 1, 
+              bgcolor: 'green', 
+              '&:hover': { bgcolor: 'darkgreen' } 
             }}
           >
-            <Typography>{item.value}</Typography>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              display: 'flex',
-    
-              justifyContent: 'space-between',
+            Hold
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ 
+              m: 1, 
+              bgcolor: 'blue', 
+              '&:hover': { bgcolor: 'darkblue' } 
             }}
           >
-            {item.inputs.map((inputLabel, idx) => (
-              <TextField
-                key={idx}
-                size="small"
-                label={inputLabel}
-                sx={{
-                  bgcolor: 'white',
-                  borderRadius: 1,
-                  flex: 1,
-                }}
-              />
-            ))}
-          </Box>
-        )}
-      </Box>
-    </Grid>
-  ))}
-  
-</Grid>
-<Divider sx={{ my: 2 }} />
-<Grid container alignItems="center" justifyContent="center" spacing={1}>
-  <Grid item xs={12} textAlign="center">
-    <Button
-      variant="contained"
-      sx={{ 
-        m: 1, 
-        bgcolor: 'green', 
-        '&:hover': { bgcolor: 'darkgreen' } 
-      }}
-    >
-      Hold
-    </Button>
-    <Button
-      variant="contained"
-      sx={{ 
-        m: 1, 
-        bgcolor: 'blue', 
-        '&:hover': { bgcolor: 'darkblue' } 
-      }}
-    >
-      Pay & Save
-    </Button>
-    <Button
-      variant="contained"
-      sx={{ 
-        m: 1, 
-        bgcolor: 'red', 
-        '&:hover': { bgcolor: 'darkred' } 
-      }}
-    >
-      Reset
-    </Button>
-  </Grid>
-</Grid>
-
+            Pay & Save
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ 
+              m: 1, 
+              bgcolor: 'red', 
+              '&:hover': { bgcolor: 'darkred' } 
+            }}
+          >
+            Reset
+          </Button>
+        </Grid>
+      </Grid>
     </Box>
   );
 }

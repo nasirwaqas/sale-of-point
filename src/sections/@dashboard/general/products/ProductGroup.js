@@ -1,8 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
-import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import Iconify from '../../../../components/iconify';
 // @mui
 import {
   Card,
@@ -15,6 +13,9 @@ import {
   TableContainer,
 } from '@mui/material';
 // components
+import Iconify from '../../../../components/iconify';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
+
 import Scrollbar from '../../../../components/scrollbar';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../../components/settings';
@@ -25,7 +26,7 @@ import {
   TableHeadCustom,
   TablePaginationCustom,
 } from '../../../../components/table';
-import { UserTableToolbar } from '../../../@dashboard/category/list';
+import { UserTableToolbar } from '../../category/list';
 
 // ----------------------------------------------------------------------
 
@@ -56,9 +57,9 @@ export default function ProductGroup() {
   const [filterName, setFilterName] = useState('');
 
   const data = [
-    { productGroupName: 'John Doe',  },
-    { productGroupName: 'Jane Smith', },
-    { productGroupName: 'Mike Brown',  },
+    { productGroupName: 'John Doe' },
+    { productGroupName: 'Jane Smith' },
+    { productGroupName: 'Mike Brown' },
   ];
 
   const dataFiltered = applyFilter({
@@ -90,11 +91,9 @@ export default function ProductGroup() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-      <CustomBreadcrumbs
-          
+        <CustomBreadcrumbs
           links={[
             { name: 'Product Group New', href: PATH_DASHBOARD.root },
-           
           ]}
           action={
             <Button
@@ -103,7 +102,7 @@ export default function ProductGroup() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              New 
+              New
             </Button>
           }
         />
@@ -167,7 +166,7 @@ export default function ProductGroup() {
 function applyFilter({ inputData, filterName }) {
   if (filterName) {
     return inputData.filter((user) =>
-      user.menufacturerName.toLowerCase().includes(filterName.toLowerCase())
+      user.productGroupName.toLowerCase().includes(filterName.toLowerCase())
     );
   }
   return inputData;

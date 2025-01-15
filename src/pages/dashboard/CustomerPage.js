@@ -15,7 +15,7 @@ import {
   TableBody,
   Container,
   IconButton,
-  TableRow, TableCell ,
+  TableRow, TableCell,
   DialogActions,
   Dialog,
   Box,
@@ -23,15 +23,12 @@ import {
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// _mock_
-// import { _userList } from '../../_mock/arrays';
 // components
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
-
 import {
   useTable,
   getComparator,
@@ -43,10 +40,9 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 // sections
+import CustomersBalanceReport from '../../sections/@dashboard/general/customers/CustomersBalanceReport';
+import CustomerTableToolbar from '../../sections/@dashboard/general/customers/CustomerTableToolbar';
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/category/list';
-import CustomersBalanceReport from 'src/sections/@dashboard/general/customers/CustomersBalanceReport';
-import CustomerTableToolbar from 'src/sections/@dashboard/general/customers/CustomerTableToolbar';
-
 
 // ----------------------------------------------------------------------
 
@@ -72,7 +68,6 @@ const TABLE_HEAD = [
   { id: 'customerAdddress', label: 'Address', align: 'left' },
   { id: 'customerAccount', label: 'Account', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
-
 ];
 
 // ----------------------------------------------------------------------
@@ -139,21 +134,23 @@ export default function CustomerPage() {
       customerCnic: "54321-0987654-1", // CNIC
     },
   ];
-  
 
-const handleClose = () => {
+  const handleClose = () => {
     setOpen(false);
   };
 
-const handleOpen = () => {
+  const handleOpen = () => {
     console.log('Opening dialog...');
     setOpen(true);
   };
 
-  
+  const handleDeleteRows = (selectedRows) => {
+    // Implement the delete logic here
+    console.log('Deleting rows:', selectedRows);
+  };
 
   const dataFiltered = applyFilter({
-    inputData: data ,
+    inputData: data,
     comparator: getComparator(order, orderBy),
     filterName,
     filterRole,
@@ -163,8 +160,6 @@ const handleOpen = () => {
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const denseHeight = dense ? 52 : 72;
-
-
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -189,9 +184,6 @@ const handleOpen = () => {
     setFilterRole(event.target.value);
   };
 
-
-
-
   const handleEditRow = (id) => {
     navigate(PATH_DASHBOARD.customer.edit);
   };
@@ -212,83 +204,75 @@ const handleOpen = () => {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-      <CustomBreadcrumbs
-         links={[
-      { name: 'customer', href: PATH_DASHBOARD.root },
-      ]}
-        action={
-    <>  
-       {/* New Button: customers Balance Report */}
-      <Button
-        onClick={handleOpen}
-        variant="contained"
-        color="primary"
-        sx={{ ml: 2 }} // Adds some space between the buttons
-      >
-        customers Balance Report
-        
-      </Button>
-            {/* New Button: customers Balance Report */}
-            <Button
-        component={RouterLink}
-        to={PATH_DASHBOARD.customer.balancemessage}
-        variant="contained"
-        color="primary"
-        sx={{ ml: 2 }} // Adds some space between the buttons
-      >
-        Send Balance Message
-        
-      </Button>
-            {/* New Button: customers Balance Report */}
-            <Button
+        <CustomBreadcrumbs
+          links={[
+            { name: 'customer', href: PATH_DASHBOARD.root },
+          ]}
+          action={
+            <>
+              {/* New Button: customers Balance Report */}
+              <Button
+                onClick={handleOpen}
+                variant="contained"
+                color="primary"
+                sx={{ ml: 2 }} // Adds some space between the buttons
+              >
+                customers Balance Report
+              </Button>
+              {/* New Button: customers Balance Report */}
+              <Button
+                component={RouterLink}
+                to={PATH_DASHBOARD.customer.balancemessage}
+                variant="contained"
+                color="primary"
+                sx={{ ml: 2 }} // Adds some space between the buttons
+              >
+                Send Balance Message
+              </Button>
+              {/* New Button: customers Balance Report */}
+              <Button
                 component={RouterLink}
                 to={PATH_DASHBOARD.customer.areas}
-        variant="contained"
-        color="primary"
-        sx={{ ml: 2 }} // Adds some space between the buttons
-      >
-        Areas
-        
-      </Button>
-            {/* New Button: customers Balance Report */}
-            <Button
-          component={RouterLink}
-          to={PATH_DASHBOARD.customer.import}
-        variant="contained"
-        color="primary"
-        sx={{ ml: 2 }} // Adds some space between the buttons
-      >
-        Import
-        
-      </Button>
-            {/* New Button: customers Balance Report */}
-            <Button
-         component={RouterLink}
-         to={PATH_DASHBOARD.customer.import}
-        variant="contained"
-        color="primary"
-        sx={{ ml: 2 }} // Adds some space between the buttons
-      >
-        Export
-        
-      </Button>
-      <Button
-        component={RouterLink}
-        to={PATH_DASHBOARD.customer.new}
-        variant="contained"
-        sx={{ ml: 2 }} // Adds some space between the buttons
-
-      >
-        New
-      </Button>
-     </>
-        }
-     />
-
+                variant="contained"
+                color="primary"
+                sx={{ ml: 2 }} // Adds some space between the buttons
+              >
+                Areas
+              </Button>
+              {/* New Button: customers Balance Report */}
+              <Button
+                component={RouterLink}
+                to={PATH_DASHBOARD.customer.import}
+                variant="contained"
+                color="primary"
+                sx={{ ml: 2 }} // Adds some space between the buttons
+              >
+                Import
+              </Button>
+              {/* New Button: customers Balance Report */}
+              <Button
+                component={RouterLink}
+                to={PATH_DASHBOARD.customer.import}
+                variant="contained"
+                color="primary"
+                sx={{ ml: 2 }} // Adds some space between the buttons
+              >
+                Export
+              </Button>
+              <Button
+                component={RouterLink}
+                to={PATH_DASHBOARD.customer.new}
+                variant="contained"
+                sx={{ ml: 2 }} // Adds some space between the buttons
+              >
+                New
+              </Button>
+            </>
+          }
+        />
 
         <Card>
-    
-        <CustomerTableToolbar
+          <CustomerTableToolbar
             filterName={filterName}
             filterRole={filterRole}
             optionsRole={AREA_OPTIONS}
@@ -296,11 +280,8 @@ const handleOpen = () => {
             onFilterRole={handleFilterRole}
             onResetFilter={handleResetFilter}
           />
-          
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          
-
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
                 <TableHeadCustom
@@ -312,52 +293,50 @@ const handleOpen = () => {
                   onSort={onSort}
                 />
 
-                
                 <TableBody>
-  {dataInPage.map((row, index) => (
-    <TableRow key={index}>
-      <TableCell>{row.customerName}</TableCell>
-        <TableCell>{row.customerPhone}</TableCell>
-        <TableCell>{row.customerCnic}</TableCell>
-        <TableCell>{row.customerAddress}</TableCell>
-        <TableCell>{row.customerAccount}</TableCell>
-      <TableCell>
-        <Button 
-          variant="outlined" 
-          color="primary" 
-          size="small" 
-          onClick={() => handleEditRow(row.categoryName)}
-        >
-          Edit
-        </Button>
-        <Button 
-          variant="contained" 
-          color="success" 
-          size="small" 
-          sx={{ ml: 1 }}
-          onClick={() => handleAccountRow(row.categoryName)}
-        >
-          Account
-        </Button>
+                  {dataInPage.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row.customerName}</TableCell>
+                      <TableCell>{row.customerPhone}</TableCell>
+                      <TableCell>{row.customerCnic}</TableCell>
+                      <TableCell>{row.customerAddress}</TableCell>
+                      <TableCell>{row.customerAccount}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          size="small"
+                          onClick={() => handleEditRow(row.categoryName)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="success"
+                          size="small"
+                          sx={{ ml: 1 }}
+                          onClick={() => handleAccountRow(row.categoryName)}
+                        >
+                          Account
+                        </Button>
 
-        <Button 
-          variant="contained" 
-          color="success" 
-          size="small" 
-          sx={{ ml: 1 }} // Add some margin between buttons
-        >
-          Active
-        </Button>
-      </TableCell>
-    </TableRow>
-  ))}
+                        <Button
+                          variant="contained"
+                          color="success"
+                          size="small"
+                          sx={{ ml: 1 }} // Add some margin between buttons
+                        >
+                          Active
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
 
-  <TableEmptyRows
-    height={denseHeight}
-    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-  />
-</TableBody>
-
+                  <TableEmptyRows
+                    height={denseHeight}
+                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                  />
+                </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
@@ -397,7 +376,7 @@ const handleOpen = () => {
           </Button>
         }
       />
-            <Dialog fullScreen open={open}>
+      <Dialog fullScreen open={open}>
         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
           <DialogActions
             sx={{
@@ -415,7 +394,7 @@ const handleOpen = () => {
 
           <Box sx={{ flexGrow: 1, height: '100%', overflow: 'hidden' }}>
             <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
-            <CustomersBalanceReport customer={data} />
+              <CustomersBalanceReport customer={data} />
             </PDFViewer>
           </Box>
         </Box>

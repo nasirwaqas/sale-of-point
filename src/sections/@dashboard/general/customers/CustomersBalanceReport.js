@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Page, View, Text, Document } from '@react-pdf/renderer';
-import { fCurrency } from '../../../../utils/formatNumber';
 import { fontSize, fontWeight } from '@mui/system';
+import { fCurrency } from '../../../../utils/formatNumber';
 
 // Define the styles inline for the PDF document
 const styles = {
@@ -74,9 +74,9 @@ CustomersBalanceReport.propTypes = {
 };
 
 export default function CustomersBalanceReport({ customer }) {
-  const totalBalance = customer.reduce((sum, customer) => {
-    const customerAccount = parseFloat(customer.customerAccount);
-    return sum + (isNaN(customerAccount) ? 0 : customerAccount);
+  const totalBalance = customer.reduce((sum, cust) => {
+    const customerAccount = parseFloat(cust.customerAccount);
+    return sum + (Number.isNaN(customerAccount) ? 0 : customerAccount);
   }, 0);
 
   return (
@@ -111,22 +111,22 @@ export default function CustomersBalanceReport({ customer }) {
 
           {/* Table Body */}
           <View style={styles.tableBody}>
-            {customer.map((customer, index) => (
+            {customer.map((cust, index) => (
               <View style={styles.tableRow} key={index}>
                 <View style={styles.tableCell}>
-                  <Text>{customer.customerName}</Text>
+                  <Text>{cust.customerName}</Text>
                 </View>
                 <View style={styles.tableCell}>
-                  <Text>{customer.customerPhone}</Text>
+                  <Text>{cust.customerPhone}</Text>
                 </View>
                 <View style={styles.tableCell}>
-                  <Text>{customer.customerCnic}</Text>
+                  <Text>{cust.customerCnic}</Text>
                 </View>
                 <View style={styles.tableCell}>
-                  <Text>{customer.customerAddress}</Text>
+                  <Text>{cust.customerAddress}</Text>
                 </View>
                 <View style={styles.tableCell}>
-                  <Text>{fCurrency(parseFloat(customer.customerAccount))}</Text>
+                  <Text>{fCurrency(parseFloat(cust.customerAccount))}</Text>
                 </View>
               </View>
             ))}

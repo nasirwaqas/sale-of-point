@@ -9,11 +9,11 @@ import Iconify from '../../../../components/iconify';
 UserTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
-
-  onFilterName: PropTypes.func,
-
-  onResetFilter: PropTypes.func,
+  filterRole: PropTypes.string,
   optionsRole: PropTypes.arrayOf(PropTypes.string),
+  onFilterName: PropTypes.func,
+  onFilterRole: PropTypes.func,
+  onResetFilter: PropTypes.func,
 };
 
 export default function UserTableToolbar({

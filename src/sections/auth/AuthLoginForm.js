@@ -7,6 +7,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+// graphql
+
+import { useLazyQuery } from '@apollo/client';
+import { LOGIN_USER } from '../../graphQL/queries';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // auth
@@ -14,14 +18,12 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
-import { LOGIN_USER } from 'src/graphQL/queries';
-import { useLazyQuery } from '@apollo/client';
 
 // ----------------------------------------------------------------------
 
 export default function AuthLoginForm() {
   const { login } = useAuthContext();
-  const [loginUser, { data, loading, error }] = useLazyQuery(LOGIN_USER, {
+  const [loginUser, { data: loginData, loading, error: loginError }] = useLazyQuery(LOGIN_USER, {
     fetchPolicy: 'no-cache',
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -48,9 +50,9 @@ export default function AuthLoginForm() {
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (formData) => {
     // Input validation
-    if (!data.username || !data.password) {
+    if (!formData.username || !formData.password) {
       setError('afterSubmit', {
         message: 'Username and password are required.',
       });
@@ -59,16 +61,16 @@ export default function AuthLoginForm() {
 
     try {
       const response = await loginUser({
-        variables: { username: data.username, password: data.password },
+        variables: { username: formData.username, password: formData.password },
       });
 
       const { token, ...userData } = response.data.login;
       await login(token, userData);
-    } catch (error) {
-      console.error('Login error:', error);
+    } catch (err) {
+      console.error('Login error:', err);
       reset();
       setError('afterSubmit', {
-        message: error.message || 'An unexpected error occurred. Please try again.',
+        message: err.message || 'An unexpected error occurred. Please try again.',
       });
     }
   };

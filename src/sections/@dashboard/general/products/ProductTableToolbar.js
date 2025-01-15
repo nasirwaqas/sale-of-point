@@ -9,9 +9,9 @@ import Iconify from '../../../../components/iconify';
 ProductTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
-
+  filterRole: PropTypes.string, // Add this line
   onFilterName: PropTypes.func,
-
+  onFilterRole: PropTypes.func, // Add this line
   onResetFilter: PropTypes.func,
   optionsRole: PropTypes.arrayOf(PropTypes.string),
 };
@@ -54,8 +54,8 @@ export default function ProductTableToolbar({
           maxWidth: { sm: 240 },
           textTransform: 'capitalize',
         }}
-      > 
-         {optionsRole.map((option) => (
+      >
+        {optionsRole.map((option) => (
           <MenuItem
             key={option}
             value={option}
@@ -68,8 +68,8 @@ export default function ProductTableToolbar({
           >
             {option}
           </MenuItem>
-        ))} 
-       </TextField>
+        ))}
+      </TextField>
 
       <TextField
         fullWidth

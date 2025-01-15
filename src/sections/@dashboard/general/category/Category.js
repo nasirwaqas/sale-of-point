@@ -49,16 +49,15 @@ export default function Category({ title, subheader, tableData, tableLabels, ...
           /> */}
 
       <TableContainer sx={{ overflow: 'unset' }}>
-       
-          <Table sx={{ minWidth: 720 }}>
-            <TableHeadCustom headLabel={tableLabels} />
-     
-            <TableBody>
-              {tableData.map((row) => (
-                <CategoryRow key={row.id} row={row} />
-              ))}
-            </TableBody>
-          </Table>
+        <Table sx={{ minWidth: 720 }}>
+          <TableHeadCustom headLabel={tableLabels} />
+
+          <TableBody>
+            {tableData.map((row) => (
+              <CategoryRow key={row.id} row={row} />
+            ))}
+          </TableBody>
+        </Table>
       </TableContainer>
 
       <Divider />
@@ -67,7 +66,7 @@ export default function Category({ title, subheader, tableData, tableLabels, ...
         <Button
           size="small"
           color="inherit"
-          endIcon={<Iconify icon="eva:arrow-ios-forward-fill"  />}
+          endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
         >
           View All
         </Button>
@@ -82,7 +81,9 @@ CategoryRow.propTypes = {
   row: PropTypes.shape({
     code: PropTypes.number,
     name: PropTypes.string,
-
+    categoryName: PropTypes.string, // Add this line
+    categoryDiscription: PropTypes.string, // Add this line
+    action: PropTypes.number, // Add this line
   }),
 };
 
@@ -97,31 +98,20 @@ function CategoryRow({ row }) {
     setOpenPopover(null);
   };
 
-
   return (
     <>
       <TableRow>
         <TableCell>{row.categoryName}</TableCell>
-
         <TableCell>{row.categoryDiscription}</TableCell>
-
         <TableCell>{fCurrency(row.action)}</TableCell>
-
-       
-
       </TableRow>
-  
-
-
 
       <MenuPopover
         open={openPopover}
         onClose={handleClosePopover}
         arrow="right-top"
         sx={{ width: 160 }}
-      >
-       
-      </MenuPopover>
+      />
     </>
   );
 }

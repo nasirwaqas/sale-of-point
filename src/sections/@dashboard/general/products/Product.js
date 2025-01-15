@@ -25,7 +25,7 @@ import Scrollbar from '../../../../components/scrollbar';
 import MenuPopover from '../../../../components/menu-popover';
 import { TableHeadCustom } from '../../../../components/table';
 // sections
-import { ProductTableToolbar } from '../../../@dashboard/general/products';
+import ProductTableToolbar from './ProductTableToolbar';
 
 // ----------------------------------------------------------------------
 
@@ -37,28 +37,40 @@ Product.propTypes = {
 };
 
 export default function Product({ title, subheader, tableData, tableLabels, ...other }) {
+  const [isFiltered, setIsFiltered] = useState(false);
+  const [filterName, setFilterName] = useState('');
+
+  const handleFilterName = (event) => {
+    setFilterName(event.target.value);
+    setIsFiltered(event.target.value !== '');
+  };
+
+  const handleResetFilter = () => {
+    setFilterName('');
+    setIsFiltered(false);
+  };
+
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
 
       <ProductTableToolbar
-            isFiltered={isFiltered}
-            filterName={filterName}
-            onFilterName={handleFilterName}
-            onResetFilter={handleResetFilter}
-          />
+        isFiltered={isFiltered}
+        filterName={filterName}
+        onFilterName={handleFilterName}
+        onResetFilter={handleResetFilter}
+      />
 
       <TableContainer sx={{ overflow: 'unset' }}>
-       
-          <Table sx={{ minWidth: 720 }}>
-            <TableHeadCustom headLabel={tableLabels} />
-     
-            <TableBody>
-              {tableData.map((row) => (
-                <ProductRow key={row.id} row={row} />
-              ))}
-            </TableBody>
-          </Table>
+        <Table sx={{ minWidth: 720 }}>
+          <TableHeadCustom headLabel={tableLabels} />
+
+          <TableBody>
+            {tableData.map((row) => (
+              <ProductRow key={row.id} row={row} />
+            ))}
+          </TableBody>
+        </Table>
       </TableContainer>
 
       <Divider />
@@ -67,7 +79,7 @@ export default function Product({ title, subheader, tableData, tableLabels, ...o
         <Button
           size="small"
           color="inherit"
-          endIcon={<Iconify icon="eva:arrow-ios-forward-fill"  />}
+          endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
         >
           View All
         </Button>
@@ -82,7 +94,9 @@ ProductRow.propTypes = {
   row: PropTypes.shape({
     code: PropTypes.number,
     name: PropTypes.string,
-
+    productName: PropTypes.string, // Add this line
+    productDiscription: PropTypes.string, // Add this line
+    action: PropTypes.number, // Add this line
   }),
 };
 
@@ -97,31 +111,20 @@ function ProductRow({ row }) {
     setOpenPopover(null);
   };
 
-
   return (
     <>
       <TableRow>
         <TableCell>{row.productName}</TableCell>
-
         <TableCell>{row.productDiscription}</TableCell>
-
         <TableCell>{fCurrency(row.action)}</TableCell>
-
-       
-
       </TableRow>
-  
-
-
 
       <MenuPopover
         open={openPopover}
         onClose={handleClosePopover}
         arrow="right-top"
         sx={{ width: 160 }}
-      >
-       
-      </MenuPopover>
+      />
     </>
   );
 }

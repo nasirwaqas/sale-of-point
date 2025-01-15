@@ -12,12 +12,13 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
+// mock
+import { phoneNumber } from '../../../../_mock/assets';
 // components
 import Label from '../../../../components/label';
 import Iconify from '../../../../components/iconify';
 import MenuPopover from '../../../../components/menu-popover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
-import { phoneNumber } from 'src/_mock/assets';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ UserTableRow.propTypes = {
 };
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, avatarUrl, company, role, isVerified, status, categoryName,categoryDiscription,catetoryAction } = row;
+  const { name, avatarUrl, company, role, isVerified, status, categoryName, categoryDiscription, catetoryAction } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -54,14 +55,10 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
   return (
     <>
-    
       <TableRow hover selected={selected}>
-  
-
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Avatar alt={categoryName} src={avatarUrl} />
-
             <Typography variant="subtitle2" noWrap>
               {categoryName}
             </Typography>
@@ -102,8 +99,6 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           </IconButton>
         </TableCell>
       </TableRow>
-
-  
     </>
   );
 }

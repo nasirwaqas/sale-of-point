@@ -40,17 +40,15 @@ export default function AppRecentInvoice({ title, subheader, tableData, tableLab
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
 
       <TableContainer sx={{ overflow: 'unset' }}>
+        <Table sx={{ minWidth: 720 }}>
+          <TableHeadCustom headLabel={tableLabels} />
 
-          <Table sx={{ minWidth: 720 }}>
-            <TableHeadCustom headLabel={tableLabels} />
-
-            <TableBody>
-              {tableData.map((row) => (
-                <AppRecentInvoiceRow key={row.id} row={row} />
-              ))}
-            </TableBody>
-          </Table>
-     
+          <TableBody>
+            {tableData.map((row) => (
+              <AppRecentInvoiceRow key={row.id} row={row} />
+            ))}
+          </TableBody>
+        </Table>
       </TableContainer>
 
       <Divider />
@@ -76,6 +74,10 @@ AppRecentInvoiceRow.propTypes = {
     price: PropTypes.number,
     status: PropTypes.string,
     category: PropTypes.string,
+    type: PropTypes.string, // Add this line
+    time: PropTypes.string, // Add this line
+    invoice: PropTypes.number, // Add this line
+    totalamount: PropTypes.number, // Add this line
   }),
 };
 
@@ -114,14 +116,9 @@ function AppRecentInvoiceRow({ row }) {
     <>
       <TableRow>
         <TableCell>{row.type}</TableCell>
-
         <TableCell>{row.time}</TableCell>
-
         <TableCell>{fCurrency(row.invoice)}</TableCell>
-
         <TableCell>{fCurrency(row.totalamount)}</TableCell>
-
-    
       </TableRow>
 
       <MenuPopover
