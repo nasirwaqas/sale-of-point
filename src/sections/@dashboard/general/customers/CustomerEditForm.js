@@ -1,55 +1,66 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-// form
+import { useEffect, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery, useMutation } from '@apollo/client';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
-// utils
+import { Box, Card, Grid, Stack, Typography, MenuItem } from '@mui/material';
 import { fData } from '../../../../utils/formatNumber';
-// components
+import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { GET_CUSTOMER_BY_ID, GET_CUSTOMER_AREAS_BY_BRANCH } from '../../../../graphQL/queries';
+import { EDIT_CUSTOMER } from '../../../../graphQL/mutations';
 import FormProvider, { RHFSelect, RHFTextField, RHFUploadAvatar } from '../../../../components/hook-form';
-
-// ----------------------------------------------------------------------
+import { useSnackbar } from '../../../../components/snackbar';
 
 CustomerEditForm.propTypes = {
   isEdit: PropTypes.bool,
-  currentUser: PropTypes.object,
 };
 
-export default function CustomerEditForm({ isEdit = false, currentUser }) {
+export default function CustomerEditForm({ isEdit = false }) {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const { id } = useParams();
+  const branchId = '60d0fe4f5311236168a109ca'; // Static or dynamic branch ID
+
+  // Fetch customer data by ID
+  const { data: customerData, loading: customerLoading, error: customerError } = useQuery(GET_CUSTOMER_BY_ID, {
+    variables: { id },
+  });
+
+  // Fetch customer areas by branch
+  const { data: customerAreasData, loading: areasLoading, error: areasError } = useQuery(GET_CUSTOMER_AREAS_BY_BRANCH, {
+    variables: { branchId },
+  });
+
+  const [editCustomer] = useMutation(EDIT_CUSTOMER);
 
   const NewUserSchema = Yup.object().shape({
-    firstName: Yup.string().required('First Name is required'),
-    lastName: Yup.string().required('Last Name is required'),
-    phone: Yup.string()
-      .required('Phone number is required')
-      .matches(/^\d{10,15}$/, 'Phone number must be 10 to 15 digits'),
-    cnic: Yup.string().required('CNIC is required'),
-    email: Yup.string().required('Email is required').email('Invalid email format'),
-    saleTax: Yup.string().required('Sale Tax is required'),
-    address: Yup.string().required('Address is required'),
-    description: Yup.string().required('Description is required'),
-    avatarUrl: Yup.mixed().required('Picture is required'),
+    area: Yup.string().required('Area is required'),
+    name: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
+    phone: Yup.string().required('Phone number is required').matches(/^\d{10,15}$/, 'Phone number must be 10 to 15 digits'),
+    cnic: Yup.string(),
+    saleTex: Yup.string(),
+    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    address: Yup.string().required('Address is required').min(10, 'Address must be at least 10 characters'),
+    description: Yup.string().required('Description is required').min(20, 'Description must be at least 20 characters'),
+    image: Yup.mixed().required('Image is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      firstName: currentUser?.firstName || '',
-      lastName: currentUser?.lastName || '',
-      phone: currentUser?.phone || '',
-      cnic: currentUser?.cnic || '',
-      email: currentUser?.email || '',
-      saleTax: currentUser?.saleTax || '',
-      address: currentUser?.address || '',
-      description: currentUser?.description || '',
-      avatarUrl: currentUser?.avatarUrl || null,
+      area: customerData?.getCustomerById.area || '',
+      name: customerData?.getCustomerById.name || '',
+      phone: customerData?.getCustomerById.phone || '',
+      cnic: customerData?.getCustomerById.cnic || '',
+      saleTex: customerData?.getCustomerById.saleTex || '',
+      email: customerData?.getCustomerById.email || '',
+      address: customerData?.getCustomerById.address || '',
+      description: customerData?.getCustomerById.description || '',
+      image: customerData?.getCustomerById.image || null,
     }),
-    [currentUser]
+    [customerData]
   );
 
   const methods = useForm({
@@ -57,76 +68,99 @@ export default function CustomerEditForm({ isEdit = false, currentUser }) {
     defaultValues,
   });
 
-  const { reset, watch, control, setValue, handleSubmit, formState } = methods;
+  const {
+    reset,
+    handleSubmit,
+    setValue,
+    formState: { isSubmitting },
+  } = methods;
 
   useEffect(() => {
-    if (isEdit && currentUser) {
+    if (customerData) {
       reset(defaultValues);
     }
-  }, [isEdit, currentUser, reset, defaultValues]);
+  }, [customerData, reset, defaultValues]);
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
+  const onSubmit = async (formData) => {
+    try {
+      console.log('Submitting data:', formData); // Log the form data to check the structure
+      await editCustomer({
+        variables: {
+          id, // Pass ID directly
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          cnic: formData.cnic,
+          description: formData.description,
+          saleTex: formData.saleTex,
+          image: formData.image, // Handle file upload properly
+          status: formData.status,
+          branchId: formData.branchId,
+          area: formData.area,
+          customerAreaId: formData.customerAreaId
+        },
       });
-      if (file) {
-        setValue('avatarUrl', newFile, { shouldValidate: true });
-      }
-    },
-    [setValue]
-  );
 
-  const onSubmit = async (data) => {
-    console.log('Form Data:', data);
-    navigate(-1);
+      enqueueSnackbar('Customer updated successfully!', { variant: 'success' });
+      navigate(PATH_DASHBOARD.customer.root);
+    } catch (error) {
+      console.error('Error updating customer:', error);
+      enqueueSnackbar('Error updating customer', { variant: 'error' });
+    }
   };
+
+  const handleDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+
+    const newFile = Object.assign(file, {
+      preview: URL.createObjectURL(file),
+    });
+
+    if (file) {
+      setValue('image', newFile, { shouldValidate: true });
+    }
+  };
+
+  if (customerLoading || areasLoading) return <p>Loading...</p>;
+  if (customerError || areasError) {
+    console.error('Error loading data:', customerError || areasError);
+    return <p>Error loading data: {(customerError || areasError).message}</p>;
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography variant="h4" gutterBottom>
-            Customer Information
-          </Typography>
-          <Card sx={{ p: 3 }}>
-            {/* First Row - Dropdown */}
-            <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2}>
-              <RHFSelect name="category" label="Category">
-                <option value="" disabled>
-                  Select Category
-                </option>
-                <option value="Category 1">Category 1</option>
-                <option value="Category 2">Category 2</option>
+        <Grid item xs={12} md={12}>
+          <Card sx={{ pt: 10, pb: 5, px: 3 }}>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              {/* RHFSelect for Areas */}
+              <RHFSelect name="area" label="Area" id="area">
+                {customerAreasData?.getCustomerAreasByBranch.map((area) => (
+                  <MenuItem key={area.id} value={area.id}>
+                    {area.name}
+                  </MenuItem>
+                ))}
               </RHFSelect>
-            </Box>
 
-            {/* Second Row - First Name & Last Name */}
-            <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2} mt={2}>
-              <RHFTextField name="firstName" label="First Name" />
-              <RHFTextField name="lastName" label="Last Name" />
-            </Box>
-
-            {/* Third Row - Phone, CNIC, Email, Sale Tax */}
-            <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2} mt={2}>
+              {/* Other input fields */}
+              <RHFTextField name="name" label="Name" />
               <RHFTextField name="phone" label="Phone" />
               <RHFTextField name="cnic" label="CNIC" />
+              <RHFTextField name="saleTex" label="Sale Tex" />
               <RHFTextField name="email" label="Email" />
-              <RHFTextField name="saleTax" label="Sale Tax" />
-            </Box>
-
-            {/* Fourth Row - Address & Description */}
-            <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2} mt={2}>
-              <RHFTextField name="address" label="Address" />
-              <RHFTextField name="description" label="Description" multiline rows={3} />
-            </Box>
-
-            {/* Fifth Row - Picture */}
-            <Box mt={2}>
+              <RHFTextField name="address" multiline rows={2} label="Address" />
+              <RHFTextField name="description" multiline rows={4} label="Description" />
               <RHFUploadAvatar
-                name="avatarUrl"
-                accept="image/*"
+                name="image"
                 maxSize={3145728}
                 onDrop={handleDrop}
                 helperText={
@@ -141,18 +175,15 @@ export default function CustomerEditForm({ isEdit = false, currentUser }) {
                     }}
                   >
                     Allowed *.jpeg, *.jpg, *.png, *.gif
+                    <br /> max size of {fData(3145728)}
                   </Typography>
                 }
               />
             </Box>
 
-            {/* Buttons */}
-            <Stack direction="row" spacing={2} justifyContent="center" mt={3}>
-              <LoadingButton type="submit" variant="contained" loading={formState.isSubmitting}>
-                {isEdit ? 'Save Changes' : 'Save'}
-              </LoadingButton>
-              <LoadingButton variant="outlined" onClick={() => navigate(-1)}>
-                Cancel
+            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                Save Changes
               </LoadingButton>
             </Stack>
           </Card>

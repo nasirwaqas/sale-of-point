@@ -201,9 +201,9 @@ export default function Router() {
 
          { path: 'customer', element: <CustomerPage /> },
          { path: '/dashboard/customer/new', element: <CustomerNewPage /> },
-         { path: '/dashboard/customer/edit', element: <CustomerEditForm /> },
-         { path: '/dashboard/customer/account', element: <CustomerAccount />},
-         { path: '/dashboard/customer/message', element: <CustomerSendMessage />},
+         { path: '/dashboard/customer/edit/:id', element: <CustomerEditForm /> },
+         { path: '/dashboard/customer/account/:id', element: <CustomerAccount />},
+         { path: '/dashboard/customer/message/:id', element: <CustomerSendMessage />},
          { path: '/dashboard/customer/balancemessage', element: <CustomerSendBalanceMessage />},
          { path: '/dashboard/customer/import', element: <CustomerImport />},
          {  path: '/dashboard/customer/areas', element: <CustomerAreas />},

@@ -233,6 +233,7 @@ export const GET_TOTAL_BALANCE_BY_BRANCH_ID = gql`
   }
 `;
 
+
 export const SEARCH_BALANCES = gql`
   query SearchBalances($vendorId: ID!, $fromDate: String, $toDate: String) {
     searchBalances(vendorId: $vendorId, fromDate: $fromDate, toDate: $toDate) {
@@ -244,6 +245,132 @@ export const SEARCH_BALANCES = gql`
         date
         description
       }
+      totalBalance
+    }
+  }
+`;
+
+// ==============> CUSTOMER QUERIES <================
+
+
+
+export const GET_CUSTOMER_BY_ID = gql`
+  query GetCustomerById($id: ID!) {
+    getCustomerById(id: $id) {
+      id
+      name
+      email
+      phone
+      address
+      cnic
+      description
+      saleTex
+      image
+      status
+      createdAt
+      updatedAt
+      branchId
+    }
+  }
+`;
+
+export const GET_CUSTOMERS_BY_BRANCH = gql`
+  query GetCustomersByBranch($branchId: ID!) {
+    getCustomersByBranch(branchId: $branchId) {
+      id
+      name
+      email
+      phone
+      address
+      cnic
+      description
+      saleTex
+      image
+      status
+      createdAt
+      updatedAt
+      branchId
+    }
+  }`;
+
+export const GET_CUSTOMER_BY_BRANCH = gql`
+  query GetCustomerByBranch($branchId: ID!, $area: String, $name: String) {
+    getCustomerByBranch(branchId: $branchId, area: $area, name: $name) {
+      id
+      name
+      email
+      phone
+      address
+      cnic
+      description
+      saleTex
+      image
+      status
+      createdAt
+      updatedAt
+      branchId
+      area
+      customerAreaId
+    }
+  }
+`;
+
+export const GET_CUSTOMER_AREAS_BY_BRANCH = gql`
+  query GetCustomerAreasByBranch($branchId: ID!) {
+    getCustomerAreasByBranch(branchId: $branchId) {
+      id
+      type
+      name
+      value
+      description
+      controlType
+      status
+      branchId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+
+// export const GET_TOTAL_BALANCE_BY_ID = gql`
+//   query GetTotalBalanceById($id: ID!) {
+//     getTotalBalanceById(id: $id)
+//   }
+// `;
+
+export const GET_TOTAL_BALANCE_BY_BRANCH = gql`
+  query GetTotalBalanceByBranch($branchId: ID!) {
+    getTotalBalanceByBranch(branchId: $branchId) {
+      customerId
+      totalBalance
+    }
+  }
+`;
+
+
+export const SEARCH_CUSTOMER_BALANCE = gql`
+  query SearchCustomerBalance($customerId: ID!, $fromDate: String, $toDate: String) {
+    searchCustomerBalance(customerId: $customerId, fromDate: $fromDate, toDate: $toDate) {
+      balances {
+        id
+        customerId
+        amount
+        balanceType
+        date
+        description
+        balance
+      }
+      totalBalance
+    }
+  }
+`;
+
+
+export const GET_CUSTOMER_TOTAL_BALANCE_BY_BRANCH_ID = gql`
+  query GetCustomerTotalBalanceByBranchId($branchId: ID!) {
+    getCustomerTotalBalanceByBranchId(branchId: $branchId) {
+      branchId
       totalBalance
     }
   }

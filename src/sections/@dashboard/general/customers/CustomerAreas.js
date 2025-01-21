@@ -13,9 +13,13 @@ import {
   MenuItem,
   Paper,
 } from '@mui/material';
+import { useQuery, useMutation } from '@apollo/client';
+import { CREATE_CUSTOMER_AREA, EDIT_CUSTOMER_AREA } from '../../../../graphQL/mutations';
+import { GET_CUSTOMER_AREAS_BY_BRANCH } from '../../../../graphQL/queries';
 
 export default function CustomerAreas() {
   const [formData, setFormData] = useState({
+    id: '',
     type: '',
     name: '',
     value: '',
@@ -23,41 +27,86 @@ export default function CustomerAreas() {
     controlType: '',
   });
 
-  const [records, setRecords] = useState([
-    {
-      type: 'Type1',
-      name: 'Area 1',
-      value: '100',
-      description: 'Description for Area 1',
-      controlType: 'number',
-    },
-    {
-      type: 'Type2',
-      name: 'Area 2',
-      value: '200',
-      description: 'Description for Area 2',
-      controlType: 'checkbox',
-    },
-  ]);
+  const branchId = '60d0fe4f5311236168a109ca'; // Replace with actual branch ID
+
+  const { loading, error: queryError, data: queryData, refetch } = useQuery(GET_CUSTOMER_AREAS_BY_BRANCH, {
+    variables: { branchId },
+  });
+
+  const [createCustomerArea] = useMutation(CREATE_CUSTOMER_AREA);
+  const [editCustomerArea] = useMutation(EDIT_CUSTOMER_AREA);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSave = () => {
-    setRecords([...records, { ...formData }]);
-    setFormData({ type: '', name: '', value: '', description: '', controlType: '' });
+  const handleSave = async () => {
+    try {
+      const { id, type, name, value, description, controlType } = formData;
+      const status = 'active'; // Replace with actual status value
+
+      if (id) {
+        // Edit existing customer area
+        await editCustomerArea({
+          variables: {
+            id,
+            type,
+            name,
+            value,
+            description,
+            controlType,
+            status,
+            branchId,
+          },
+        });
+      } else {
+        // Create new customer area
+        await createCustomerArea({
+          variables: {
+
+            type,
+            name,
+            value,
+            description,
+            controlType,
+            status,
+            branchId,
+          },
+        });
+      }
+
+      setFormData({ id: '', type: '', name: '', value: '', description: '', controlType: '' });
+      refetch();
+    } catch (mutationError) {
+      console.error('Error saving customer area:', mutationError);
+    }
   };
 
   const handleEdit = (index) => {
-    const recordToEdit = records[index];
+    const recordToEdit = queryData.getCustomerAreasByBranch[index];
     setFormData(recordToEdit);
   };
 
-  const handleActivate = (index) => {
-    alert(`Activated record at index ${index + 1}`);
+  const handleStatusToggle = async (index) => {
+    const record = queryData.getCustomerAreasByBranch[index];
+    const newStatus = record.status === 'active' ? 'deactive' : 'active';
+
+    try {
+      await editCustomerArea({
+        variables: {
+          id: record.id,
+          status: newStatus,
+        },
+      });
+      refetch();
+    } catch (mutationError) {
+      console.error('Error updating status:', mutationError);
+    }
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (queryError) return <p>Error loading data</p>;
 
   return (
     <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -81,9 +130,9 @@ export default function CustomerAreas() {
           onChange={handleChange}
           fullWidth
         >
-          <MenuItem value="Type1">Type1</MenuItem>
-          <MenuItem value="Type2">Type2</MenuItem>
-          <MenuItem value="Type3">Type3</MenuItem>
+          <MenuItem value="Customer Area1">Customer Area1</MenuItem>
+          <MenuItem value="Customer Area2">Customer Area2</MenuItem>
+          <MenuItem value="Customer Area3">Customer Area3</MenuItem>
         </TextField>
         <TextField
           label="Name"
@@ -123,11 +172,10 @@ export default function CustomerAreas() {
           <MenuItem value="select">Select</MenuItem>
         </TextField>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-         <Button variant="contained" size="small" onClick={handleSave}>
-           Save
-        </Button>
-</Box>
-
+          <Button variant="contained" size="small" onClick={handleSave}>
+            Save
+          </Button>
+        </Box>
       </Box>
 
       {/* Table Section */}
@@ -142,15 +190,17 @@ export default function CustomerAreas() {
                 <TableCell>Type</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Value</TableCell>
+                <TableCell>Status</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {records.map((record, index) => (
-                <TableRow key={index}>
+              {queryData.getCustomerAreasByBranch.map((record, index) => (
+                <TableRow key={record.id}>
                   <TableCell>{record.type}</TableCell>
                   <TableCell>{record.name}</TableCell>
                   <TableCell>{record.value}</TableCell>
+                  <TableCell>{record.status}</TableCell>
                   <TableCell>
                     <Button
                       variant="outlined"
@@ -162,10 +212,10 @@ export default function CustomerAreas() {
                     </Button>
                     <Button
                       variant="outlined"
-                      color="success"
-                      onClick={() => handleActivate(index)}
+                      color={record.status === 'active' ? 'success' : 'warning'}
+                      onClick={() => handleStatusToggle(index)}
                     >
-                      Activate
+                      {record.status === 'active' ? 'Deactivate' : 'Activate'}
                     </Button>
                   </TableCell>
                 </TableRow>

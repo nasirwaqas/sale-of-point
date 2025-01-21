@@ -1,8 +1,9 @@
+import { useQuery, useMutation } from '@apollo/client';
 import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 // @mui
 import {
   Tab,
@@ -42,31 +43,17 @@ import {
 // sections
 import CustomersBalanceReport from '../../sections/@dashboard/general/customers/CustomersBalanceReport';
 import CustomerTableToolbar from '../../sections/@dashboard/general/customers/CustomerTableToolbar';
-import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/category/list';
+import { GET_CUSTOMERS_BY_BRANCH, GET_TOTAL_BALANCE_BY_BRANCH, GET_CUSTOMER_TOTAL_BALANCE_BY_BRANCH_ID } from '../../graphQL/queries';
+import { EDIT_CUSTOMER, DELETE_CUSTOMER } from '../../graphQL/mutations';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = ['all', 'active', 'banned'];
-
-const AREA_OPTIONS = [
-  'all',
-  'ux designer',
-  'full stack designer',
-  'backend developer',
-  'project manager',
-  'leader',
-  'ui designer',
-  'ui/ux designer',
-  'front end developer',
-  'full stack developer',
-];
-
 const TABLE_HEAD = [
-  { id: 'customerName', label: 'Name', align: 'left' },
-  { id: 'customerPhone', label: 'Phone', align: 'left' },
-  { id: 'customerCnic', label: 'CNIC', align: 'left' }, // Added CNIC column
-  { id: 'customerAdddress', label: 'Address', align: 'left' },
-  { id: 'customerAccount', label: 'Account', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'phone', label: 'Phone', align: 'left' },
+  { id: 'cnic', label: 'CNIC', align: 'left' },
+  { id: 'address', label: 'Address', align: 'left' },
+  { id: 'account', label: 'Account', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
 
@@ -93,109 +80,165 @@ export default function CustomerPage() {
   } = useTable();
 
   const { themeStretch } = useSettingsContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
-  const [filterName, setFilterName] = useState('');
-
-  const [filterRole, setFilterRole] = useState('all');
-
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [showPreview, setShowPreview] = useState(false);
   const [open, setOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null); // State to store the ID of the customer to be deleted
+  const [filterName, setFilterName] = useState('');
+  const [filterArea, setFilterArea] = useState('');
+  const [selectedAreaId, setSelectedAreaId] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [showReport, setShowReport] = useState(false);
 
-  const data = [
-    {
-      customerName: "John Doe",
-      avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
-      customerAccount: "8579827",
-      customerPhone: "9230393839",
-      customerAddress: "Innovative tech products and solutions",
-      customerCnic: "12345-6789012-3", // CNIC
-    },
-    {
-      customerName: "Jane Smith",
-      avatarUrl: "https://randomuser.me/api/portraits/women/2.jpg",
-      customerAccount: "298509",
-      customerPhone: "929393939",
-      customerAddress: "Organic farming and produce",
-      customerCnic: "98765-4321098-7", // CNIC
-    },
-    {
-      customerName: "Mike Brown",
-      avatarUrl: "https://randomuser.me/api/portraits/men/3.jpg",
-      customerAccount: "2578",
-      customerPhone: "Contact",
-      customerAddress: "Product Manager",
-      customerCnic: "54321-0987654-1", // CNIC
-    },
-  ];
+  const branchId = '60d0fe4f5311236168a109ca'; // Replace with dynamic branchId as needed
+
+  const { data, loading, error: queryError, refetch } = useQuery(GET_CUSTOMERS_BY_BRANCH, {
+    variables: { branchId },
+  });
+
+  const { data: balanceData, loading: balanceLoading, error: balanceError } = useQuery(GET_TOTAL_BALANCE_BY_BRANCH, {
+    variables: { branchId },
+  });
+
+  const { data: totalBalanceData, loading: totalBalanceLoading, error: totalBalanceError } = useQuery(GET_CUSTOMER_TOTAL_BALANCE_BY_BRANCH_ID, {
+    variables: { branchId },
+  });
+
+  const [editCustomer] = useMutation(EDIT_CUSTOMER);
+  const [deleteCustomer] = useMutation(DELETE_CUSTOMER);
 
   const handleClose = () => {
     setOpen(false);
+    setShowReport(false);
   };
 
   const handleOpen = () => {
     console.log('Opening dialog...');
+    console.log('Filtered data:', dataFiltered); // Log the filtered data
     setOpen(true);
+    setShowReport(true);
   };
 
-  const handleDeleteRows = (selectedRows) => {
+  const handleDeleteRows = async (selectedRows) => {
     // Implement the delete logic here
     console.log('Deleting rows:', selectedRows);
+    try {
+      await Promise.all(
+        selectedRows.map((id) =>
+          deleteCustomer({
+            variables: { deleteCustomerId: id },
+          })
+        )
+      );
+      refetch();
+      setSelected([]);
+      enqueueSnackbar('Customers deleted successfully', { variant: 'success' });
+    } catch (error) {
+      console.error('Error deleting rows:', error);
+      enqueueSnackbar('Failed to delete customers', { variant: 'error' });
+    }
   };
 
-  const dataFiltered = applyFilter({
-    inputData: data,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterRole,
-    filterStatus,
-  });
-
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
-  const denseHeight = dense ? 52 : 72;
-
-  const handleOpenConfirm = () => {
+  const handleOpenConfirm = (id) => {
+    setDeleteId(id);
     setOpenConfirm(true);
   };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-  };
-
-  const handleFilterStatus = (event, newValue) => {
-    setPage(0);
-    setFilterStatus(newValue);
-  };
-
-  const handleFilterName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
-
-  const handleFilterRole = (event) => {
-    setPage(0);
-    setFilterRole(event.target.value);
+    setDeleteId(null);
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.customer.edit);
+    console.log('Edit customer ID:', id); // Log the customer ID
+    navigate(PATH_DASHBOARD.customer.edit(id));
   };
+
   const handleAccountRow = (id) => {
-    navigate(PATH_DASHBOARD.customer.account);
+    console.log('Account customer ID:', id); // Log the customer ID
+    navigate(PATH_DASHBOARD.customer.account(id));
+  };
+
+  const handleDeleteRow = async () => {
+    // Perform the deletion using the DELETE_CUSTOMER mutation
+    console.log('Deleting row:', deleteId);
+    try {
+      await deleteCustomer({
+        variables: { deleteCustomerId: deleteId },
+      });
+      refetch(); // Refetch the table data after deletion
+      handleCloseConfirm();
+      enqueueSnackbar('Customer deleted successfully', { variant: 'success' });
+    } catch (error) {
+      console.error('Error deleting row:', error);
+      enqueueSnackbar('Failed to delete customer', { variant: 'error' });
+    }
+  };
+
+  const handleStatusRow = async (id, status) => {
+    try {
+      await editCustomer({
+        variables: {
+          id,
+          status,
+        },
+      });
+      refetch();
+      enqueueSnackbar('Customer status updated successfully', { variant: 'success' });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      enqueueSnackbar('Failed to update customer status', { variant: 'error' });
+    }
+  };
+
+  const handleFilterName = (event) => {
+    setFilterName(event.target.value);
+  };
+
+  const handleFilterArea = (areaId) => {
+    setFilterArea(areaId);
   };
 
   const handleResetFilter = () => {
     setFilterName('');
-    setFilterRole('all');
-    setFilterStatus('all');
+    setFilterArea('');
   };
+
+  const handleAreaSelect = (areaId) => {
+    setSelectedAreaId(areaId);
+    setFilterArea(areaId); // Ensure the filter state is updated
+  };
+
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
+  };
+
+  const denseHeight = dense ? 52 : 72;
+
+  if (loading || balanceLoading || totalBalanceLoading) return <div>Loading...</div>;
+  if (queryError || balanceError || totalBalanceError) return <div>Error loading data</div>;
+
+  const customers = searchResults.length > 0 ? searchResults : data?.getCustomersByBranch || [];
+  const customerBalances = balanceData?.getTotalBalanceByBranch || [];
+  const totalBalance = totalBalanceData?.getCustomerTotalBalanceByBranchId?.totalBalance || 0;
+
+  const getCustomerBalance = (customerId) => {
+    const customerBalance = customerBalances.find((balance) => balance.customerId === customerId);
+    return customerBalance ? customerBalance.totalBalance : 0;
+  };
+
+  const filteredCustomers = customers.filter((customer) => {
+    const matchesArea = filterArea ? customer.customerAreaId === filterArea : true;
+    const matchesName = filterName ? customer.name.toLowerCase().includes(filterName.toLowerCase()) : true;
+    return matchesArea && matchesName;
+  });
+  const dataFiltered = [...filteredCustomers].sort(getComparator(order, orderBy));
+  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  console.log('Filtered customers data:', dataFiltered); // Add this line to log the filtered customers data
 
   return (
     <>
@@ -205,12 +248,9 @@ export default function CustomerPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          links={[
-            { name: 'customer', href: PATH_DASHBOARD.root },
-          ]}
-          action={
+          links={[{ name: 'customer', href: PATH_DASHBOARD.root }]}
+          action={(
             <>
-              {/* New Button: customers Balance Report */}
               <Button
                 onClick={handleOpen}
                 variant="contained"
@@ -219,7 +259,6 @@ export default function CustomerPage() {
               >
                 customers Balance Report
               </Button>
-              {/* New Button: customers Balance Report */}
               <Button
                 component={RouterLink}
                 to={PATH_DASHBOARD.customer.balancemessage}
@@ -229,7 +268,6 @@ export default function CustomerPage() {
               >
                 Send Balance Message
               </Button>
-              {/* New Button: customers Balance Report */}
               <Button
                 component={RouterLink}
                 to={PATH_DASHBOARD.customer.areas}
@@ -239,7 +277,6 @@ export default function CustomerPage() {
               >
                 Areas
               </Button>
-              {/* New Button: customers Balance Report */}
               <Button
                 component={RouterLink}
                 to={PATH_DASHBOARD.customer.import}
@@ -249,7 +286,6 @@ export default function CustomerPage() {
               >
                 Import
               </Button>
-              {/* New Button: customers Balance Report */}
               <Button
                 component={RouterLink}
                 to={PATH_DASHBOARD.customer.import}
@@ -268,19 +304,20 @@ export default function CustomerPage() {
                 New
               </Button>
             </>
-          }
+          )}
         />
 
         <Card>
           <CustomerTableToolbar
             filterName={filterName}
-            filterRole={filterRole}
-            optionsRole={AREA_OPTIONS}
+            filterArea={filterArea}
             onFilterName={handleFilterName}
-            onFilterRole={handleFilterRole}
+            onFilterArea={handleFilterArea}
             onResetFilter={handleResetFilter}
+            isFiltered={Boolean(filterName || filterArea)}
+            onAreaSelect={handleAreaSelect} // Pass the function here
+            onSearchResults={handleSearchResults} // Pass the function here
           />
-
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
@@ -288,25 +325,25 @@ export default function CustomerPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
+                  rowCount={dataInPage.length}
                   numSelected={selected.length}
                   onSort={onSort}
                 />
 
                 <TableBody>
-                  {dataInPage.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{row.customerName}</TableCell>
-                      <TableCell>{row.customerPhone}</TableCell>
-                      <TableCell>{row.customerCnic}</TableCell>
-                      <TableCell>{row.customerAddress}</TableCell>
-                      <TableCell>{row.customerAccount}</TableCell>
+                  {dataInPage.map((row) => (
+                    <TableRow key={row.id} hover tabIndex={-1}>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.phone}</TableCell>
+                      <TableCell>{row.cnic}</TableCell>
+                      <TableCell>{row.address}</TableCell>
+                      <TableCell>{getCustomerBalance(row.id)}</TableCell>
                       <TableCell>
                         <Button
                           variant="outlined"
                           color="primary"
                           size="small"
-                          onClick={() => handleEditRow(row.categoryName)}
+                          onClick={() => handleEditRow(row.id)}
                         >
                           Edit
                         </Button>
@@ -315,18 +352,27 @@ export default function CustomerPage() {
                           color="success"
                           size="small"
                           sx={{ ml: 1 }}
-                          onClick={() => handleAccountRow(row.categoryName)}
+                          onClick={() => handleAccountRow(row.id)}
                         >
                           Account
                         </Button>
-
                         <Button
                           variant="contained"
-                          color="success"
+                          color={row.status === 'active' ? 'success' : 'warning'}
                           size="small"
-                          sx={{ ml: 1 }} // Add some margin between buttons
+                          sx={{ ml: 1 }}
+                          onClick={() => handleStatusRow(row.id, row.status === 'active' ? 'deactive' : 'active')}
                         >
-                          Active
+                          {row.status === 'active' ? 'Deactivate' : 'Activate'}
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          size="small"
+                          sx={{ ml: 1 }}
+                          onClick={() => handleOpenConfirm(row.id)}
+                        >
+                          Delete
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -334,8 +380,14 @@ export default function CustomerPage() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, dataInPage.length)}
                   />
+                  <TableRow>
+                    <TableCell colSpan={4} />
+                    <TableCell colSpan={2} align="right" sx={{ fontWeight: 'bold' }}>
+                      Total Balance: {totalBalance}
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -347,88 +399,39 @@ export default function CustomerPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
             dense={dense}
             onChangeDense={onChangeDense}
           />
         </Card>
+        {showReport && (
+          <Box sx={{ mt: 3 }}>
+            <PDFViewer width="100%" height="600">
+              <CustomersBalanceReport customers={dataFiltered} getCustomerBalance={getCustomerBalance} totalBalance={totalBalance} />
+            </PDFViewer>
+          </Box>
+        )}
       </Container>
 
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
-        content={
+        content={(
           <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
+            Are you sure you want to delete this customer?
           </>
-        }
-        action={
+        )}
+        action={(
           <Button
             variant="contained"
             color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
+            onClick={handleDeleteRow}
           >
             Delete
           </Button>
-        }
+        )}
       />
-      <Dialog fullScreen open={open}>
-        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <DialogActions
-            sx={{
-              zIndex: 9,
-              padding: '12px !important',
-              boxShadow: (theme) => theme.customShadows.z8,
-            }}
-          >
-            <Tooltip title="Close">
-              <IconButton color="inherit" onClick={handleClose}>
-                <Iconify icon="eva:close-fill" />
-              </IconButton>
-            </Tooltip>
-          </DialogActions>
-
-          <Box sx={{ flexGrow: 1, height: '100%', overflow: 'hidden' }}>
-            <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
-              <CustomersBalanceReport customer={data} />
-            </PDFViewer>
-          </Box>
-        </Box>
-      </Dialog>
+   
     </>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-
-  if (filterStatus !== 'all') {
-    inputData = inputData.filter((user) => user.status === filterStatus);
-  }
-
-  if (filterRole !== 'all') {
-    inputData = inputData.filter((user) => user.role === filterRole);
-  }
-
-  return inputData;
 }

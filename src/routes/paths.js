@@ -105,6 +105,7 @@ export const PATH_DASHBOARD = {
     account: (id) => path(ROOTS_DASHBOARD, `/vendors/account/${id}`),
   },
   report: {
+    
     root: path(ROOTS_DASHBOARD, '/report'),
     customerRegister: path(ROOTS_DASHBOARD, '/report/customer-register'),
     customerSaleProducts: path(ROOTS_DASHBOARD, '/report/customer-sale-products'),
@@ -129,14 +130,14 @@ export const PATH_DASHBOARD = {
     stockAdjustment: path(ROOTS_DASHBOARD, '/report/stock-adjustment'),
     vendorPurchaseHistory: path(ROOTS_DASHBOARD, '/report/vendor-purchase-history'),
     cashInHand: path(ROOTS_DASHBOARD, '/report/cash-in-hand'),
-    
+    edit: (id) => path(ROOTS_DASHBOARD, `/manufacture/edit/${id}`),
   },
   customer: {
     root: path(ROOTS_DASHBOARD, '/customer'),
     new: path(ROOTS_DASHBOARD, '/customer/new'),
-    edit: path(ROOTS_DASHBOARD, '/customer/edit'),
-    account: path(ROOTS_DASHBOARD, '/customer/account'),
-    message: path(ROOTS_DASHBOARD, '/customer/message'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/customer/edit/${id}`),
+    account: (id) => path(ROOTS_DASHBOARD, `/customer/account/${id}`),
+    message: (id) => path(ROOTS_DASHBOARD, `/customer/message/${id}`),
     balancemessage: path(ROOTS_DASHBOARD, '/customer/balancemessage'),
     import: path(ROOTS_DASHBOARD, '/customer/import'),
     areas: path(ROOTS_DASHBOARD, '/customer/areas'),

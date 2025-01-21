@@ -258,3 +258,258 @@ export const CREATE_BALANCE = gql`
     }
   }
 `;
+ // ==============> CUSTOMER MUTATIONS <================
+
+
+
+
+
+ export const CREATE_CUSTOMER = gql`
+   mutation CreateCustomer(
+     $name: String!,
+     $email: String!,
+     $phone: String!,
+     $address: String!,
+     $cnic: String,
+     $description: String!,
+     $saleTex: String,
+     $image: Upload,
+     $status: String!,
+     $branchId: ID!,
+     $area: String!,
+     $customerAreaId: ID
+   ) {
+     createCustomer(
+       name: $name,
+       email: $email,
+       phone: $phone,
+       address: $address,
+       cnic: $cnic,
+       description: $description,
+       saleTex: $saleTex,
+       image: $image,
+       status: $status,
+       branchId: $branchId,
+       area: $area,
+       customerAreaId: $customerAreaId
+     ) {
+       id
+       name
+       email
+       phone
+       address
+       cnic
+       description
+       saleTex
+       image
+       status
+       createdAt
+       updatedAt
+       branchId
+       area
+       customerAreaId
+     }
+   }
+ `;
+ 
+ export const EDIT_CUSTOMER = gql`
+ mutation EditCustomer(
+   $id: ID!,
+   $name: String,
+   $email: String,
+   $phone: String,
+   $address: String,
+   $cnic: String,
+   $description: String,
+   $saleTex: String,
+   $image: Upload,
+   $status: String,
+   $branchId: ID,
+   $area: String,
+   $customerAreaId: ID
+ ) {
+   editCustomer(
+     id: $id,
+     name: $name,
+     email: $email,
+     phone: $phone,
+     address: $address,
+     cnic: $cnic,
+     description: $description,
+     saleTex: $saleTex,
+     image: $image,
+     status: $status,
+     branchId: $branchId,
+     area: $area,
+     customerAreaId: $customerAreaId
+   ) {
+     id
+     name
+     email
+     phone
+     address
+     cnic
+     description
+     saleTex
+     image
+     status
+     createdAt
+     updatedAt
+     branchId
+     area
+     customerAreaId
+   }
+ }
+`;
+
+
+export const DELETE_CUSTOMER = gql`
+  mutation DeleteCustomer($deleteCustomerId: ID!) {
+    deleteCustomer(id: $deleteCustomerId) {
+      id
+      name
+      email
+      phone
+      address
+      description
+      status
+      branchId
+    }
+  }
+`;
+
+export const CREATE_CUSTOMER_AREA = gql`
+  mutation CreateCustomerArea(
+    
+    $type: String!,
+    $name: String!,
+    $value: String!,
+    $description: String!,
+    $controlType: String!,
+    $status: String!,
+    $branchId: ID!
+  ) {
+    createCustomerArea(
+      
+      type: $type,
+      name: $name,
+      value: $value,
+      description: $description,
+      controlType: $controlType,
+      status: $status,
+      branchId: $branchId
+    ) {
+      id
+     
+      type
+      name
+      value
+      description
+      controlType
+      status
+      branchId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const EDIT_CUSTOMER_AREA = gql`
+  mutation EditCustomerArea(
+    $id: ID!,
+    $type: String,
+    $name: String,
+    $value: String,
+    $description: String,
+    $controlType: String,
+    $status: String,
+    $branchId: ID
+  ) {
+    editCustomerArea(
+      id: $id,
+      type: $type,
+      name: $name,
+      value: $value,
+      description: $description,
+      controlType: $controlType,
+      status: $status,
+      branchId: $branchId
+    ) {
+      id
+     
+      type
+      name
+      value
+      description
+      controlType
+      status
+      branchId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const CREATE_CUSTOMER_BALANCE = gql`
+  mutation CreateCustomerBalance(
+    $customerId: ID!,
+    $branchId: ID!,
+    $balanceType: String!,
+    $date: Date!,
+    $amount: Float!,
+    $description: String!
+    $balance: Float!
+  ) {
+    createCustomerBalance(
+      customerId: $customerId,
+      branchId: $branchId,
+      balanceType: $balanceType,
+      date: $date,
+      amount: $amount,
+      description: $description
+      balance: $balance
+    ) {
+      customerId
+      branchId
+      balanceType
+      date
+      amount
+      description
+      balance
+    }
+  }
+`;
+
+
+export const CREATE_CUSTOMER_MESSAGE = gql`
+  mutation CreateCustomerMessage(
+    $customerId: ID!,
+    $customerName: String!,
+    $customerBalance: Float!,
+    $number: String!,
+    $template: String!,
+    $message: String!,
+    $branchId: ID
+  ) {
+    createCustomerMessage(
+      customerId: $customerId,
+      customerName: $customerName,
+      customerBalance: $customerBalance,
+      number: $number,
+      template: $template,
+      message: $message,
+      branchId: $branchId
+    ) {
+      
+      customerId
+      customerName
+      customerBalance
+      number
+      template
+      message
+      branchId
+      createdAt
+      updatedAt
+    }
+  }
+`;
