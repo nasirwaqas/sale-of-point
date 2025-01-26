@@ -91,11 +91,11 @@ export const PATH_DASHBOARD = {
   product: {
     root: path(ROOTS_DASHBOARD, '/product'),
     new: path(ROOTS_DASHBOARD, '/product/new'),
-    edit: path(ROOTS_DASHBOARD, '/product/edit'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/product/edit/${id}`),
     setting: path(ROOTS_DASHBOARD, '/product/setting'),
     group: path(ROOTS_DASHBOARD, '/product/group'),
     groupnew: path(ROOTS_DASHBOARD, '/product/group/new'),
-    groupedit: path(ROOTS_DASHBOARD, '/product/group/edit'),
+    groupedit: (id) => path(ROOTS_DASHBOARD, `/product/group/edit/${id}`),
 
   },
   vendors: {

@@ -252,8 +252,6 @@ export const SEARCH_BALANCES = gql`
 
 // ==============> CUSTOMER QUERIES <================
 
-
-
 export const GET_CUSTOMER_BY_ID = gql`
   query GetCustomerById($id: ID!) {
     getCustomerById(id: $id) {
@@ -372,6 +370,135 @@ export const GET_CUSTOMER_TOTAL_BALANCE_BY_BRANCH_ID = gql`
     getCustomerTotalBalanceByBranchId(branchId: $branchId) {
       branchId
       totalBalance
+    }
+  }
+`;
+// ==============> PRODUCT QUERIES <================
+
+export const GET_PRODUCT_GROUP_BY_BRANCH = gql`
+  query GetProductGroupByBranch($branchId: ID!, $groupName: String) {
+    getProductGroupByBranch(branchId: $branchId, groupName: $groupName) {
+      id
+      branchId
+      groupName
+      products {
+        item
+        quantity
+        action
+      }
+    }
+  }
+`;
+
+export const GET_PRODUCT_GROUP_BY_ID = gql`
+  query GetProductGroupById($id: ID!) {
+    getProductGroupById(id: $id) {
+      id
+      groupName
+      branchId
+      searchProduct
+      products {
+        item
+        quantity
+        action
+      }
+    }
+  }
+`;
+
+export const GET_PRODUCT_BY_ID = gql`
+  query GetProductById($id: ID!) {
+    getProductById(id: $id) {
+      id
+      branchId
+      status
+      skuCode
+      code
+      name
+      category
+      company
+      formula
+      purchasePrice
+      salePrice
+      wholesalePrice
+      saleQuantities
+      discountPercentage
+      discountRs
+      minimumStock
+      boxPurchasePrice
+      boxSalePrice
+      boxSize
+      saleMargin
+      description
+      location
+      inStock
+      addStock
+      image
+    }
+  }
+`;
+
+export const GET_PRODUCT_BY_BRANCH = gql`
+  query GetProductByBranch($branchId: ID!) {
+    getProductByBranch(branchId: $branchId) {
+      id
+      branchId
+      status
+      skuCode
+      code
+      name
+      category
+      company
+      formula
+      purchasePrice
+      salePrice
+      wholesalePrice
+      saleQuantities
+      discountPercentage
+      discountRs
+      minimumStock
+      boxPurchasePrice
+      boxSalePrice
+      boxSize
+      saleMargin
+      description
+      location
+      inStock
+      addStock
+      image
+    }
+  }
+`;
+
+
+export const GET_PRODUCT_BY_SEARCH_FILTER = gql`
+  query GetProductBySearchFilter($branchId: ID!, $status: String, $saleDiscount: Float, $name: String) {
+    getProductBySearchFilter(branchId: $branchId, status: $status, saleDiscount: $saleDiscount, name: $name) {
+      id
+      branchId
+      status
+      skuCode
+      code
+      name
+      category
+      company
+      formula
+      purchasePrice
+      salePrice
+      wholesalePrice
+      saleQuantities
+      discountPercentage
+      discountRs
+      minimumStock
+      boxPurchasePrice
+      boxSalePrice
+      boxSize
+      saleMargin
+      description
+      location
+      inStock
+      addStock
+      image
     }
   }
 `;

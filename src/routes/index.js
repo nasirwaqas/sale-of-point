@@ -188,11 +188,11 @@ export default function Router() {
 
         { path: 'product', element: <ProductPage /> },
         { path: '/dashboard/product/new', element: <ProductNewPage /> },
-        { path: '/dashboard/product/edit', element: <ProductEditForm /> },
+        { path: '/dashboard/product/edit/:id', element: <ProductEditForm /> },
         { path: '/dashboard/product/setting', element: <ProductSetting /> },
         { path: '/dashboard/product/group', element: <ProductGroup /> },
         { path: '/dashboard/product/group/new', element: <ProductGroupNew /> },
-        { path: '/dashboard/product/group/edit', element: <ProductGroupEdit /> },
+        { path: '/dashboard/product/group/edit/:id', element: <ProductGroupEdit /> },
 
          { path: 'vendors', element: <VendorsPage /> },
          { path: '/dashboard/vendors/new', element: <VendorsNewPage /> },

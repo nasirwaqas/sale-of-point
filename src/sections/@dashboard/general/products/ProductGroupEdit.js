@@ -12,15 +12,68 @@ import {
   Typography,
   Box,
 } from '@mui/material';
+import { useMutation, useQuery } from '@apollo/client';
+import { useSnackbar } from 'notistack';
+import { useNavigate, useParams } from 'react-router-dom';
+import { EDIT_PRODUCT_GROUP } from '../../../../graphQL/mutations';
+import { GET_PRODUCT_GROUP_BY_ID } from '../../../../graphQL/queries';
 
 export default function ProductGroupEdit() {
   const [groupName, setGroupName] = useState('');
   const [searchProduct, setSearchProduct] = useState('');
   const [rows, setRows] = useState([{ item: '', quantity: '', action: '' }]);
+  const [branchId, setBranchId] = useState('60d0fe4f5311236168a109ca'); // Replace with actual branch ID
 
-  // Handlers
-  const handleSubmit = () => {
-    console.log('Submit clicked', { groupName, searchProduct, rows });
+  const { id } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+
+  const { data: queryData, loading: queryLoading } = useQuery(GET_PRODUCT_GROUP_BY_ID, {
+    variables: { id },
+    onCompleted: (fetchedData) => {
+      const productGroup = fetchedData.getProductGroupById;
+      setGroupName(productGroup.groupName);
+      setSearchProduct(productGroup.searchProduct);
+      setRows(productGroup.products);
+    },
+  });
+
+  const [editProductGroup, { loading }] = useMutation(EDIT_PRODUCT_GROUP, {
+    onCompleted: () => {
+      enqueueSnackbar('Product group updated successfully', { variant: 'success' });
+      navigate(-1); // Navigate back to the previous page
+    },
+    onError: (error) => {
+      console.error('Error updating product group:', error);
+      enqueueSnackbar('Error updating product group', { variant: 'error' });
+    },
+  });
+
+  const handleSubmit = async () => {
+    try {
+      const input = {
+        branchId,
+        groupName,
+        searchProduct,
+        products: rows.map(row => ({
+          item: row.item,
+          quantity: parseInt(row.quantity, 10),
+          action: row.action,
+        })),
+      };
+
+      console.log('Submitting data:', input);
+
+      await editProductGroup({
+        variables: {
+          id,
+          input,
+        },
+      });
+    } catch (err) {
+      console.error('Error updating product group:', err);
+      enqueueSnackbar('Error updating product group', { variant: 'error' });
+    }
   };
 
   const handleReset = () => {
@@ -30,7 +83,7 @@ export default function ProductGroupEdit() {
   };
 
   const handleCancel = () => {
-    console.log('Cancel clicked');
+    navigate(-1); // Navigate back to the previous page
   };
 
   const handleRowChange = (index, field, value) => {
@@ -48,10 +101,14 @@ export default function ProductGroupEdit() {
     setRows(rows.filter((_, rowIndex) => rowIndex !== index));
   };
 
+  if (queryLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Container maxWidth="md">
       <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
-        New Product Group
+        Edit Product Group
       </Typography>
 
       <Card sx={{ p: 3 }}>
@@ -102,26 +159,35 @@ export default function ProductGroupEdit() {
                   <TableCell>
                     <TextField
                       fullWidth
-                      label="action"
-                      type="number"
-                      value={row.quantity}
+                      label="Action"
+                      value={row.action}
                       onChange={(e) => handleRowChange(index, 'action', e.target.value)}
                     />
                   </TableCell>
-                 
+                  <TableCell>
+                    <Button variant="text" color="error" onClick={() => removeRow(index)}>
+                      Remove
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
 
               {/* Add New Row */}
-              
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <Button variant="text" color="primary" onClick={addRow}>
+                    Add Product
+                  </Button>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
 
         {/* Action Buttons */}
         <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center', gap: 2 }}>
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
-            Save
+          <Button variant="contained" color="primary" onClick={handleSubmit} disabled={loading}>
+            {loading ? 'Saving...' : 'Save'}
           </Button>
           <Button variant="outlined" color="warning" onClick={handleReset}>
             Reset

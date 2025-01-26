@@ -49,7 +49,12 @@ mutation EditCategory(
     id
   }
 }`
+export const DELETE_CATEGORY = gql`
+mutation DeleteCategory($deleteCategoryId: ID!) {
+  deleteCategory(id: $deleteCategoryId)
+}`
 
+// ==============> MANUFACTURE QUERIES <================
 export const CREATE_MANUFACTURE = gql`
 mutation CreateManufacture($manufactureInput: ManufactureInput) {
   createManufacture(manufactureInput: $manufactureInput) {
@@ -71,8 +76,12 @@ mutation EditManufacture($id: ID!  $manufactureInput: ManufactureInput) {
     image
   }
 }`
+export const DELETE_MANUFACTURE = gql`
+mutation DeleteManufacture($deleteManufactureId: ID!) {
+  deleteManufacture(id: $deleteManufactureId)
+}`
 
-
+// ==============> INCOME QUERIES <================
 export const CREATE_INCOME_TYPE = gql`
   mutation CreateIncomeType($branchId: ID!, $name: String!, $description: String) {
     createIncomeType(branchId: $branchId, name: $name, description: $description) {
@@ -121,14 +130,6 @@ export const DELETE_INCOME_TYPE = gql`
   }
 `;
 
-export const DELETE_CATEGORY = gql`
-mutation DeleteCategory($deleteCategoryId: ID!) {
-  deleteCategory(id: $deleteCategoryId)
-}`
-export const DELETE_MANUFACTURE = gql`
-mutation DeleteManufacture($deleteManufactureId: ID!) {
-  deleteManufacture(id: $deleteManufactureId)
-}`
 
 // ==============> EXPENSE MUTATIONS <================
 
@@ -180,7 +181,7 @@ export const DELETE_EXPENSE_TYPE = gql`
   }
 `;
 
-// ==============> EXPENSE MUTATIONS <================
+// ==============> VENDOR MUTATIONS <================
 
 
 export const CREATE_VENDOR = gql`
@@ -203,7 +204,7 @@ export const DELETE_VENDOR = gql`
   }
 `;
 
-// Define the GraphQL mutation for editing a vendor
+
 export const EDIT_VENDOR = gql`
   mutation EditVendor(
     $id: ID!,
@@ -231,38 +232,38 @@ export const EDIT_VENDOR = gql`
   }
 `;
 
-export const CREATE_BALANCE = gql`
-  mutation CreateBalance(
-    $vendorId: ID!
-    $branchId: ID!
-    $type: String!
-    $date: Date!
-    $amount: Float!
-    $description: String!
-  ) {
-    createBalance(
-      vendorId: $vendorId
-      branchId: $branchId
-      type: $type
-      date: $date
-      amount: $amount
-      description: $description
-    ) {
-      id
-      vendorId
-      branchId
-      type
-      date
-      amount
-      description
-    }
-  }
-`;
+
  // ==============> CUSTOMER MUTATIONS <================
 
 
 
-
+ export const CREATE_BALANCE = gql`
+ mutation CreateBalance(
+   $vendorId: ID!
+   $branchId: ID!
+   $type: String!
+   $date: Date!
+   $amount: Float!
+   $description: String!
+ ) {
+   createBalance(
+     vendorId: $vendorId
+     branchId: $branchId
+     type: $type
+     date: $date
+     amount: $amount
+     description: $description
+   ) {
+     id
+     vendorId
+     branchId
+     type
+     date
+     amount
+     description
+   }
+ }
+`;
 
  export const CREATE_CUSTOMER = gql`
    mutation CreateCustomer(
@@ -511,5 +512,144 @@ export const CREATE_CUSTOMER_MESSAGE = gql`
       createdAt
       updatedAt
     }
+  }
+`;
+
+ // ==============> PRODUCT MUTATIONS <================
+
+ export const CREATE_PRODUCT = gql`
+   mutation CreateProduct($input: ProductInput!) {
+     createProduct(input: $input) {
+    id
+    branchId
+    status
+    skuCode
+    code
+    name
+    category
+    company
+    formula
+    purchasePrice
+    salePrice
+    wholesalePrice
+    saleQuantities
+    discountPercentage
+    discountRs
+    minimumStock
+    boxPurchasePrice
+    boxSalePrice
+    boxSize
+    saleMargin
+    description
+    location
+    inStock
+    addStock
+    image
+     }
+   }
+ `;
+ export const CREATE_PRODUCT_GROUP = gql`
+   mutation CreateProductGroup($input: ProductGroupInput!) {
+     createProductGroup(input: $input) {
+       id
+       branchId
+       groupName
+       searchProduct
+       products {
+         item
+         quantity
+         action
+       }
+     }
+   }
+ `;
+ export const DELETE_PRODUCT_GROUP = gql`
+    mutation DeleteProductGroup($id: ID!) {
+      deleteProductGroup(id: $id)
+    }
+  `;
+export const EDIT_PRODUCT_GROUP = gql`
+  mutation EditProductGroup($id: ID!, $input: ProductGroupInput!) {
+    editProductGroup(id: $id, input: $input) {
+      id
+      groupName
+      branchId
+      searchProduct
+      products {
+        item
+        quantity
+        action
+      }
+    }
+  }
+`;
+// export const EDIT_PRODUCT = gql`
+//   mutation EditProduct($id: ID!, $input: ProductInput!) {
+//     editProduct(id: $id, input: $input) {
+//       id
+//       branchId
+//       status
+//       skuCode
+//       code
+//       name
+//       category
+//       company
+//       formula
+//       purchasePrice
+//       salePrice
+//       wholesalePrice
+//       saleQuantities
+//       discountPercentage
+//       discountRs
+//       minimumStock
+//       boxPurchasePrice
+//       boxSalePrice
+//       boxSize
+//       saleMargin
+//       description
+//       location
+//       inStock
+//       addStock
+//       image
+//     }
+//   }
+// `;
+
+
+export const EDIT_PRODUCT = gql`
+  mutation EditProduct($id: ID!, $input: ProductInput!) {
+    editProduct(id: $id, input: $input) {
+      id
+      branchId
+      status
+      skuCode
+      code
+      name
+      category
+      company
+      formula
+      purchasePrice
+      salePrice
+      wholesalePrice
+      saleQuantities
+      discountPercentage
+      discountRs
+      minimumStock
+      boxPurchasePrice
+      boxSalePrice
+      boxSize
+      saleMargin
+      description
+      location
+      inStock
+      addStock
+      image
+    }
+  }
+`;
+
+export const DELETE_PRODUCT = gql`
+  mutation DeleteProduct($id: ID!) {
+    deleteProduct(id: $id)
   }
 `;

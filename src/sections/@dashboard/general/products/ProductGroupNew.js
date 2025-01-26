@@ -12,15 +12,51 @@ import {
   Typography,
   Box,
 } from '@mui/material';
+import { useMutation } from '@apollo/client';
+import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom';
+import { CREATE_PRODUCT_GROUP } from '../../../../graphQL/mutations';
 
 export default function NewProductGroup() {
   const [groupName, setGroupName] = useState('');
   const [searchProduct, setSearchProduct] = useState('');
   const [rows, setRows] = useState([{ item: '', quantity: '', action: '' }]);
+  const [branchId, setBranchId] = useState('60d0fe4f5311236168a109ca'); // Replace with actual branch ID
+
+  const [createProductGroup, { loading }] = useMutation(CREATE_PRODUCT_GROUP);
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   // Handlers
-  const handleSubmit = () => {
-    console.log('Submit clicked', { groupName, searchProduct, rows });
+  const handleSubmit = async () => {
+    try {
+      const input = {
+        branchId,
+        groupName,
+        searchProduct,
+        products: rows.map(row => ({
+          item: row.item,
+          quantity: parseInt(row.quantity, 10),
+          action: row.action,
+        })),
+      };
+
+      console.log('Submitting data:', input);
+
+      await createProductGroup({
+        variables: {
+          input,
+        },
+      });
+      enqueueSnackbar('Product group created successfully', { variant: 'success' });
+      // Reset the input fields
+      setGroupName('');
+      setSearchProduct('');
+      setRows([{ item: '', quantity: '', action: '' }]);
+    } catch (err) {
+      console.error('Error creating product group:', err);
+      enqueueSnackbar('Error creating product group', { variant: 'error' });
+    }
   };
 
   const handleReset = () => {
@@ -30,7 +66,7 @@ export default function NewProductGroup() {
   };
 
   const handleCancel = () => {
-    console.log('Cancel clicked');
+    navigate(-1); // Navigate back to the previous page
   };
 
   const handleRowChange = (index, field, value) => {
@@ -102,26 +138,35 @@ export default function NewProductGroup() {
                   <TableCell>
                     <TextField
                       fullWidth
-                      label="action"
-                      type="number"
-                      value={row.quantity}
+                      label="Action"
+                      value={row.action}
                       onChange={(e) => handleRowChange(index, 'action', e.target.value)}
                     />
                   </TableCell>
-                 
+                  <TableCell>
+                    <Button variant="text" color="error" onClick={() => removeRow(index)}>
+                      Remove
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
 
               {/* Add New Row */}
-              
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <Button variant="text" color="primary" onClick={addRow}>
+                    Add Product
+                  </Button>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
 
         {/* Action Buttons */}
         <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center', gap: 2 }}>
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
-            Save
+          <Button variant="contained" color="primary" onClick={handleSubmit} disabled={loading}>
+            {loading ? 'Saving...' : 'Save'}
           </Button>
           <Button variant="outlined" color="warning" onClick={handleReset}>
             Reset

@@ -1,27 +1,24 @@
 import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import * as XLSX from 'xlsx'; // Import xlsx library
 // @mui
 import {
-  Tab,
-  Tabs,
   Card,
   Table,
   Button,
-  Tooltip,
-  Divider,
-  TableBody,
   Container,
-  IconButton,
-  TableRow,
+  TableBody,
   TableCell,
+  TableRow,
   TableContainer,
+  Typography,
+  Box,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// _mock_
-// import { _userList } from '../../_mock/arrays';
 // components
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
@@ -32,37 +29,25 @@ import {
   useTable,
   getComparator,
   emptyRows,
-  TableNoData,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../components/table';
 // sections
-import { UserTableRow } from '../../sections/@dashboard/category/list';
-import { ProductTableToolbar } from '../../sections/@dashboard/general/products'
-// ----------------------------------------------------------------------
-
-const STATUS_OPTIONS = ['all', 'active', 'banned'];
-
-const ROLE_OPTIONS = [
-  'all',
-  'Active',
-  'Deactive',
-  'Discount Products',
-];
+import ProductTableToolbar from '../../sections/@dashboard/general/products/ProductTableToolbar';
+import { GET_PRODUCT_BY_SEARCH_FILTER, GET_PRODUCT_BY_BRANCH } from '../../graphQL/queries'; // Import GET_PRODUCT_BY_BRANCH query
+import { EDIT_PRODUCT, DELETE_PRODUCT } from '../../graphQL/mutations';
 
 const TABLE_HEAD = [
-  { id: 'productCode', label: 'Code', align: 'left' },
-  { id: 'productName', label: 'Name', align: 'left' },
-  { id: 'productCategory', label: 'Category', align: 'left' },
+  { id: 'skuCode', label: 'Code', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'category', label: 'Category', align: 'left' },
   { id: 'purchasePrice', label: 'Purchase Price', align: 'left' },
   { id: 'salePrice', label: 'Sale Price', align: 'left' },
-  { id: 'saleDiscount', label: 'Sale Discount', align: 'left' },
-  { id: 'productFormula', label: 'Formula', align: 'left' },
+  { id: 'discountRs', label: 'Sale Discount', align: 'left' },
+  { id: 'formula', label: 'Formula', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
-// ----------------------------------------------------------------------
 
 export default function ProductPage() {
   const {
@@ -85,97 +70,168 @@ export default function ProductPage() {
   } = useTable();
 
   const { themeStretch } = useSettingsContext();
-
   const navigate = useNavigate();
-
-  const [tableData, setTableData] = useState([]);
-
+  const { enqueueSnackbar } = useSnackbar();
+  const { id: paramId } = useParams();
   const [openConfirm, setOpenConfirm] = useState(false);
-
+  const [deleteId, setDeleteId] = useState(null); // State to store the ID of the product to be deleted
   const [filterName, setFilterName] = useState('');
+  const [filterData, setFilterData] = useState('All');
+  const [products, setProducts] = useState([]);
 
-  const [filterRole, setFilterRole] = useState('all');
+  const branchId = '60d0fe4f5311236168a109ca'; // Replace with actual branch ID
 
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterProducts, { loading, error: queryError, data: queryData, refetch }] = useLazyQuery(GET_PRODUCT_BY_SEARCH_FILTER, {
+    variables: { branchId },
+    onCompleted: (data) => {
+      setProducts(data.getProductBySearchFilter);
+    },
+  });
 
-  const data = [
-    {
-      productCode: 'P001',
-      productName: 'Vitamin C Tablets',
-      productCategory: 'Health Supplements',
-      purchasePrice: '$10',
-      salePrice: '$15',
-      saleDiscount: '10%',
-      productFormula: 'Ascorbic Acid 500mg',
+  const [getProductsByBranch] = useLazyQuery(GET_PRODUCT_BY_BRANCH, {
+    variables: { branchId },
+    onCompleted: (data) => {
+      exportToExcel(data.getProductByBranch);
     },
-    {
-      productCode: 'P002',
-      productName: 'Pain Relief Balm',
-      productCategory: 'Topical Treatments',
-      purchasePrice: '$5',
-      salePrice: '$8',
-      saleDiscount: '5%',
-      productFormula: 'Menthol and Camphor',
-    },
-    {
-      productCode: 'P003',
-      productName: 'Herbal Tea',
-      productCategory: 'Beverages',
-      purchasePrice: '$3',
-      salePrice: '$6',
-      saleDiscount: '15%',
-      productFormula: 'Chamomile and Green Tea',
-    },
-  ];
+  });
+
+  const [editProduct] = useMutation(EDIT_PRODUCT);
+  const [deleteProduct] = useMutation(DELETE_PRODUCT);
+
+  let tableData = [];
+  if (products.length) {
+    tableData = products;
+  } else if (queryData) {
+    tableData = queryData.getProductBySearchFilter;
+  }
 
   const dataFiltered = applyFilter({
-    inputData: data,
+    inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterRole,
-    filterStatus,
+    filterData,
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const denseHeight = dense ? 52 : 72;
 
-  const handleOpenConfirm = () => {
+  const handleOpenConfirm = (id) => {
+    setDeleteId(id);
     setOpenConfirm(true);
   };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
+    setDeleteId(null);
   };
 
-  const handleFilterStatus = (event, newValue) => {
+  const handleFilterBy = (event) => {
     setPage(0);
-    setFilterStatus(newValue);
+    const value = event.target.value;
+    let status = null;
+    let saleDiscount = null;
+
+    if (value !== 'All') {
+      if (value === 'Discount Products') {
+        saleDiscount = 0;
+      } else {
+        status = value;
+      }
+    }
+
+    setFilterData(value);
+    filterProducts({ variables: { branchId, status, saleDiscount, name: filterName } });
   };
 
-  const handleFilterName = (event) => {
+  const handleFilterByName = (event) => {
     setPage(0);
-    setFilterName(event.target.value);
-  };
+    const value = event.target.value;
+    setFilterName(value);
 
-  const handleFilterRole = (event) => {
-    setPage(0);
-    setFilterRole(event.target.value);
+    let status = null;
+    let saleDiscount = null;
+
+    if (filterData !== 'All') {
+      if (filterData === 'Discount Products') {
+        saleDiscount = 0;
+      } else {
+        status = filterData;
+      }
+    }
+
+    filterProducts({ variables: { branchId, status, saleDiscount, name: value } });
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.product.edit);
+    navigate(PATH_DASHBOARD.product.edit(id));
   };
 
-  const handleDeleteRows = (selectedRows) => {
-    // Implement the delete logic here
-    console.log('Deleting rows:', selectedRows);
+  const handleStatusRow = async (id, status) => {
+    try {
+      console.log('Updating product status:', { id, status }); // Log the input data
+      await editProduct({
+        variables: {
+          id,
+          input: { status },
+        },
+      });
+      refetch();
+      enqueueSnackbar('Product status updated successfully', { variant: 'success' });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      enqueueSnackbar('Failed to update product status', { variant: 'error' });
+    }
+  };
+
+  const handleDeleteRow = async () => {
+    try {
+      await deleteProduct({
+        variables: { id: deleteId },
+      });
+      refetch();
+      setSelected([]);
+      enqueueSnackbar('Product deleted successfully', { variant: 'success' });
+      handleCloseConfirm();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      enqueueSnackbar('Failed to delete product', { variant: 'error' });
+    }
+  };
+
+  const handleDeleteRows = async (selectedRows) => {
+    try {
+      await Promise.all(
+        selectedRows.map((id) =>
+          deleteProduct({
+            variables: { id },
+          })
+        )
+      );
+      refetch();
+      setSelected([]);
+      enqueueSnackbar('Products deleted successfully', { variant: 'success' });
+    } catch (error) {
+      console.error('Error deleting rows:', error);
+      enqueueSnackbar('Failed to delete products', { variant: 'error' });
+    }
   };
 
   const handleResetFilter = () => {
     setFilterName('');
-    setFilterRole('all');
-    setFilterStatus('all');
+    setFilterData('All');
+    filterProducts({ variables: { branchId, status: null, saleDiscount: null, name: '' } });
+  };
+
+  const handleExport = () => {
+    getProductsByBranch();
+  };
+
+  const exportToExcel = (data) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Products');
+    XLSX.writeFile(workbook, 'Products.xlsx');
   };
 
   return (
@@ -186,9 +242,7 @@ export default function ProductPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          links={[
-            { name: 'Product', href: PATH_DASHBOARD.root },
-          ]}
+          links={[{ name: 'Product', href: PATH_DASHBOARD.root }]}
           action={
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Button
@@ -199,24 +253,28 @@ export default function ProductPage() {
               >
                 New
               </Button>
-              <Button variant="contained" sx={{ ml: 1 }}>Print Barcode</Button>
-              <Button 
-              component={RouterLink}
-              to={PATH_DASHBOARD.product.setting}
-              variant="contained" 
-              sx={{ ml: 1 }}
+              <Button variant="contained" sx={{ ml: 1 }}>
+                Print Barcode
+              </Button>
+              <Button
+                component={RouterLink}
+                to={PATH_DASHBOARD.product.setting}
+                variant="contained"
+                sx={{ ml: 1 }}
               >
                 Settings
-                </Button>
-
+              </Button>
               <Button
                 component={RouterLink}
                 to={PATH_DASHBOARD.product.group}
-                variant="contained" 
+                variant="contained"
                 sx={{ ml: 1 }}
-               >
-                Product Group</Button>
-              <Button variant="contained" sx={{ ml: 1 }}>Export</Button>
+              >
+                Product Group
+              </Button>
+              <Button variant="contained" sx={{ ml: 1 }} onClick={handleExport}>
+                Export
+              </Button>
             </div>
           }
         />
@@ -224,11 +282,12 @@ export default function ProductPage() {
         <Card>
           <ProductTableToolbar
             filterName={filterName}
-            filterRole={filterRole}
-            optionsRole={ROLE_OPTIONS}
-            onFilterName={handleFilterName}
-            onFilterRole={handleFilterRole}
+            filterData={filterData}
+            onFilterName={handleFilterByName}
+            onFilterData={handleFilterBy}
             onResetFilter={handleResetFilter}
+            branchId={branchId}
+            onSearchResults={setProducts} // Pass setProducts as onSearchResults
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -244,33 +303,55 @@ export default function ProductPage() {
                 />
 
                 <TableBody>
-                  {dataInPage.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{row.productCode}</TableCell>
-                      <TableCell>{row.productName}</TableCell>
-                      <TableCell>{row.productCategory}</TableCell>
+                  {loading && (
+                    <TableRow>
+                      <TableCell colSpan={8}>Loading...</TableCell>
+                    </TableRow>
+                  )}
+                  {queryError && (
+                    <TableRow>
+                      <TableCell colSpan={8}>Error: {queryError.message}</TableCell>
+                    </TableRow>
+                  )}
+                  {dataInPage.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell>{row.skuCode}</TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.category}</TableCell>
                       <TableCell>{row.purchasePrice}</TableCell>
                       <TableCell>{row.salePrice}</TableCell>
-                      <TableCell>{row.saleDiscount}</TableCell>
-                      <TableCell>{row.productFormula}</TableCell>
-
+                      <TableCell>{row.discountPercentage}</TableCell>
+                      <TableCell>{row.formula}</TableCell>
                       <TableCell>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          size="small"
-                          onClick={() => handleEditRow(row.productCode)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          size="small"
-                          sx={{ ml: 1 }} // Add some margin between buttons
-                        >
-                          Active
-                        </Button>
+                        <Box display="flex" alignItems="center">
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            sx={{ minWidth: '50px', fontSize: '0.75rem', padding: '4px 8px' }}
+                            onClick={() => handleEditRow(row.id)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color={row.status === 'Active' ? 'success' : 'warning'}
+                            size="small"
+                            sx={{ ml: 1, minWidth: '50px', fontSize: '0.75rem', padding: '4px 8px' }}
+                            onClick={() => handleStatusRow(row.id, row.status === 'Active' ? 'Inactive' : 'Active')}
+                          >
+                            {row.status === 'Active' ? 'Deactivate' : 'Activate'}
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            size="small"
+                            sx={{ ml: 1, minWidth: '50px', fontSize: '0.75rem', padding: '4px 8px' }}
+                            onClick={() => handleOpenConfirm(row.id)}
+                          >
+                            Delete
+                          </Button>
+                        </Box>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -290,7 +371,6 @@ export default function ProductPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
             dense={dense}
             onChangeDense={onChangeDense}
           />
@@ -303,17 +383,14 @@ export default function ProductPage() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
+            Are you sure you want to delete this product?
           </>
         }
         action={
           <Button
             variant="contained"
             color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
+            onClick={handleDeleteRow}
           >
             Delete
           </Button>
@@ -325,7 +402,7 @@ export default function ProductPage() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole }) {
+function applyFilter({ inputData, comparator, filterName, filterData }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -339,8 +416,16 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
   // Apply filters
   if (filterName) {
     inputData = inputData.filter(
-      (item) => item.productName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
+  }
+
+  if (filterData && filterData !== 'All') {
+    if (filterData === 'Discount Products') {
+      inputData = inputData.filter((item) => item.discountRs > 0);
+    } else {
+      inputData = inputData.filter((item) => item.status === filterData);
+    }
   }
 
   return inputData;
